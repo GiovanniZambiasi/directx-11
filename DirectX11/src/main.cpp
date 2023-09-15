@@ -220,9 +220,3 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 
     return returnCode;
 }
-
-//int main(int argc, char* argv[])
-//{
-//    
-//    return wWinMain();
-//}
