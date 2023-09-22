@@ -1,2 +1,2 @@
 # directx-11
-A DirectX11 studo
+A DirectX11 study
