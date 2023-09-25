@@ -1,7 +1,3 @@
-//
-// Game.cpp
-//
-
 #include "pch.h"
 #include "Game.h"
 
@@ -85,5 +81,5 @@ void Game::SwapBuffers()
 void Game::ClearBuffer(float r, float g, float b)
 {
     const float colors[] = { r,g,b };
-    deviceContext->ClearRenderTargetView(backBufferView, colors);
+    deviceContext->ClearRenderTargetView(backBufferView.Get(), colors);
 }

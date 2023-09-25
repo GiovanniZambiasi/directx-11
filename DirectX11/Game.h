@@ -1,8 +1,6 @@
-//
-// Game.h
-//
-
 #pragma once
+
+using namespace Microsoft;
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -12,10 +10,10 @@ class Game
     int outputWidth;
     int outputHeight;
     
-    IDXGISwapChain* swapChain{};
-    ID3D11Device* device{};
-    ID3D11DeviceContext* deviceContext{};
-    ID3D11RenderTargetView* backBufferView{};
+    WRL::ComPtr<IDXGISwapChain> swapChain{};
+    WRL::ComPtr<ID3D11Device> device{};
+    WRL::ComPtr<ID3D11DeviceContext> deviceContext{};
+    WRL::ComPtr<ID3D11RenderTargetView> backBufferView{};
     
 public:
     Game() noexcept;
