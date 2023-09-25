@@ -1,22 +1,28 @@
 #include "pch.h"
 #include "Game.h"
-
 #include <iostream>
-
 #include "ErrorHandling.h"
+#include <d3dcompiler.h>
+
+#pragma comment(lib, "D3DCompiler.lib")
 
 extern void ExitGame() noexcept;
 
 using namespace DirectX;
 
+using namespace Microsoft;
+
 Game::Game() noexcept :
     outputWindow(nullptr),
     outputWidth(800),
     outputHeight(600)
-{}
+{
+}
 
 void Game::Initialize(HWND window, int width, int height)
 {
+    DXGIInfoUtils::Init();
+    
     outputWindow = window;
     outputWidth = std::max(width, 1);
     outputHeight = std::max(height, 1);
@@ -49,7 +55,7 @@ void Game::Initialize(HWND window, int width, int height)
     nullptr,
     D3D_DRIVER_TYPE_HARDWARE,
     nullptr,
-    0,
+    D3D11_CREATE_DEVICE_DEBUG,
     nullptr,
     0,
     D3D11_SDK_VERSION,
@@ -70,6 +76,9 @@ void Game::Initialize(HWND window, int width, int height)
 void Game::Update()
 {
     ClearBuffer(1,0,0);
+
+    DrawTriangle();
+    
     SwapBuffers();
 }
 
@@ -82,4 +91,82 @@ void Game::ClearBuffer(float r, float g, float b)
 {
     const float colors[] = { r,g,b };
     deviceContext->ClearRenderTargetView(backBufferView.Get(), colors);
+}
+
+void Game::DrawTriangle()
+{
+    struct Vertex
+    {
+        float x{0.f};
+        float y{0.f};
+    };
+
+    const Vertex vertices[] =
+    {
+        {0.f, .5f},
+        {.5f, -.5f},
+        {-.5f, -.5f},
+    };
+
+    const UINT stride = sizeof(Vertex);
+    const UINT offset = 0u;
+
+    // Create vertex buffer
+    WRL::ComPtr<ID3D11Buffer> vertexBuffer{};
+    D3D11_BUFFER_DESC bufferDescription
+    {
+        sizeof(vertices),
+        D3D11_USAGE_DEFAULT,
+        D3D11_BIND_VERTEX_BUFFER,
+        0,
+        0,
+        stride
+    };
+    D3D11_SUBRESOURCE_DATA bufferData{vertices};
+    GIO_THROW_IF_FAILED(device->CreateBuffer(&bufferDescription, &bufferData, &vertexBuffer));
+    deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+    
+    // Load shaders
+    WRL::ComPtr<ID3DBlob> shaderBlob{};
+    
+    GIO_THROW_IF_FAILED(D3DReadFileToBlob(L"PixelShader.cso", &shaderBlob));
+    WRL::ComPtr<ID3D11PixelShader> pixelShader{};
+    GIO_THROW_IF_FAILED(device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader));
+    deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
+    
+    GIO_THROW_IF_FAILED(D3DReadFileToBlob(L"VertexShader.cso", &shaderBlob));
+    WRL::ComPtr<ID3D11VertexShader> vertexShader{};
+    GIO_THROW_IF_FAILED(device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader));
+    deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
+    
+    // Create input layout
+    WRL::ComPtr<ID3D11InputLayout> inputLayout{};
+    const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]{
+        "Position",
+        0,
+        DXGI_FORMAT_R32G32_FLOAT,
+        0,
+        0,
+        D3D11_INPUT_PER_VERTEX_DATA,
+        0
+    };
+    GIO_THROW_IF_FAILED(device->CreateInputLayout(inputElementDesc, static_cast<UINT>(std::size(inputElementDesc)), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &inputLayout));
+    deviceContext->IASetInputLayout(inputLayout.Get());
+    
+    deviceContext->OMSetRenderTargets(1, backBufferView.GetAddressOf(), nullptr);
+    
+    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    
+    D3D11_VIEWPORT viewport
+    {
+        0,
+        0,
+        static_cast<FLOAT>(outputWidth),
+        static_cast<FLOAT>(outputHeight),
+        0,
+        1.f
+    };
+    deviceContext->RSSetViewports(1, &viewport);
+    
+    deviceContext->Draw(static_cast<UINT>(std::size(vertices)), 0);
 }
