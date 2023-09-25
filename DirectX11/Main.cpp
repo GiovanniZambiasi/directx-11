@@ -3,6 +3,10 @@
 //
 
 #include "pch.h"
+
+#include <iostream>
+
+#include "ErrorHandling.h"
 #include "Game.h"
 
 using namespace DirectX;
@@ -39,75 +43,87 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     if (!XMVerifyCPUSupport())
         return 1;
-
-    HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
-    if (FAILED(hr))
-        return 1;
-
-    g_game = std::make_unique<Game>();
-
-    // Register class and create window
+    
+    try
     {
-        // Register class
-        WNDCLASSEXW wcex = {};
-        wcex.cbSize = sizeof(WNDCLASSEXW);
-        wcex.style = CS_HREDRAW | CS_VREDRAW;
-        wcex.lpfnWndProc = WndProc;
-        wcex.hInstance = hInstance;
-        wcex.hIcon = LoadIconW(hInstance, L"IDI_ICON");
-        wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
-        wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
-        wcex.lpszClassName = L"DirectX11WindowClass";
-        wcex.hIconSm = LoadIconW(wcex.hInstance, L"IDI_ICON");
-        if (!RegisterClassExW(&wcex))
+        HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+        if (FAILED(hr))
             return 1;
 
-        // Create window
-        int w, h;
-        g_game->GetDefaultSize(w, h);
+        g_game = std::make_unique<Game>();
 
-        RECT rc = { 0, 0, static_cast<LONG>(w), static_cast<LONG>(h) };
+        // Register class and create window
+        {
+            // Register class
+            WNDCLASSEXW wcex = {};
+            wcex.cbSize = sizeof(WNDCLASSEXW);
+            wcex.style = CS_HREDRAW | CS_VREDRAW;
+            wcex.lpfnWndProc = WndProc;
+            wcex.hInstance = hInstance;
+            wcex.hIcon = LoadIconW(hInstance, L"IDI_ICON");
+            wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
+            wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
+            wcex.lpszClassName = L"DirectX11WindowClass";
+            wcex.hIconSm = LoadIconW(wcex.hInstance, L"IDI_ICON");
+            if (!RegisterClassExW(&wcex))
+                return 1;
 
-        AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+            // Create window
+            std::tuple<int, int> windowSize = g_game->GetDefaultSize();
 
-        HWND hwnd = CreateWindowExW(0, L"DirectX11WindowClass", g_szAppName, WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top,
-            nullptr, nullptr, hInstance,
-            g_game.get());
-        // TODO: Change to CreateWindowExW(WS_EX_TOPMOST, L"DirectX11WindowClass", g_szAppName, WS_POPUP,
-        // to default to fullscreen.
+            RECT rc = { 0, 0, static_cast<LONG>(std::get<0>(windowSize)), static_cast<LONG>(std::get<1>(windowSize)) };
 
-        if (!hwnd)
-            return 1;
+            AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-        ShowWindow(hwnd, nCmdShow);
-        // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
+            HWND hwnd = CreateWindowExW(0, L"DirectX11WindowClass", g_szAppName, WS_OVERLAPPEDWINDOW,
+                CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top,
+                nullptr, nullptr, hInstance,
+                g_game.get());
+            // TODO: Change to CreateWindowExW(WS_EX_TOPMOST, L"DirectX11WindowClass", g_szAppName, WS_POPUP,
+            // to default to fullscreen.
 
-        GetClientRect(hwnd, &rc);
+            if (!hwnd)
+                return 1;
 
-        g_game->Initialize(hwnd, rc.right - rc.left, rc.bottom - rc.top);
+            ShowWindow(hwnd, nCmdShow);
+            // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
+
+            GetClientRect(hwnd, &rc);
+
+            g_game->Initialize(hwnd, rc.right - rc.left, rc.bottom - rc.top);
+        }
+
+        // Main message loop
+        MSG msg = {};
+        while (WM_QUIT != msg.message)
+        {
+            if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+            else
+            {
+                g_game->Update();
+            }
+        }
+
+        g_game.reset();
+
+        CoUninitialize();
+        
+        return static_cast<int>(msg.wParam);
     }
-
-    // Main message loop
-    MSG msg = {};
-    while (WM_QUIT != msg.message)
+    catch(const std::exception& e)
     {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-            g_game->Tick();
-        }
+        std::cout << "FATAL:" << std::endl << e.what();
+    }
+    catch(...)
+    {
+        std::cout << "FATAL:" << std::endl << "Unknown error";
     }
 
-    g_game.reset();
-
-    CoUninitialize();
-
-    return static_cast<int>(msg.wParam);
+    return -1;
 }
 
 // Windows procedure
@@ -134,7 +150,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         if (s_in_sizemove && game)
         {
-            game->Tick();
+            //game->Tick();
         }
         else
         {
@@ -150,21 +166,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (!s_minimized)
             {
                 s_minimized = true;
-                if (!s_in_suspend && game)
-                    game->OnSuspending();
+                // if (!s_in_suspend && game)
+                //     game->OnSuspending();
                 s_in_suspend = true;
             }
         }
         else if (s_minimized)
         {
             s_minimized = false;
-            if (s_in_suspend && game)
-                game->OnResuming();
+            // if (s_in_suspend && game)
+            //     game->OnResuming();
             s_in_suspend = false;
         }
         else if (!s_in_sizemove && game)
         {
-            game->OnWindowSizeChanged(LOWORD(lParam), HIWORD(lParam));
+            //game->OnWindowSizeChanged(LOWORD(lParam), HIWORD(lParam));
         }
         break;
 
@@ -179,7 +195,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             RECT rc;
             GetClientRect(hWnd, &rc);
 
-            game->OnWindowSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
+            //game->OnWindowSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
         }
         break;
 
@@ -197,11 +213,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             if (wParam)
             {
-                game->OnActivated();
+                //game->OnActivated();
             }
             else
             {
-                game->OnDeactivated();
+                //game->OnDeactivated();
             }
         }
         break;
@@ -210,16 +226,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (wParam)
         {
         case PBT_APMQUERYSUSPEND:
-            if (!s_in_suspend && game)
-                game->OnSuspending();
+            //if (!s_in_suspend && game)
+                //game->OnSuspending();
             s_in_suspend = true;
             return TRUE;
 
         case PBT_APMRESUMESUSPEND:
             if (!s_minimized)
             {
-                if (s_in_suspend && game)
-                    game->OnResuming();
+                // if (s_in_suspend && game)
+                //     game->OnResuming();
                 s_in_suspend = false;
             }
             return TRUE;
@@ -239,14 +255,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
                 SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
 
-                int width = 800;
-                int height = 600;
+                std::tuple<int, int> windowSize{800, 600};
+                
                 if (game)
-                    game->GetDefaultSize(width, height);
+                    windowSize = game->GetDefaultSize();
 
                 ShowWindow(hWnd, SW_SHOWNORMAL);
 
-                SetWindowPos(hWnd, HWND_TOP, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+                SetWindowPos(hWnd, HWND_TOP, 0, 0, std::get<0>(windowSize), std::get<1>(windowSize), SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
             }
             else
             {
