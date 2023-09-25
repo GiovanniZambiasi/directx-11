@@ -75,7 +75,7 @@ void Game::Initialize(HWND window, int width, int height)
 
 void Game::Update()
 {
-    ClearBuffer(1,0,0);
+    ClearBuffer(.7f,.9f,.7f);
 
     DrawTriangle();
     
@@ -99,13 +99,16 @@ void Game::DrawTriangle()
     {
         float x{0.f};
         float y{0.f};
+        unsigned char r;
+        unsigned char g;
+        unsigned char b;
     };
 
     const Vertex vertices[] =
     {
-        {0.f, .5f},
-        {.5f, -.5f},
-        {-.5f, -.5f},
+        {0.f, .5f, 255, 0, 0},
+        {.5f, -.5f, 0, 255, 0},
+        {-.5f, -.5f, 0, 0, 255},
     };
 
     const UINT stride = sizeof(Vertex);
@@ -113,7 +116,7 @@ void Game::DrawTriangle()
 
     // Create vertex buffer
     WRL::ComPtr<ID3D11Buffer> vertexBuffer{};
-    D3D11_BUFFER_DESC bufferDescription
+    D3D11_BUFFER_DESC vertexBufferDesc
     {
         sizeof(vertices),
         D3D11_USAGE_DEFAULT,
@@ -122,9 +125,27 @@ void Game::DrawTriangle()
         0,
         stride
     };
-    D3D11_SUBRESOURCE_DATA bufferData{vertices};
-    GIO_THROW_IF_FAILED(device->CreateBuffer(&bufferDescription, &bufferData, &vertexBuffer));
+    D3D11_SUBRESOURCE_DATA vertexBufferData{vertices};
+    GIO_THROW_IF_FAILED(device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer));
     deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+    unsigned short indices[]
+    {
+        0,1,2,
+    };
+    WRL::ComPtr<ID3D11Buffer> indexBuffer{};
+    D3D11_BUFFER_DESC indexBufferDesc
+    {
+        sizeof(indices),
+        D3D11_USAGE_DEFAULT,
+        D3D11_BIND_INDEX_BUFFER,
+        0,
+        0,
+        sizeof(unsigned short),
+    };
+    D3D11_SUBRESOURCE_DATA indexBufferData{indices};
+    GIO_THROW_IF_FAILED(device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer));
+    deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
     
     // Load shaders
     WRL::ComPtr<ID3DBlob> shaderBlob{};
@@ -141,14 +162,10 @@ void Game::DrawTriangle()
     
     // Create input layout
     WRL::ComPtr<ID3D11InputLayout> inputLayout{};
-    const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]{
-        "Position",
-        0,
-        DXGI_FORMAT_R32G32_FLOAT,
-        0,
-        0,
-        D3D11_INPUT_PER_VERTEX_DATA,
-        0
+    const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]
+    {
+        {"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, offsetof(Vertex, r), D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     GIO_THROW_IF_FAILED(device->CreateInputLayout(inputElementDesc, static_cast<UINT>(std::size(inputElementDesc)), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &inputLayout));
     deviceContext->IASetInputLayout(inputLayout.Get());
@@ -168,5 +185,5 @@ void Game::DrawTriangle()
     };
     deviceContext->RSSetViewports(1, &viewport);
     
-    deviceContext->Draw(static_cast<UINT>(std::size(vertices)), 0);
+    deviceContext->DrawIndexed(static_cast<UINT>(std::size(indices)), 0, 0);
 }
