@@ -67,7 +67,7 @@ void Game::Initialize(HWND window, int width, int height)
     
     GIO_THROW_IF_FAILED(swapChain->GetBuffer(0, __uuidof(ID3D11Resource),reinterpret_cast<void**>(&backBuffer)));
     
-    device->CreateRenderTargetView(backBuffer, nullptr, &backBufferView);
+    GIO_THROW_IF_FAILED(device->CreateRenderTargetView(backBuffer, nullptr, &backBufferView));
     backBuffer->Release();
 }
 
@@ -79,7 +79,7 @@ void Game::Update()
 
 void Game::SwapBuffers()
 {
-    swapChain->Present(1, 0);
+    GIO_THROW_IF_FAILED(swapChain->Present(1, 0));
 }
 
 void Game::ClearBuffer(float r, float g, float b)
