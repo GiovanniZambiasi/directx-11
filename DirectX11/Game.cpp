@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Game.h"
+
+#include <chrono>
 #include <iostream>
 #include "ErrorHandling.h"
 #include <d3dcompiler.h>
@@ -17,6 +19,7 @@ Game::Game() noexcept :
     outputWidth(800),
     outputHeight(600)
 {
+    startTime = std::chrono::steady_clock::now();
 }
 
 void Game::Initialize(HWND window, int width, int height)
@@ -75,9 +78,11 @@ void Game::Initialize(HWND window, int width, int height)
 
 void Game::Update()
 {
+    std::chrono::duration<float> timeSinceStart = std::chrono::steady_clock::now() - startTime;
+    
     ClearBuffer(.7f,.9f,.7f);
 
-    DrawTriangle();
+    DrawTriangle(timeSinceStart.count());
     
     SwapBuffers();
 }
@@ -93,7 +98,7 @@ void Game::ClearBuffer(float r, float g, float b)
     deviceContext->ClearRenderTargetView(backBufferView.Get(), colors);
 }
 
-void Game::DrawTriangle()
+void Game::DrawTriangle(float angle)
 {
     struct Vertex
     {
@@ -146,6 +151,43 @@ void Game::DrawTriangle()
     D3D11_SUBRESOURCE_DATA indexBufferData{indices};
     GIO_THROW_IF_FAILED(device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer));
     deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+    float aspectRatio = outputHeight/static_cast<float>(outputWidth);
+    
+    struct ConstantBuffer
+    {
+        struct
+        {
+            float element[4][4];
+        } transformation;
+    };
+    const ConstantBuffer constantBufferData
+    {
+        {
+            aspectRatio * std::cos(angle), std::sin(angle), .0f, .0f,
+            aspectRatio * -std::sin(angle), std::cos(angle), .0f, .0f,
+            0.f, 0.f, 1.0f, .0f,
+            0.f, 0.f, 0.0f, 1.0f,
+        }
+    };
+    WRL::ComPtr<ID3D11Buffer> constantBuffer{};
+    D3D11_BUFFER_DESC constantBufferDesc
+    {
+        sizeof(constantBufferData),
+        D3D11_USAGE_DYNAMIC,
+        D3D11_BIND_CONSTANT_BUFFER,
+        D3D11_CPU_ACCESS_WRITE,
+        0,
+        // Stride unnecessary because this is not an index or vertex buffer
+        0,
+    };
+    D3D11_SUBRESOURCE_DATA constantBufferSubresource
+    {
+        &constantBufferData,
+    };
+    device->CreateBuffer(&constantBufferDesc, &constantBufferSubresource, &constantBuffer);
+
+    deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
     
     // Load shaders
     WRL::ComPtr<ID3DBlob> shaderBlob{};

@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -7,6 +8,8 @@ class Game
     HWND outputWindow;
     int outputWidth;
     int outputHeight;
+
+    std::chrono::steady_clock::time_point startTime{};
     
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain{};
     Microsoft::WRL::ComPtr<ID3D11Device> device{};
@@ -33,6 +36,6 @@ private:
 
     void ClearBuffer(float r, float g, float b);
 
-    void DrawTriangle();
+    void DrawTriangle(float angle);
     
 };
