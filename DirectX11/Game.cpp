@@ -5,12 +5,11 @@
 #include <iostream>
 #include "ErrorHandling.h"
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 #pragma comment(lib, "D3DCompiler.lib")
 
 extern void ExitGame() noexcept;
-
-using namespace DirectX;
 
 using namespace Microsoft;
 
@@ -74,6 +73,49 @@ void Game::Initialize(HWND window, int width, int height)
     
     GIO_THROW_IF_FAILED(device->CreateRenderTargetView(backBuffer, nullptr, &backBufferView));
     backBuffer->Release();
+
+    D3D11_DEPTH_STENCIL_DESC depthStencilDesc
+    {
+        true,
+        D3D11_DEPTH_WRITE_MASK_ALL,
+        D3D11_COMPARISON_LESS,
+        false,
+        0,
+        0,        
+    };
+    WRL::ComPtr<ID3D11DepthStencilState> depthStencilState{};
+    GIO_THROW_IF_FAILED(device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState))
+
+    deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 0);
+
+    WRL::ComPtr<ID3D11Texture2D> depthStencil{};
+    D3D11_TEXTURE2D_DESC depthDescription
+    {
+        static_cast<UINT>(outputWidth),
+        static_cast<UINT>(outputHeight),
+        1,
+        1,
+        DXGI_FORMAT_D32_FLOAT,
+        { 1, 0 },
+        D3D11_USAGE_DEFAULT,
+        D3D11_BIND_DEPTH_STENCIL
+    };
+    GIO_THROW_IF_FAILED(device->CreateTexture2D(&depthDescription, nullptr, &depthStencil))
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc
+    {
+        DXGI_FORMAT_D32_FLOAT,
+        D3D11_DSV_DIMENSION_TEXTURE2D
+    };
+    device->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, &depthStencilView);
+
+    deviceContext->OMSetRenderTargets(1, backBufferView.GetAddressOf(), depthStencilView.Get());
+}
+
+void Game::UpdateDimensions(int width, int height)
+{
+    outputWidth = width;
+    outputHeight = height;
 }
 
 void Game::Update()
@@ -82,7 +124,16 @@ void Game::Update()
     
     ClearBuffer(.7f,.9f,.7f);
 
-    DrawTriangle(timeSinceStart.count());
+    POINT cursorPos{};
+    GetCursorPos(&cursorPos);
+
+    std::tuple<float,float> halfDimensions{outputWidth/2.f, outputHeight/2.f};
+    float cursorX = cursorPos.x/ std::get<0>(halfDimensions) -1.f;
+    float cursorY = 1-(cursorPos.y/std::get<1>(halfDimensions) - 1.f);
+    
+    DrawTriangle(timeSinceStart.count(), cursorX, cursorY);
+    
+    DrawTriangle(timeSinceStart.count(), -cursorX, -cursorY);
     
     SwapBuffers();
 }
@@ -96,24 +147,28 @@ void Game::ClearBuffer(float r, float g, float b)
 {
     const float colors[] = { r,g,b };
     deviceContext->ClearRenderTargetView(backBufferView.Get(), colors);
+    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Game::DrawTriangle(float angle)
+void Game::DrawTriangle(float angle, float x, float y)
 {
     struct Vertex
     {
         float x{0.f};
         float y{0.f};
-        unsigned char r;
-        unsigned char g;
-        unsigned char b;
+        float z{0.f};
     };
 
     const Vertex vertices[] =
     {
-        {0.f, .5f, 255, 0, 0},
-        {.5f, -.5f, 0, 255, 0},
-        {-.5f, -.5f, 0, 0, 255},
+        {-1.f, -1.f, -1.f},
+        {1.f, -1.f, -1.f,},
+        {-1.f, 1.f, -1.f,},
+        {1.f, 1.f, -1.f, },
+        {-1.f, -1.f, 1.f,},
+        {1.f, -1.f, 1.f, },
+        {-1.f, 1.f, 1.f, },
+        {1.f, 1.f, 1.f, }
     };
 
     const UINT stride = sizeof(Vertex);
@@ -136,7 +191,12 @@ void Game::DrawTriangle(float angle)
 
     unsigned short indices[]
     {
-        0,1,2,
+        0,2,1, 2,3,1,
+        1,3,5, 3,7,5,
+        2,6,3, 3,6,7,
+        4,5,7, 4,7,6,
+        0,4,2, 2,4,6,
+        0,1,4, 1,5,4
     };
     WRL::ComPtr<ID3D11Buffer> indexBuffer{};
     D3D11_BUFFER_DESC indexBufferDesc
@@ -156,18 +216,17 @@ void Game::DrawTriangle(float angle)
     
     struct ConstantBuffer
     {
-        struct
-        {
-            float element[4][4];
-        } transformation;
+        DirectX::XMMATRIX transform{};
     };
     const ConstantBuffer constantBufferData
     {
         {
-            aspectRatio * std::cos(angle), std::sin(angle), .0f, .0f,
-            aspectRatio * -std::sin(angle), std::cos(angle), .0f, .0f,
-            0.f, 0.f, 1.0f, .0f,
-            0.f, 0.f, 0.0f, 1.0f,
+            XMMatrixTranspose(
+            DirectX::XMMatrixRotationZ(angle) *
+            DirectX::XMMatrixRotationX(angle) *
+            DirectX::XMMatrixTranslation(x, y, 4.f) *
+            DirectX::XMMatrixPerspectiveLH(1.0f, aspectRatio, 0.5f, 10.f)
+            )
         }
     };
     WRL::ComPtr<ID3D11Buffer> constantBuffer{};
@@ -189,6 +248,46 @@ void Game::DrawTriangle(float angle)
 
     deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
     
+    struct OtherConstantBuffer
+    {
+        struct
+        {
+            float r;
+            float g;
+            float b;
+            float a;
+        } face_colors[6];
+    };
+    const OtherConstantBuffer otherConstantBufferData
+    {
+        {
+            {1.f, 0.f, 1.f},
+            {1.f, 0.f, 0.f},
+            {0.f, 1.f, 0.f},
+            {0.f, 0.f, 1.f},
+            {1.f, 1.f, 0.f},
+            {0.f, 1.f, 1.f},
+        }
+    };
+    WRL::ComPtr<ID3D11Buffer> otherConstantBuffer{};
+    D3D11_BUFFER_DESC otherConstantBufferDesc
+    {
+        sizeof(otherConstantBufferData),
+        D3D11_USAGE_DYNAMIC,
+        D3D11_BIND_CONSTANT_BUFFER,
+        D3D11_CPU_ACCESS_WRITE,
+        0,
+        // Stride unnecessary because this is not an index or vertex buffer
+        0,
+    };
+    D3D11_SUBRESOURCE_DATA otherConstantBufferSubresource
+    {
+        &otherConstantBufferData,
+    };
+    device->CreateBuffer(&otherConstantBufferDesc, &otherConstantBufferSubresource, &otherConstantBuffer);
+
+    deviceContext->PSSetConstantBuffers(0, 1, otherConstantBuffer.GetAddressOf());
+    
     // Load shaders
     WRL::ComPtr<ID3DBlob> shaderBlob{};
     
@@ -206,13 +305,10 @@ void Game::DrawTriangle(float angle)
     WRL::ComPtr<ID3D11InputLayout> inputLayout{};
     const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]
     {
-        {"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, offsetof(Vertex, r), D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
     GIO_THROW_IF_FAILED(device->CreateInputLayout(inputElementDesc, static_cast<UINT>(std::size(inputElementDesc)), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &inputLayout));
     deviceContext->IASetInputLayout(inputLayout.Get());
-    
-    deviceContext->OMSetRenderTargets(1, backBufferView.GetAddressOf(), nullptr);
     
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     

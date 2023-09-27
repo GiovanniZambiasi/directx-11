@@ -15,7 +15,8 @@ class Game
     Microsoft::WRL::ComPtr<ID3D11Device> device{};
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext{};
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBufferView{};
-    
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView{};
+
 public:
     Game() noexcept;
 
@@ -27,6 +28,8 @@ public:
 
     void Initialize(HWND window, int width, int height);
 
+    void UpdateDimensions(int width, int height);
+    
     void Update();
     
     std::tuple<int, int> GetDefaultSize() const noexcept { return {1240, 720}; }
@@ -36,6 +39,6 @@ private:
 
     void ClearBuffer(float r, float g, float b);
 
-    void DrawTriangle(float angle);
+    void DrawTriangle(float angle, float x, float y);
     
 };
