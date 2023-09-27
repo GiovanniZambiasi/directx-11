@@ -4,6 +4,7 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include "ErrorHandling.h"
+#include "IndexBuffer.h"
 
 using namespace Microsoft;
 
@@ -170,29 +171,18 @@ void Graphics::DrawTriangle(float angle, float x, float y)
     GIO_THROW_IF_FAILED(device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer));
     deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
 
-    unsigned short indices[]
+    std::vector<USHORT> indices
     {
-        0,2,1, 2,3,1,
-        1,3,5, 3,7,5,
-        2,6,3, 3,6,7,
-        4,5,7, 4,7,6,
-        0,4,2, 2,4,6,
-        0,1,4, 1,5,4
+        0, 2, 1, 2, 3, 1,
+        1, 3, 5, 3, 7, 5,
+        2, 6, 3, 3, 6, 7,
+        4, 5, 7, 4, 7, 6,
+        0, 4, 2, 2, 4, 6,
+        0, 1, 4, 1, 5, 4
     };
-    WRL::ComPtr<ID3D11Buffer> indexBuffer{};
-    D3D11_BUFFER_DESC indexBufferDesc
-    {
-        sizeof(indices),
-        D3D11_USAGE_DEFAULT,
-        D3D11_BIND_INDEX_BUFFER,
-        0,
-        0,
-        sizeof(unsigned short),
-    };
-    D3D11_SUBRESOURCE_DATA indexBufferData{indices};
-    GIO_THROW_IF_FAILED(device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer));
-    deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-
+    IndexBuffer indexBuffer{*this, indices};
+    indexBuffer.Bind(*this);
+    
     float aspectRatio = outputHeight/static_cast<float>(outputWidth);
     
     struct ConstantBuffer

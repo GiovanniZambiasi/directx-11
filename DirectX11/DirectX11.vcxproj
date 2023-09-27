@@ -183,6 +183,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="graphics\Bindable.h" />
     <ClInclude Include="graphics\Graphics.h" />
+    <ClInclude Include="graphics\IndexBuffer.h" />
+    <ClInclude Include="graphics\VertexBuffer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
@@ -191,6 +193,8 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="graphics\Bindable.cpp" />
     <ClCompile Include="graphics\Graphics.cpp" />
+    <ClCompile Include="graphics\IndexBuffer.cpp" />
+    <ClCompile Include="graphics\VertexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

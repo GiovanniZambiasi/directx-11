@@ -16,6 +16,10 @@ public:
     Graphics(HWND window, int width, int height);
 
     void Update(float timeSinceStart, float deltaTime);
+
+    ID3D11Device* GetDevice() const { return device.Get(); }
+    
+    ID3D11DeviceContext* GetDeviceContext() const { return deviceContext.Get(); }
     
 private:
     void SwapBuffers();
