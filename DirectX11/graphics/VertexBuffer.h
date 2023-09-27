@@ -2,13 +2,33 @@
 #include <vector>
 
 #include "Bindable.h"
+#include "ErrorHandling.h"
+#include "Graphics.h"
 
 class VertexBuffer : public Bindable
 {
-    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer{};
+    Microsoft::WRL::ComPtr<ID3D11Buffer> buffer{};
+
+    UINT stride{};
     
 public:
-    VertexBuffer(Graphics& graphics, const std::vector<UINT>& indices);
+    template <typename TVertex>
+    VertexBuffer(Graphics& graphics, const std::vector<TVertex>& vertices)
+        : stride(sizeof(TVertex))
+    {
+        
+        D3D11_BUFFER_DESC desc
+        {
+            vertices.size() * sizeof(TVertex),
+            D3D11_USAGE_DEFAULT,
+            D3D11_BIND_VERTEX_BUFFER,
+            0,
+            0,
+            stride
+        };
+        D3D11_SUBRESOURCE_DATA data{vertices.data()};
+        GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, &data, &buffer))
+    }
     
     void Bind(Graphics& graphics) override;
 

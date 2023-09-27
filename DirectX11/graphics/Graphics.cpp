@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include "ErrorHandling.h"
 #include "IndexBuffer.h"
+#include "VertexBuffer.h"
 
 using namespace Microsoft;
 
@@ -141,7 +142,7 @@ void Graphics::DrawTriangle(float angle, float x, float y)
         float z{0.f};
     };
 
-    const Vertex vertices[] =
+    std::vector<Vertex>  vertices
     {
         {-1.f, -1.f, -1.f},
         {1.f, -1.f, -1.f,},
@@ -152,25 +153,10 @@ void Graphics::DrawTriangle(float angle, float x, float y)
         {-1.f, 1.f, 1.f, },
         {1.f, 1.f, 1.f, }
     };
-
-    const UINT stride = sizeof(Vertex);
-    const UINT offset = 0u;
-
-    // Create vertex buffer
-    WRL::ComPtr<ID3D11Buffer> vertexBuffer{};
-    D3D11_BUFFER_DESC vertexBufferDesc
-    {
-        sizeof(vertices),
-        D3D11_USAGE_DEFAULT,
-        D3D11_BIND_VERTEX_BUFFER,
-        0,
-        0,
-        stride
-    };
-    D3D11_SUBRESOURCE_DATA vertexBufferData{vertices};
-    GIO_THROW_IF_FAILED(device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer));
-    deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-
+    
+    VertexBuffer buffer{*this, vertices};
+    buffer.Bind(*this);
+    
     std::vector<USHORT> indices
     {
         0, 2, 1, 2, 3, 1,
