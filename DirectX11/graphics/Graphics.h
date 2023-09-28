@@ -1,10 +1,12 @@
 ﻿#pragma once
 
+struct GioColor;
+
 class Graphics
 {
     HWND outputWindow;
-    int outputWidth;
-    int outputHeight;
+    UINT outputWidth;
+    UINT outputHeight;
 
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain{};
     Microsoft::WRL::ComPtr<ID3D11Device> device{};
@@ -13,18 +15,17 @@ class Graphics
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView{};
     
 public:
-    Graphics(HWND window, int width, int height);
-
-    void Update(float timeSinceStart, float deltaTime);
+    Graphics(HWND window, UINT width, UINT height);
 
     ID3D11Device* GetDevice() const { return device.Get(); }
     
     ID3D11DeviceContext* GetDeviceContext() const { return deviceContext.Get(); }
-    
-private:
-    void SwapBuffers();
 
-    void ClearBuffer(float r, float g, float b);
+    std::tuple<UINT, UINT> GetOutputDimensions() const { return {outputWidth, outputHeight}; }
+    
+    void ClearBuffer(const GioColor& color);
+    
+    void SwapBuffers();
 
     void DrawTriangle(float angle, float x, float y);
     

@@ -11,14 +11,14 @@ using namespace Microsoft;
 
 #pragma comment(lib, "D3DCompiler.lib")
 
-Graphics::Graphics(HWND window, int width, int height)
+Graphics::Graphics(HWND window, UINT width, UINT height)
     : outputWindow(window), outputWidth(width), outputHeight(height)
 {
     DXGIInfoUtils::Init();
     
     outputWindow = window;
-    outputWidth = std::max(width, 1);
-    outputHeight = std::max(height, 1);
+    outputWidth = std::max(width, 1u);
+    outputHeight = std::max(height, 1u);
 
     DXGI_SWAP_CHAIN_DESC swapChainDescription
     {
@@ -103,34 +103,15 @@ Graphics::Graphics(HWND window, int width, int height)
     deviceContext->OMSetRenderTargets(1, backBufferView.GetAddressOf(), depthStencilView.Get());
 }
 
-void Graphics::Update(float timeSinceStart, float deltaTime)
+void Graphics::ClearBuffer(const GioColor& color)
 {
-    ClearBuffer(.7f,.9f,.7f);
-
-    POINT cursorPos{};
-    GetCursorPos(&cursorPos);
-
-    std::tuple<float,float> halfDimensions{outputWidth/2.f, outputHeight/2.f};
-    float cursorX = cursorPos.x/ std::get<0>(halfDimensions) -1.f;
-    float cursorY = 1-(cursorPos.y/std::get<1>(halfDimensions) - 1.f);
-    
-    DrawTriangle(timeSinceStart, cursorX, cursorY);
-    
-    DrawTriangle(timeSinceStart, -cursorX, -cursorY);
-    
-    SwapBuffers();
+    deviceContext->ClearRenderTargetView(backBufferView.Get(), reinterpret_cast<const FLOAT*>(&color));
+    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Graphics::SwapBuffers()
 {
     GIO_THROW_IF_FAILED(swapChain->Present(1, 0));
-}
-
-void Graphics::ClearBuffer(float r, float g, float b)
-{
-    const float colors[] = { r,g,b };
-    deviceContext->ClearRenderTargetView(backBufferView.Get(), colors);
-    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Graphics::DrawTriangle(float angle, float x, float y)
