@@ -13,7 +13,7 @@ protected:
     Microsoft::WRL::ComPtr<ID3DBlob> blob{};
     
 public:
-    Shader(Graphics& graphics, const wchar_t* fileName)
+    Shader(IRenderingContext& graphics, const wchar_t* fileName)
     {
         GIO_THROW_IF_FAILED(D3DReadFileToBlob(fileName, &blob));
     }
@@ -24,16 +24,16 @@ public:
 class VertexShader : public Shader<ID3D11VertexShader>
 {
 public:
-    VertexShader(Graphics& graphics, const wchar_t* fileName);
+    VertexShader(IRenderingContext& graphics, const wchar_t* fileName);
 
-    void Bind(Graphics& graphics) override;
+    void Bind(IRenderingContext& graphics) override;
 
 };
 
 class PixelShader : public Shader<ID3D11PixelShader>
 {
 public:
-    PixelShader(Graphics& graphics, const wchar_t* const fileName);
+    PixelShader(IRenderingContext& graphics, const wchar_t* const fileName);
 
-    void Bind(Graphics& graphics) override;
+    void Bind(IRenderingContext& graphics) override;
 };

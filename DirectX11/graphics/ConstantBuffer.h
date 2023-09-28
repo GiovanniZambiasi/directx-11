@@ -7,26 +7,25 @@ protected:
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer{};
     
 public:
-    ConstantBuffer(Graphics& graphics, const void* data, UINT dataWidth);
-    
+    ConstantBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth);
 };
 
 class PixelConstantBuffer : public ConstantBuffer
 {
 public:
-    PixelConstantBuffer(Graphics& graphics, const void* data, UINT dataWidth)
+    PixelConstantBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth)
         : ConstantBuffer(graphics, data, dataWidth)
     { }
 
-    void Bind(Graphics& graphics) override;
+    void Bind(IRenderingContext& graphics) override;
 };
 
 class VertexConstantBuffer : public ConstantBuffer
 {
 public:
-    VertexConstantBuffer(Graphics& graphics, const void*  data, UINT dataWidth)
+    VertexConstantBuffer(IRenderingContext& graphics, const void*  data, UINT dataWidth)
         : ConstantBuffer(graphics, data, dataWidth)
     {  }
 
-    void Bind(Graphics& graphics) override;
+    void Bind(IRenderingContext& graphics) override;
 };

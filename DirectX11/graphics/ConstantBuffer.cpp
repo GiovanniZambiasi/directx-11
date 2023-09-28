@@ -2,9 +2,9 @@
 #include "ConstantBuffer.h"
 
 #include "ErrorHandling.h"
-#include "Graphics.h"
+#include "IRenderingContext.h"
 
-ConstantBuffer::ConstantBuffer(Graphics& graphics, const void* data, UINT dataWidth)
+ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth)
 {
     D3D11_BUFFER_DESC desc
     {
@@ -23,12 +23,12 @@ ConstantBuffer::ConstantBuffer(Graphics& graphics, const void* data, UINT dataWi
     GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, &subresourceData, &buffer));
 }
 
-void PixelConstantBuffer::Bind(Graphics& graphics)
+void PixelConstantBuffer::Bind(IRenderingContext& graphics)
 {
     graphics.GetDeviceContext()->PSSetConstantBuffers(0u, 1u, buffer.GetAddressOf());
 }
 
-void VertexConstantBuffer::Bind(Graphics& graphics)
+void VertexConstantBuffer::Bind(IRenderingContext& graphics)
 {
     graphics.GetDeviceContext()->VSSetConstantBuffers(0u, 1u, buffer.GetAddressOf());
 }

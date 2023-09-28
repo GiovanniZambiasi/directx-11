@@ -188,6 +188,7 @@
     <ClInclude Include="graphics\Graphics.h" />
     <ClInclude Include="graphics\IndexBuffer.h" />
     <ClInclude Include="graphics\InputLayout.h" />
+    <ClInclude Include="graphics\IRenderingContext.h" />
     <ClInclude Include="graphics\Shader.h" />
     <ClInclude Include="graphics\VertexBuffer.h" />
     <ClInclude Include="pch.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="graphics\Graphics.cpp" />
     <ClCompile Include="graphics\IndexBuffer.cpp" />
     <ClCompile Include="graphics\InputLayout.cpp" />
+    <ClCompile Include="graphics\IRenderingContext.cpp" />
     <ClCompile Include="graphics\Shader.cpp" />
     <ClCompile Include="graphics\VertexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />

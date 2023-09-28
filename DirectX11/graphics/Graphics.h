@@ -1,8 +1,9 @@
 ﻿#pragma once
+#include "IRenderingContext.h"
 
 struct GioColor;
 
-class Graphics
+class Graphics : public IRenderingContext
 {
     HWND outputWindow;
     UINT outputWidth;
@@ -17,9 +18,9 @@ class Graphics
 public:
     Graphics(HWND window, UINT width, UINT height);
 
-    ID3D11Device* GetDevice() const { return device.Get(); }
+    ID3D11Device* GetDevice() const  override { return device.Get(); }
     
-    ID3D11DeviceContext* GetDeviceContext() const { return deviceContext.Get(); }
+    ID3D11DeviceContext* GetDeviceContext() const override  { return deviceContext.Get(); }
 
     std::tuple<UINT, UINT> GetOutputDimensions() const { return {outputWidth, outputHeight}; }
 

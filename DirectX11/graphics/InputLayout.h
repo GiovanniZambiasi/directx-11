@@ -8,7 +8,7 @@ class InputLayout : public IBindable
     Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout{};
     
 public:
-    InputLayout(Graphics& graphics, const std::vector<D3D11_INPUT_ELEMENT_DESC>& elements, ID3DBlob* blob);
+    InputLayout(IRenderingContext& graphics, const std::vector<D3D11_INPUT_ELEMENT_DESC>& elements, ID3DBlob* blob);
 
-    void Bind(Graphics& graphics) override;
+    void Bind(IRenderingContext& graphics) override;
 };

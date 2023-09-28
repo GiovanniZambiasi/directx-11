@@ -1,16 +1,12 @@
 ﻿#pragma once
 
-class Graphics;
+class IRenderingContext;
 
 class IBindable
 {
 public:
     virtual ~IBindable() = default;
 
-    virtual void Bind(Graphics& graphics) = 0;
-    
-protected:
-    
-    
+    virtual void Bind(IRenderingContext& graphics) = 0;
     
 };

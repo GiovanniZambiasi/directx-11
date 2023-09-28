@@ -8,7 +8,7 @@ class IndexBuffer : public IBindable
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer{};
     
 public:
-    IndexBuffer(Graphics& graphics, const std::vector<USHORT>& indices);
+    IndexBuffer(IRenderingContext& graphics, const std::vector<USHORT>& indices);
     
-    void Bind(Graphics& graphics) override;
+    void Bind(IRenderingContext& graphics) override;
 };

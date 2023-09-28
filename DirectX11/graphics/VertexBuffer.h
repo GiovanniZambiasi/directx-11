@@ -3,7 +3,7 @@
 
 #include "IBindable.h"
 #include "ErrorHandling.h"
-#include "Graphics.h"
+#include "IRenderingContext.h"
 
 class VertexBuffer : public IBindable
 {
@@ -13,7 +13,7 @@ class VertexBuffer : public IBindable
     
 public:
     template <typename TVertex>
-    VertexBuffer(Graphics& graphics, const std::vector<TVertex>& vertices)
+    VertexBuffer(IRenderingContext& graphics, const std::vector<TVertex>& vertices)
         : stride(sizeof(TVertex))
     {
         
@@ -30,7 +30,7 @@ public:
         GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, &data, &buffer))
     }
     
-    void Bind(Graphics& graphics) override;
+    void Bind(IRenderingContext& graphics) override;
 
     
 };
