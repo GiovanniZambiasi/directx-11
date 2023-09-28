@@ -183,6 +183,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GioColor.h" />
     <ClInclude Include="GioVertex.h" />
+    <ClInclude Include="graphics\ConstantBuffer.h" />
     <ClInclude Include="graphics\IBindable.h" />
     <ClInclude Include="graphics\Graphics.h" />
     <ClInclude Include="graphics\IndexBuffer.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GioColor.cpp" />
     <ClCompile Include="GioVertex.cpp" />
+    <ClCompile Include="graphics\ConstantBuffer.cpp" />
     <ClCompile Include="graphics\IBindable.cpp" />
     <ClCompile Include="graphics\Graphics.cpp" />
     <ClCompile Include="graphics\IndexBuffer.cpp" />

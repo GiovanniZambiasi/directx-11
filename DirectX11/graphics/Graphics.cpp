@@ -3,6 +3,8 @@
 
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+
+#include "ConstantBuffer.h"
 #include "ErrorHandling.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
@@ -135,7 +137,6 @@ void Graphics::DrawTriangle(float angle, float x, float y)
         {-1.f, 1.f, 1.f, },
         {1.f, 1.f, 1.f, }
     };
-    
     VertexBuffer buffer{*this, vertices};
     buffer.Bind(*this);
     
@@ -168,24 +169,8 @@ void Graphics::DrawTriangle(float angle, float x, float y)
             )
         }
     };
-    WRL::ComPtr<ID3D11Buffer> constantBuffer{};
-    D3D11_BUFFER_DESC constantBufferDesc
-    {
-        sizeof(constantBufferData),
-        D3D11_USAGE_DYNAMIC,
-        D3D11_BIND_CONSTANT_BUFFER,
-        D3D11_CPU_ACCESS_WRITE,
-        0,
-        // Stride unnecessary because this is not an index or vertex buffer
-        0,
-    };
-    D3D11_SUBRESOURCE_DATA constantBufferSubresource
-    {
-        &constantBufferData,
-    };
-    device->CreateBuffer(&constantBufferDesc, &constantBufferSubresource, &constantBuffer);
-
-    deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
+    VertexConstantBuffer transformationBuffer{*this, &constantBufferData, sizeof(constantBufferData)};
+    transformationBuffer.Bind(*this);
     
     struct OtherConstantBuffer
     {
@@ -208,24 +193,8 @@ void Graphics::DrawTriangle(float angle, float x, float y)
             {0.f, 1.f, 1.f},
         }
     };
-    WRL::ComPtr<ID3D11Buffer> otherConstantBuffer{};
-    D3D11_BUFFER_DESC otherConstantBufferDesc
-    {
-        sizeof(otherConstantBufferData),
-        D3D11_USAGE_DYNAMIC,
-        D3D11_BIND_CONSTANT_BUFFER,
-        D3D11_CPU_ACCESS_WRITE,
-        0,
-        // Stride unnecessary because this is not an index or vertex buffer
-        0,
-    };
-    D3D11_SUBRESOURCE_DATA otherConstantBufferSubresource
-    {
-        &otherConstantBufferData,
-    };
-    device->CreateBuffer(&otherConstantBufferDesc, &otherConstantBufferSubresource, &otherConstantBuffer);
-
-    deviceContext->PSSetConstantBuffers(0, 1, otherConstantBuffer.GetAddressOf());
+    PixelConstantBuffer faceColorsBuffer{*this, &otherConstantBufferData, sizeof(otherConstantBufferData)};
+    faceColorsBuffer.Bind(*this);
     
     // Load shaders
     WRL::ComPtr<ID3DBlob> shaderBlob{};
