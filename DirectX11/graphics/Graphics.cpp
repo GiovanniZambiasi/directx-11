@@ -8,6 +8,7 @@
 #include "ErrorHandling.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
+#include "Shader.h"
 #include "VertexBuffer.h"
 
 using namespace Microsoft;
@@ -196,24 +197,17 @@ void Graphics::DrawTriangle(float angle, float x, float y)
     PixelConstantBuffer faceColorsBuffer{*this, &otherConstantBufferData, sizeof(otherConstantBufferData)};
     faceColorsBuffer.Bind(*this);
     
-    // Load shaders
-    WRL::ComPtr<ID3DBlob> shaderBlob{};
-    
-    GIO_THROW_IF_FAILED(D3DReadFileToBlob(L"PixelShader.cso", &shaderBlob));
-    WRL::ComPtr<ID3D11PixelShader> pixelShader{};
-    GIO_THROW_IF_FAILED(device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader));
-    deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
-    
-    GIO_THROW_IF_FAILED(D3DReadFileToBlob(L"VertexShader.cso", &shaderBlob));
-    WRL::ComPtr<ID3D11VertexShader> vertexShader{};
-    GIO_THROW_IF_FAILED(device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader));
-    deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
+    PixelShader pixelShader{*this, L"PixelShader.cso"};
+    pixelShader.Bind(*this);
+
+    VertexShader vertexShader{*this, L"VertexShader.cso"};
+    vertexShader.Bind(*this);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
     {
         {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
-    InputLayout inputLayout{*this, inputElementDesc, shaderBlob.Get()};
+    InputLayout inputLayout{*this, inputElementDesc, vertexShader.GetBlob()};
     inputLayout.Bind(*this);
     
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
