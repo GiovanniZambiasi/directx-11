@@ -183,9 +183,10 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GioColor.h" />
     <ClInclude Include="GioVertex.h" />
-    <ClInclude Include="graphics\Bindable.h" />
+    <ClInclude Include="graphics\IBindable.h" />
     <ClInclude Include="graphics\Graphics.h" />
     <ClInclude Include="graphics\IndexBuffer.h" />
+    <ClInclude Include="graphics\InputLayout.h" />
     <ClInclude Include="graphics\VertexBuffer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
@@ -195,9 +196,10 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GioColor.cpp" />
     <ClCompile Include="GioVertex.cpp" />
-    <ClCompile Include="graphics\Bindable.cpp" />
+    <ClCompile Include="graphics\IBindable.cpp" />
     <ClCompile Include="graphics\Graphics.cpp" />
     <ClCompile Include="graphics\IndexBuffer.cpp" />
+    <ClCompile Include="graphics\InputLayout.cpp" />
     <ClCompile Include="graphics\VertexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">

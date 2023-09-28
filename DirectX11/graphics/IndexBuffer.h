@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <vector>
 
-#include "Bindable.h"
+#include "IBindable.h"
 
-class IndexBuffer : public Bindable
+class IndexBuffer : public IBindable
 {
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer{};
     

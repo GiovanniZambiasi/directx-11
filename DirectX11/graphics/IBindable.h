@@ -2,10 +2,10 @@
 
 class Graphics;
 
-class Bindable
+class IBindable
 {
 public:
-    virtual ~Bindable() = default;
+    virtual ~IBindable() = default;
 
     virtual void Bind(Graphics& graphics) = 0;
     

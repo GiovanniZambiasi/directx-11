@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include "ErrorHandling.h"
 #include "IndexBuffer.h"
+#include "InputLayout.h"
 #include "VertexBuffer.h"
 
 using namespace Microsoft;
@@ -150,7 +151,7 @@ void Graphics::DrawTriangle(float angle, float x, float y)
     IndexBuffer indexBuffer{*this, indices};
     indexBuffer.Bind(*this);
     
-    float aspectRatio = outputHeight/static_cast<float>(outputWidth);
+    FLOAT aspectRatio = GetAspectRatio();
     
     struct ConstantBuffer
     {
@@ -238,15 +239,13 @@ void Graphics::DrawTriangle(float angle, float x, float y)
     WRL::ComPtr<ID3D11VertexShader> vertexShader{};
     GIO_THROW_IF_FAILED(device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader));
     deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
-    
-    // Create input layout
-    WRL::ComPtr<ID3D11InputLayout> inputLayout{};
-    const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]
+
+    std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
     {
         {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
-    GIO_THROW_IF_FAILED(device->CreateInputLayout(inputElementDesc, static_cast<UINT>(std::size(inputElementDesc)), shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &inputLayout));
-    deviceContext->IASetInputLayout(inputLayout.Get());
+    InputLayout inputLayout{*this, inputElementDesc, shaderBlob.Get()};
+    inputLayout.Bind(*this);
     
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     

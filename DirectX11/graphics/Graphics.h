@@ -22,6 +22,8 @@ public:
     ID3D11DeviceContext* GetDeviceContext() const { return deviceContext.Get(); }
 
     std::tuple<UINT, UINT> GetOutputDimensions() const { return {outputWidth, outputHeight}; }
+
+    FLOAT GetAspectRatio() const { return static_cast<FLOAT>(outputHeight)/static_cast<FLOAT>(outputWidth); }
     
     void ClearBuffer(const GioColor& color);
     

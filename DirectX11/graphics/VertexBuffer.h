@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include <vector>
 
-#include "Bindable.h"
+#include "IBindable.h"
 #include "ErrorHandling.h"
 #include "Graphics.h"
 
-class VertexBuffer : public Bindable
+class VertexBuffer : public IBindable
 {
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer{};
 

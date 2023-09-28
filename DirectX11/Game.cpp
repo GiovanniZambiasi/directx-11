@@ -28,7 +28,7 @@ void Game::Update()
     POINT cursorPos{};
     GetCursorPos(&cursorPos);
 
-    graphics->ClearBuffer({.9f, .9f, 1.f});
+    graphics->ClearBuffer({.7f, .9f, 1.f});
     
     std::tuple<UINT, UINT> outputDimensions = graphics->GetOutputDimensions();
     std::tuple<float,float> halfDimensions{std::get<0>(outputDimensions)/2.f, std::get<1>(outputDimensions)/2.f};
