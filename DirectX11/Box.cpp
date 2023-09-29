@@ -58,7 +58,7 @@ Box::Box(IRenderingContext& graphics, const GioVector& extents, const GioTransfo
                 {0.f, 1.f, 1.f},
             }
     };
-    auto faceColorsBuffer = std::make_shared<PixelConstantBuffer>(graphics, faceColors.data(), faceColors.size() * sizeof(GioColor));
+    auto faceColorsBuffer = std::make_shared<PixelConstantBuffer>(graphics, faceColors.data(), static_cast<UINT>(faceColors.size() * sizeof(GioColor)));
     drawable.AddBinding(faceColorsBuffer);
 
     RenderingSharedResources& sharedResources = graphics.GetSharedResources();

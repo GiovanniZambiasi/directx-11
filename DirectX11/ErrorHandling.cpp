@@ -53,7 +53,7 @@ void DXGIInfoUtils::Init()
 
 DXGIInfoUtils* DXGIInfoUtils::Get()
 {
-    assert(instance, "DXGIInfoManager must be initialized before use!");
+    assert(instance);
     return instance;
 }
 

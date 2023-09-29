@@ -38,3 +38,7 @@ Win64/
 # IDE Specific files
 .idea/
 .vs/
+
+# Compilation files
+bin/
+int/

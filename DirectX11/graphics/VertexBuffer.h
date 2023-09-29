@@ -19,7 +19,7 @@ public:
         
         D3D11_BUFFER_DESC desc
         {
-            vertices.size() * sizeof(TVertex),
+            static_cast<UINT>(vertices.size() * sizeof(TVertex)),
             D3D11_USAGE_DEFAULT,
             D3D11_BIND_VERTEX_BUFFER,
             0,
