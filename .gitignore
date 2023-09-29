@@ -42,3 +42,6 @@ Win64/
 # Compilation files
 bin/
 int/
+
+#Nuget packages
+packages/
