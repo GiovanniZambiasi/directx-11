@@ -19,15 +19,15 @@ Game::Game() noexcept
     startTime = std::chrono::steady_clock::now();
 }
 
-void Game::Initialize(HWND window, int width, int height)
+void Game::Initialize(HWND window, int width, int height, int tickRate)
 {
     graphics = std::make_unique<Graphics>(window, width, height);
     graphics->Initialize();
     
     box = std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{0.f, 0.f, 5.f}, {0.f}});
-    box->GetDrawable().AddBinding(graphics->GetStandardVertexShader());
-    box->GetDrawable().AddBinding(graphics->GetStandardPixelShader());
-    box->GetDrawable().AddBinding(graphics->GetStandardInputLayout());
+    box2 = std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{0.f, 0.f, 5.f}, {0.f}});
+    
+    minDeltaTime = 1.f/tickRate;
 }
 
 void Game::Update()
@@ -36,6 +36,11 @@ void Game::Update()
     std::chrono::duration<float> timeSinceStart = timeNow - startTime;
     std::chrono::duration<float> deltaTime = timeNow - previousFrameTime;
 
+    if(deltaTime.count() < minDeltaTime)
+    {
+        return;
+    }
+    
     POINT cursorPos{};
     GetCursorPos(&cursorPos);
 
@@ -48,8 +53,13 @@ void Game::Update()
 
     auto& boxTransform = box->GetTransform();
     boxTransform.position = GioVector{cursorX, cursorY, boxTransform.position.z};
-    boxTransform.rotation = GioVector{boxTransform.rotation.x, timeSinceStart.count(), timeSinceStart.count()};
+    boxTransform.rotation += GioVector{0.f, deltaTime.count(), deltaTime.count()};
     box->Draw(*graphics);
+
+    auto& boxTransform2 = box2->GetTransform();
+    boxTransform2.position = GioVector{-cursorX, -cursorY, boxTransform2.position.z};
+    boxTransform2.rotation += GioVector{0.f, deltaTime.count(), deltaTime.count()};
+    box2->Draw(*graphics);
 
     graphics->SwapBuffers();
     

@@ -6,8 +6,11 @@
 #include "GioColor.h"
 #include "GioVector.h"
 #include "graphics/IndexBuffer.h"
+#include "graphics/RenderingSharedResources.h"
 #include "graphics/TransformationBuffer.h"
 #include "graphics/VertexBuffer.h"
+#include "graphics/Shader.h"
+#include "graphics/InputLayout.h"
 
 Box::Box(IRenderingContext& graphics, const GioVector& extents)
     :Box(graphics, extents, GioTransform{})
@@ -60,6 +63,11 @@ Box::Box(IRenderingContext& graphics, const GioVector& extents, const GioTransfo
     };
     auto faceColorsBuffer = std::make_shared<PixelConstantBuffer>(graphics, faceColors.data(), faceColors.size() * sizeof(GioColor));
     drawable.AddBinding(faceColorsBuffer);
+
+    RenderingSharedResources& sharedResources = graphics.GetSharedResources();
+    drawable.AddBinding(sharedResources.standardVertexShader);
+    drawable.AddBinding(sharedResources.standardPixelShader);
+    drawable.AddBinding(sharedResources.standardInputLayout);
 }
 
 void Box::Draw(IRenderingContext& graphics)

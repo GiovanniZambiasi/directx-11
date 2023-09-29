@@ -14,6 +14,10 @@ class Game
 
     std::shared_ptr<Box> box;
     
+    std::shared_ptr<Box> box2;
+
+    FLOAT minDeltaTime{};
+    
 public:
     Game() noexcept;
 
@@ -23,7 +27,7 @@ public:
     Game(Game&&) = delete;
     Game& operator= (Game&&) = delete;
 
-    void Initialize(HWND window, int width, int height);
+    void Initialize(HWND window, int width, int height, int tickRate = 60);
 
     void Update();
     

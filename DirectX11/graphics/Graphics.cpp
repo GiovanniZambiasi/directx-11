@@ -4,14 +4,10 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
-#include "Box.h"
-#include "ConstantBuffer.h"
 #include "ErrorHandling.h"
-#include "GioVector.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
 #include "Shader.h"
-#include "VertexBuffer.h"
 
 using namespace Microsoft;
 
@@ -111,13 +107,13 @@ void Graphics::Initialize()
 
     deviceContext->OMSetRenderTargets(1, backBufferView.GetAddressOf(), depthStencilView.Get());
 
-    standardPixelShader = std::make_shared<PixelShader>(*this, L"PixelShader.cso");
-    standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
+    sharedResources.standardPixelShader = std::make_shared<PixelShader>(*this, L"PixelShader.cso");
+    sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
     {
             {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
-    standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, standardVertexShader->GetBlob());
+    sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
 }
 
 DirectX::XMMATRIX Graphics::GetProjectionMatrix() const

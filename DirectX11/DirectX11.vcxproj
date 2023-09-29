@@ -192,6 +192,7 @@
     <ClInclude Include="graphics\IndexBuffer.h" />
     <ClInclude Include="graphics\InputLayout.h" />
     <ClInclude Include="graphics\IRenderingContext.h" />
+    <ClInclude Include="graphics\RenderingSharedResources.h" />
     <ClInclude Include="graphics\Shader.h" />
     <ClInclude Include="graphics\TransformationBuffer.h" />
     <ClInclude Include="graphics\TransformUtils.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="graphics\IndexBuffer.cpp" />
     <ClCompile Include="graphics\InputLayout.cpp" />
     <ClCompile Include="graphics\IRenderingContext.cpp" />
+    <ClCompile Include="graphics\RenderingSharedResources.cpp" />
     <ClCompile Include="graphics\Shader.cpp" />
     <ClCompile Include="graphics\TransformationBuffer.cpp" />
     <ClCompile Include="graphics\TransformUtils.cpp" />

@@ -16,5 +16,9 @@ struct GioVector
         : x(inX), y(inY), z(inZ)
     {}
 
-    GioVector operator/(float factor) const; 
+    GioVector operator/(float factor) const;
+
+    GioVector operator+(const GioVector& other) const;
+
+    GioVector& operator+=(const GioVector& other);
 };
