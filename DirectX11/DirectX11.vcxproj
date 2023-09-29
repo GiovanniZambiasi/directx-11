@@ -179,33 +179,43 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Box.h" />
     <ClInclude Include="ErrorHandling.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GioColor.h" />
-    <ClInclude Include="GioVertex.h" />
+    <ClInclude Include="GioTransform.h" />
+    <ClInclude Include="GioVector.h" />
     <ClInclude Include="graphics\ConstantBuffer.h" />
+    <ClInclude Include="graphics\Drawable.h" />
     <ClInclude Include="graphics\IBindable.h" />
     <ClInclude Include="graphics\Graphics.h" />
     <ClInclude Include="graphics\IndexBuffer.h" />
     <ClInclude Include="graphics\InputLayout.h" />
     <ClInclude Include="graphics\IRenderingContext.h" />
     <ClInclude Include="graphics\Shader.h" />
+    <ClInclude Include="graphics\TransformationBuffer.h" />
+    <ClInclude Include="graphics\TransformUtils.h" />
     <ClInclude Include="graphics\VertexBuffer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="ErrorHandling.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GioColor.cpp" />
-    <ClCompile Include="GioVertex.cpp" />
+    <ClCompile Include="GioTransform.cpp" />
+    <ClCompile Include="GioVector.cpp" />
     <ClCompile Include="graphics\ConstantBuffer.cpp" />
+    <ClCompile Include="graphics\Drawable.cpp" />
     <ClCompile Include="graphics\IBindable.cpp" />
     <ClCompile Include="graphics\Graphics.cpp" />
     <ClCompile Include="graphics\IndexBuffer.cpp" />
     <ClCompile Include="graphics\InputLayout.cpp" />
     <ClCompile Include="graphics\IRenderingContext.cpp" />
     <ClCompile Include="graphics\Shader.cpp" />
+    <ClCompile Include="graphics\TransformationBuffer.cpp" />
+    <ClCompile Include="graphics\TransformUtils.cpp" />
     <ClCompile Include="graphics\VertexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
@@ -250,6 +260,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

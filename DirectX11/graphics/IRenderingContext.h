@@ -8,4 +8,7 @@ public:
     virtual ID3D11Device* GetDevice() const = 0;
     
     virtual ID3D11DeviceContext* GetDeviceContext() const = 0;
+
+    virtual DirectX::XMMATRIX GetProjectionMatrix() const = 0;
+
 };

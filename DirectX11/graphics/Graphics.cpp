@@ -4,8 +4,10 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
+#include "Box.h"
 #include "ConstantBuffer.h"
 #include "ErrorHandling.h"
+#include "GioVector.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
 #include "Shader.h"
@@ -23,7 +25,10 @@ Graphics::Graphics(HWND window, UINT width, UINT height)
     outputWindow = window;
     outputWidth = std::max(width, 1u);
     outputHeight = std::max(height, 1u);
+}
 
+void Graphics::Initialize()
+{
     DXGI_SWAP_CHAIN_DESC swapChainDescription
     {
         // A width/height of 0 means "use whatever dimensions the window has"
@@ -42,7 +47,7 @@ Graphics::Graphics(HWND window, UINT width, UINT height)
         DXGI_USAGE_RENDER_TARGET_OUTPUT,
         // 1 Here means 1 front + 1 back buffers
         1,
-        window,
+        outputWindow,
         true,
         DXGI_SWAP_EFFECT_DISCARD,
         0
@@ -105,113 +110,26 @@ Graphics::Graphics(HWND window, UINT width, UINT height)
     device->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, &depthStencilView);
 
     deviceContext->OMSetRenderTargets(1, backBufferView.GetAddressOf(), depthStencilView.Get());
+
+    standardPixelShader = std::make_shared<PixelShader>(*this, L"PixelShader.cso");
+    standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
+    std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
+    {
+            {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+    };
+    standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, standardVertexShader->GetBlob());
+}
+
+DirectX::XMMATRIX Graphics::GetProjectionMatrix() const
+{
+    return DirectX::XMMatrixPerspectiveLH(1.f, GetAspectRatio(), .5f, 10.f);
 }
 
 void Graphics::ClearBuffer(const GioColor& color)
 {
     deviceContext->ClearRenderTargetView(backBufferView.Get(), reinterpret_cast<const FLOAT*>(&color));
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
 
-void Graphics::SwapBuffers()
-{
-    GIO_THROW_IF_FAILED(swapChain->Present(1, 0));
-}
-
-void Graphics::DrawTriangle(float angle, float x, float y)
-{
-    struct Vertex
-    {
-        float x{0.f};
-        float y{0.f};
-        float z{0.f};
-    };
-
-    std::vector<Vertex>  vertices
-    {
-        {-1.f, -1.f, -1.f},
-        {1.f, -1.f, -1.f,},
-        {-1.f, 1.f, -1.f,},
-        {1.f, 1.f, -1.f, },
-        {-1.f, -1.f, 1.f,},
-        {1.f, -1.f, 1.f, },
-        {-1.f, 1.f, 1.f, },
-        {1.f, 1.f, 1.f, }
-    };
-    VertexBuffer buffer{*this, vertices};
-    buffer.Bind(*this);
-    
-    std::vector<USHORT> indices
-    {
-        0, 2, 1, 2, 3, 1,
-        1, 3, 5, 3, 7, 5,
-        2, 6, 3, 3, 6, 7,
-        4, 5, 7, 4, 7, 6,
-        0, 4, 2, 2, 4, 6,
-        0, 1, 4, 1, 5, 4
-    };
-    IndexBuffer indexBuffer{*this, indices};
-    indexBuffer.Bind(*this);
-    
-    FLOAT aspectRatio = GetAspectRatio();
-    
-    struct ConstantBuffer
-    {
-        DirectX::XMMATRIX transform{};
-    };
-    const ConstantBuffer constantBufferData
-    {
-        {
-            XMMatrixTranspose(
-            DirectX::XMMatrixRotationZ(angle) *
-            DirectX::XMMatrixRotationX(angle) *
-            DirectX::XMMatrixTranslation(x, y, 4.f) *
-            DirectX::XMMatrixPerspectiveLH(1.0f, aspectRatio, 0.5f, 10.f)
-            )
-        }
-    };
-    VertexConstantBuffer transformationBuffer{*this, &constantBufferData, sizeof(constantBufferData)};
-    transformationBuffer.Bind(*this);
-    
-    struct OtherConstantBuffer
-    {
-        struct
-        {
-            float r;
-            float g;
-            float b;
-            float a;
-        } face_colors[6];
-    };
-    const OtherConstantBuffer otherConstantBufferData
-    {
-        {
-            {1.f, 0.f, 1.f},
-            {1.f, 0.f, 0.f},
-            {0.f, 1.f, 0.f},
-            {0.f, 0.f, 1.f},
-            {1.f, 1.f, 0.f},
-            {0.f, 1.f, 1.f},
-        }
-    };
-    PixelConstantBuffer faceColorsBuffer{*this, &otherConstantBufferData, sizeof(otherConstantBufferData)};
-    faceColorsBuffer.Bind(*this);
-    
-    PixelShader pixelShader{*this, L"PixelShader.cso"};
-    pixelShader.Bind(*this);
-
-    VertexShader vertexShader{*this, L"VertexShader.cso"};
-    vertexShader.Bind(*this);
-
-    std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
-    {
-        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-    };
-    InputLayout inputLayout{*this, inputElementDesc, vertexShader.GetBlob()};
-    inputLayout.Bind(*this);
-    
-    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    
     D3D11_VIEWPORT viewport
     {
         0,
@@ -222,6 +140,10 @@ void Graphics::DrawTriangle(float angle, float x, float y)
         1.f
     };
     deviceContext->RSSetViewports(1, &viewport);
-    
-    deviceContext->DrawIndexed(static_cast<UINT>(std::size(indices)), 0, 0);
 }
+
+void Graphics::SwapBuffers()
+{
+    GIO_THROW_IF_FAILED(swapChain->Present(1, 0));
+}
+

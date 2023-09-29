@@ -3,7 +3,12 @@
 
 #include <chrono>
 #include <iostream>
+
+#include "graphics/Shader.h"
+#include "graphics/InputLayout.h"
+#include "Box.h"
 #include "GioColor.h"
+#include "GioVector.h"
 
 extern void ExitGame() noexcept;
 
@@ -17,6 +22,12 @@ Game::Game() noexcept
 void Game::Initialize(HWND window, int width, int height)
 {
     graphics = std::make_unique<Graphics>(window, width, height);
+    graphics->Initialize();
+    
+    box = std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{0.f, 0.f, 5.f}, {0.f}});
+    box->GetDrawable().AddBinding(graphics->GetStandardVertexShader());
+    box->GetDrawable().AddBinding(graphics->GetStandardPixelShader());
+    box->GetDrawable().AddBinding(graphics->GetStandardInputLayout());
 }
 
 void Game::Update()
@@ -34,11 +45,12 @@ void Game::Update()
     std::tuple<float,float> halfDimensions{std::get<0>(outputDimensions)/2.f, std::get<1>(outputDimensions)/2.f};
     float cursorX = cursorPos.x/ std::get<0>(halfDimensions) -1.f;
     float cursorY = 1-(cursorPos.y/std::get<1>(halfDimensions) - 1.f);
-    
-    graphics->DrawTriangle(timeSinceStart.count(), cursorX, cursorY);
-    
-    graphics->DrawTriangle(timeSinceStart.count(), -cursorX, -cursorY);
-    
+
+    auto& boxTransform = box->GetTransform();
+    boxTransform.position = GioVector{cursorX, cursorY, boxTransform.position.z};
+    boxTransform.rotation = GioVector{boxTransform.rotation.x, timeSinceStart.count(), timeSinceStart.count()};
+    box->Draw(*graphics);
+
     graphics->SwapBuffers();
     
     previousFrameTime = std::chrono::steady_clock::now();

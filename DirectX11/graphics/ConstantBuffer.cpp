@@ -23,6 +23,14 @@ ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, const void* data, UI
     GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, &subresourceData, &buffer));
 }
 
+void ConstantBuffer::Update(IRenderingContext& graphics, const void* data, UINT dataWidth)
+{
+    D3D11_MAPPED_SUBRESOURCE subresource{};
+    GIO_THROW_IF_FAILED(graphics.GetDeviceContext()->Map(buffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &subresource))
+    memcpy(subresource.pData, data, dataWidth);
+    graphics.GetDeviceContext()->Unmap(buffer.Get(), 0u);
+}
+
 void PixelConstantBuffer::Bind(IRenderingContext& graphics)
 {
     graphics.GetDeviceContext()->PSSetConstantBuffers(0u, 1u, buffer.GetAddressOf());

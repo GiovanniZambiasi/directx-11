@@ -8,6 +8,8 @@ protected:
     
 public:
     ConstantBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth);
+
+    void Update(IRenderingContext& graphics, const void* data, UINT dataWidth);
 };
 
 class PixelConstantBuffer : public ConstantBuffer

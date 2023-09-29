@@ -5,6 +5,7 @@
 #include "IRenderingContext.h"
 
 IndexBuffer::IndexBuffer(IRenderingContext& graphics, const std::vector<USHORT>& indices)
+    : indexCount(indices.size())
 {
     D3D11_BUFFER_DESC desc
         {

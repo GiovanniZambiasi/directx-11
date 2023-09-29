@@ -11,6 +11,8 @@ class Game
     std::chrono::steady_clock::time_point previousFrameTime{};
 
     std::unique_ptr<Graphics> graphics{};
+
+    std::shared_ptr<Box> box;
     
 public:
     Game() noexcept;
