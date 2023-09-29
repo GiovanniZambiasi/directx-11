@@ -8,6 +8,7 @@
 #include "IndexBuffer.h"
 #include "InputLayout.h"
 #include "Shader.h"
+#include "TransformationBuffer.h"
 
 using namespace Microsoft;
 
@@ -107,13 +108,7 @@ void Graphics::Initialize()
 
     deviceContext->OMSetRenderTargets(1, backBufferView.GetAddressOf(), depthStencilView.Get());
 
-    sharedResources.standardPixelShader = std::make_shared<PixelShader>(*this, L"PixelShader.cso");
-    sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
-    std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
-    {
-            {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-    };
-    sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
+    SetupSharedResources();
 }
 
 DirectX::XMMATRIX Graphics::GetProjectionMatrix() const
@@ -141,5 +136,17 @@ void Graphics::ClearBuffer(const GioColor& color)
 void Graphics::SwapBuffers()
 {
     GIO_THROW_IF_FAILED(swapChain->Present(1, 0));
+}
+
+void Graphics::SetupSharedResources()
+{
+    sharedResources.standardPixelShader = std::make_shared<PixelShader>(*this, L"PixelShader.cso");
+    sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
+    std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
+    {
+        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+    };
+    sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
+    sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
 }
 

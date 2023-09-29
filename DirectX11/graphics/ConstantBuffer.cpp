@@ -8,7 +8,8 @@ ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, const void* data, UI
 {
     D3D11_BUFFER_DESC desc
     {
-        dataWidth,
+        // If the constant buffer is being initialized with null data, byteWidth is set to the arbitrary minimum of 16 bytes  
+        data ? dataWidth : 16,
         D3D11_USAGE_DYNAMIC,
         D3D11_BIND_CONSTANT_BUFFER,
         D3D11_CPU_ACCESS_WRITE,
@@ -16,11 +17,13 @@ ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, const void* data, UI
         // Stride unnecessary because this is not an index or vertex buffer
         0,
     };
+
     D3D11_SUBRESOURCE_DATA subresourceData
     {
-        data,
+            data,
     };
-    GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, &subresourceData, &buffer));
+    
+    GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, data ? &subresourceData : nullptr, &buffer));
 }
 
 void ConstantBuffer::Update(IRenderingContext& graphics, const void* data, UINT dataWidth)

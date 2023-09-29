@@ -47,9 +47,6 @@ Box::Box(IRenderingContext& graphics, const GioVector& extents, const GioTransfo
     auto indexBuffer = std::make_shared<IndexBuffer>(graphics, indices);
     drawable.SetIndexBuffer(indexBuffer);
 
-    auto transformationBuffer = TransformationBuffer::MakeFromTransform(graphics, transform);
-    drawable.SetTransformationBuffer(transformationBuffer);
-
     std::vector<GioColor> faceColors
     {
             {
@@ -68,6 +65,7 @@ Box::Box(IRenderingContext& graphics, const GioVector& extents, const GioTransfo
     drawable.AddBinding(sharedResources.standardVertexShader);
     drawable.AddBinding(sharedResources.standardPixelShader);
     drawable.AddBinding(sharedResources.standardInputLayout);
+    drawable.SetTransformationBuffer(sharedResources.transformationBuffer);
 }
 
 void Box::Draw(IRenderingContext& graphics)

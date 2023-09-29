@@ -42,5 +42,7 @@ public:
     void ClearBuffer(const GioColor& color);
     
     void SwapBuffers();
-    
+
+private:
+    void SetupSharedResources();
 };
