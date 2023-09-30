@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 
 #include "ErrorHandling.h"
+#include "GioColor.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
 #include "Shader.h"
@@ -148,5 +149,15 @@ void Graphics::SetupSharedResources()
     };
     sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
     sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
+    std::vector<GioColor> faceColors
+    {
+        {1.f, 0.f, 1.f},
+        {1.f, 0.f, 0.f},
+        {0.f, 1.f, 0.f},
+        {0.f, 0.f, 1.f},
+        {1.f, 1.f, 0.f},
+        {0.f, 1.f, 1.f},
+    };
+    sharedResources.faceColorBuffer = std::make_shared<PixelConstantBuffer>(*this, faceColors.data(), static_cast<UINT>(faceColors.size() * sizeof(GioColor)));
 }
 

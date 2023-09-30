@@ -1,7 +1,10 @@
 #pragma once
 #include <chrono>
+#include <vector>
+
 #include "graphics/Graphics.h"
 
+class Entity;
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
 class Game
@@ -12,10 +15,8 @@ class Game
 
     std::unique_ptr<Graphics> graphics{};
 
-    std::shared_ptr<Box> box;
+    std::vector<std::shared_ptr<Entity>> entities{};
     
-    std::shared_ptr<Box> box2;
-
     FLOAT minDeltaTime{};
     
 public:

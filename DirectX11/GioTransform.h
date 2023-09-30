@@ -5,9 +5,11 @@ struct GioTransform
 {
     GioVector position{};
 
-    GioVector rotation{};
+    GioVector rotationEuler{};
 
     GioTransform operator+ (const GioTransform& other) const;
+
+    GioVector RotationRadians() const;
 
     void Translate(const GioVector& factor);
 

@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <vector>
 
+#include "Core.h"
+
 struct GioTransform;
 class TransformationBuffer;
 class IndexBuffer;
@@ -16,6 +18,10 @@ class Drawable
     std::shared_ptr<TransformationBuffer> transformationBuffer{};
 
 public:
+    Drawable() = default;
+    
+    NO_COPY_MOVE(Drawable)
+
     void AddBinding(const std::shared_ptr<IBindable>& binding);
 
     void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indices);

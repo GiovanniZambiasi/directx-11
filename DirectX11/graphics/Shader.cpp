@@ -1,7 +1,10 @@
 ﻿#include "pch.h"
 #include "Shader.h"
 
+#include "Drawable.h"
 #include "IRenderingContext.h"
+#include "InputLayout.h"
+#include "RenderingSharedResources.h"
 
 VertexShader::VertexShader(IRenderingContext& graphics, const wchar_t* const fileName)
     : Shader(graphics, fileName)
@@ -25,4 +28,13 @@ PixelShader::PixelShader(IRenderingContext& graphics, const wchar_t* const fileN
 void PixelShader::Bind(IRenderingContext& graphics)
 {
     graphics.GetDeviceContext()->PSSetShader(shaderInstance.Get(), nullptr, 0);
+}
+
+void ShaderUtils::BindStandardShaders(IRenderingContext& graphics, Drawable& drawable)
+{
+    RenderingSharedResources& sharedResources = graphics.GetSharedResources();
+    drawable.AddBinding(sharedResources.standardVertexShader);
+    drawable.AddBinding(sharedResources.standardPixelShader);
+    drawable.AddBinding(sharedResources.standardInputLayout);
+    drawable.SetTransformationBuffer(sharedResources.transformationBuffer);
 }

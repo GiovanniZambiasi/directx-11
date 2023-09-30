@@ -3,6 +3,8 @@
 
 #include "IBindable.h"
 
+class GioMesh;
+
 class IndexBuffer : public IBindable
 {
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer{};
@@ -10,7 +12,9 @@ class IndexBuffer : public IBindable
     UINT indexCount{0};
     
 public:
-    IndexBuffer(IRenderingContext& graphics, const std::vector<USHORT>& indices);
+    IndexBuffer(IRenderingContext& graphics, const std::vector<UINT>& indices);
+
+    IndexBuffer(IRenderingContext& graphics, const GioMesh& mesh);
     
     void Bind(IRenderingContext& graphics) override;
 

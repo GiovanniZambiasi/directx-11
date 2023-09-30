@@ -5,7 +5,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -30,10 +29,6 @@
 *.exe
 *.out
 *.app
-
-# Builds
-Win32/
-Win64/
 
 # IDE Specific files
 .idea/

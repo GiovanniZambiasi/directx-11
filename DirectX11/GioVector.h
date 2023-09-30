@@ -21,4 +21,6 @@ struct GioVector
     GioVector operator+(const GioVector& other) const;
 
     GioVector& operator+=(const GioVector& other);
+
+    std::string ToString() const;
 };

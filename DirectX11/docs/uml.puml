@@ -1,0 +1,40 @@
+﻿@startuml
+'https://plantuml.com/class-diagram
+
+class Game
+
+package graphics
+{
+class Graphics
+
+interface IRenderingContext
+
+Graphics ..|> IRenderingContext
+
+interface IBindable
+
+class Drawable
+Drawable ..> IRenderingContext
+Drawable o..> IBindable
+
+interface IDrawable
+IDrawable --> Drawable
+
+struct RenderingSharedResources
+
+IRenderingContext --> RenderingSharedResources
+
+IBindable --> RenderingSharedResources
+}
+
+Game --> Graphics
+
+class Entity
+
+Entity ..|> IDrawable
+
+Game o--> Entity
+
+
+
+@enduml

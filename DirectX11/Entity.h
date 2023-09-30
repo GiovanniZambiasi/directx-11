@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Core.h"
 #include "GioTransform.h"
 #include "graphics/Drawable.h"
 
@@ -9,7 +10,13 @@ class Entity : public IDrawable
     Drawable drawable{};
     
 public:
-    Drawable& GetDrawable() override { return drawable; }
+    Entity() = default;
+    
+    Entity(const GioTransform& spawnTransform);
+
+    NO_COPY_MOVE(Entity)
+    
+    Drawable& GetDrawable() final override { return drawable; }
 
     GioTransform& GetTransform() { return transform; }
     

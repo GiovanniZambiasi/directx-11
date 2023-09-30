@@ -9,6 +9,7 @@
 #include "Box.h"
 #include "GioColor.h"
 #include "GioVector.h"
+#include "Monkey.h"
 
 extern void ExitGame() noexcept;
 
@@ -23,11 +24,15 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
 {
     graphics = std::make_unique<Graphics>(window, width, height);
     graphics->Initialize();
+
+    entities =
+        {
+        std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{0.f, 0.f, 5.f}, {0.f}}),
+        std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{-2.f, 0.f, 5.f}, {0.f}}),
+        std::make_shared<Monkey>(*graphics, GioTransform{ {2.f, 0.f, 5.f}, {0.f} })
+    };
     
-    box = std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{0.f, 0.f, 5.f}, {0.f}});
-    box2 = std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{0.f, 0.f, 5.f}, {0.f}});
-    
-    minDeltaTime = 1.f/tickRate;
+    minDeltaTime = 1.f/static_cast<float>(tickRate);
 }
 
 void Game::Update()
@@ -51,16 +56,20 @@ void Game::Update()
     float cursorX = cursorPos.x/ std::get<0>(halfDimensions) -1.f;
     float cursorY = 1-(cursorPos.y/std::get<1>(halfDimensions) - 1.f);
 
-    auto& boxTransform = box->GetTransform();
-    boxTransform.position = GioVector{cursorX, cursorY, boxTransform.position.z};
-    boxTransform.rotation += GioVector{0.f, deltaTime.count(), deltaTime.count()};
-    box->Draw(*graphics);
+    float change{1.f};
+    for (std::shared_ptr<Entity>& entity : entities)
+    {
+        float verticalOffset = std::sin(timeSinceStart.count() + change);
+        change += 2.f;
 
-    auto& boxTransform2 = box2->GetTransform();
-    boxTransform2.position = GioVector{-cursorX, -cursorY, boxTransform2.position.z};
-    boxTransform2.rotation += GioVector{0.f, deltaTime.count(), deltaTime.count()};
-    box2->Draw(*graphics);
+        float rotationOffset = 180.f + std::sin(timeSinceStart.count() * .8f) * 45.f;
 
+        auto& transform = entity->GetTransform();
+        transform.position = GioVector{transform.position.x, verticalOffset, transform.position.z};
+        transform.rotationEuler = GioVector{transform.rotationEuler.x, rotationOffset, transform.rotationEuler.z};
+        entity->Draw(*graphics);
+    } 
+    
     graphics->SwapBuffers();
     
     previousFrameTime = std::chrono::steady_clock::now();
