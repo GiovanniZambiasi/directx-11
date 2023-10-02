@@ -7,15 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="StepTimer.h" />
-    <ClInclude Include="ErrorHandling.h" />
-    <ClInclude Include="Box.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="GioColor.h" />
-    <ClInclude Include="GioTransform.h" />
-    <ClInclude Include="GioVector.h" />
     <ClInclude Include="graphics\ConstantBuffer.h" />
     <ClInclude Include="graphics\Drawable.h" />
     <ClInclude Include="graphics\IBindable.h" />
@@ -28,17 +19,21 @@
     <ClInclude Include="graphics\TransformationBuffer.h" />
     <ClInclude Include="graphics\TransformUtils.h" />
     <ClInclude Include="graphics\VertexBuffer.h" />
+    <ClInclude Include="src\AssetUtils.h" />
+    <ClInclude Include="src\Box.h" />
+    <ClInclude Include="src\Core.h" />
+    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\ErrorHandling.h" />
+    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\GioColor.h" />
+    <ClInclude Include="src\GioMesh.h" />
+    <ClInclude Include="src\GioTransform.h" />
+    <ClInclude Include="src\GioVector.h" />
+    <ClInclude Include="src\Monkey.h" />
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\StepTimer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ErrorHandling.cpp" />
-    <ClCompile Include="Box.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="GioColor.cpp" />
-    <ClCompile Include="GioTransform.cpp" />
-    <ClCompile Include="GioVector.cpp" />
     <ClCompile Include="graphics\ConstantBuffer.cpp" />
     <ClCompile Include="graphics\Drawable.cpp" />
     <ClCompile Include="graphics\IBindable.cpp" />
@@ -51,6 +46,18 @@
     <ClCompile Include="graphics\TransformationBuffer.cpp" />
     <ClCompile Include="graphics\TransformUtils.cpp" />
     <ClCompile Include="graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\AssetUtils.cpp" />
+    <ClCompile Include="src\Box.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\ErrorHandling.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GioColor.cpp" />
+    <ClCompile Include="src\GioMesh.cpp" />
+    <ClCompile Include="src\GioTransform.cpp" />
+    <ClCompile Include="src\GioVector.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Monkey.cpp" />
+    <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
