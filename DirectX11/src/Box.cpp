@@ -13,6 +13,7 @@
 #include "graphics/TransformationBuffer.h"
 #include "graphics/VertexBuffer.h"
 #include "graphics/Shader.h"
+#include "graphics/BindableTexture.h"
 
 Box::Box(IRenderingContext& graphics)
     : Box(graphics,GioTransform{})
@@ -30,9 +31,9 @@ Box::Box(IRenderingContext& graphics, const GioTransform& spawnTransform)
     
     auto indexBuffer = std::make_shared<IndexBuffer>(graphics, mesh);
     drawable.SetIndexBuffer(indexBuffer);
-    
-    drawable.AddBinding(graphics.GetSharedResources().faceColorBuffer);
 
-    ShaderUtils::BindStandardShaders(graphics, drawable);
+    drawable.AddBinding(graphics.GetSharedResources().chandelleTexture);
+    
+    ShaderUtils::BindTexturedShaders(graphics, drawable);
 }
 

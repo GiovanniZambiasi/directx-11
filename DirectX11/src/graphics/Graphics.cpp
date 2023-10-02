@@ -4,10 +4,12 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
+#include "BindableTexture.h"
 #include "ErrorHandling.h"
 #include "GioColor.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
+#include "Sampler.h"
 #include "Shader.h"
 #include "TransformationBuffer.h"
 
@@ -161,8 +163,10 @@ void Graphics::SetupSharedResources()
         {"TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
     sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
-    sharedResources.standardPixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
-    sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"TexturedVertexShader.cso");
+    sharedResources.texturedPixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
+    sharedResources.texturedVertexShader = std::make_shared<VertexShader>(*this, L"TexturedVertexShader.cso");
+    sharedResources.standardSampler = std::make_shared<Sampler>(*this);
+    sharedResources.chandelleTexture = std::make_shared<BindableTexture>(*this, L"res/chandelle.png");
     sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
     std::vector<GioColor> faceColors
     {

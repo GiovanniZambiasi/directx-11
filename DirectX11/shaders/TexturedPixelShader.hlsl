@@ -6,7 +6,10 @@ struct SurfaceData
     uint faceId : SV_PrimitiveID;
 };
 
+Texture2D diffuseTexture : register(t0);
+SamplerState samplerLinear : register(s0);
+
 float4 main( SurfaceData surf ) : SV_Target
 {
-    return float4(surf.normal, 1.0f);
+    return diffuseTexture.Sample(samplerLinear, surf.texCoord);
 }

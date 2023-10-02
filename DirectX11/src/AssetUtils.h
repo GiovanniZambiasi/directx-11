@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 
+struct GioVector;
 class GioTexture;
 class GioMesh;
 
@@ -12,7 +13,7 @@ public:
     static GioTexture ImportTexture(const std::wstring& path);
     
     static std::vector<uint8_t> LoadBGRAImage(const wchar_t* path, uint32_t& outWidth, uint32_t& outHeight);
-    
+
 private:
     AssetUtils() = delete;
 };
