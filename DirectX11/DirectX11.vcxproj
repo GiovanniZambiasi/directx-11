@@ -207,8 +207,10 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GioColor.h" />
     <ClInclude Include="src\GioMesh.h" />
+    <ClInclude Include="src\GioTexture.h" />
     <ClInclude Include="src\GioTransform.h" />
     <ClInclude Include="src\GioVector.h" />
+    <ClInclude Include="src\GioVertex.h" />
     <ClInclude Include="src\graphics\ConstantBuffer.h" />
     <ClInclude Include="src\graphics\Drawable.h" />
     <ClInclude Include="src\graphics\Graphics.h" />
@@ -218,6 +220,7 @@
     <ClInclude Include="src\graphics\IRenderingContext.h" />
     <ClInclude Include="src\graphics\RenderingSharedResources.h" />
     <ClInclude Include="src\graphics\Shader.h" />
+    <ClInclude Include="src\graphics\Texture.h" />
     <ClInclude Include="src\graphics\TransformationBuffer.h" />
     <ClInclude Include="src\graphics\TransformUtils.h" />
     <ClInclude Include="src\graphics\VertexBuffer.h" />
@@ -751,6 +754,7 @@
       <AdditionalOptions>/Zc:__cplusplus </AdditionalOptions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\GioTexture.cpp" />
     <ClCompile Include="src\GioTransform.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -901,6 +905,7 @@
       <AdditionalOptions>/Zc:__cplusplus </AdditionalOptions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\GioVertex.cpp" />
     <ClCompile Include="src\graphics\ConstantBuffer.cpp" />
     <ClCompile Include="src\graphics\Drawable.cpp" />
     <ClCompile Include="src\graphics\Graphics.cpp" />
@@ -910,6 +915,7 @@
     <ClCompile Include="src\graphics\IRenderingContext.cpp" />
     <ClCompile Include="src\graphics\RenderingSharedResources.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
+    <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="src\graphics\TransformationBuffer.cpp" />
     <ClCompile Include="src\graphics\TransformUtils.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />

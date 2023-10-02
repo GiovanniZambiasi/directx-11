@@ -26,3 +26,21 @@ struct GioVector
 
     std::string ToString() const;
 };
+
+struct GioUV
+{
+    float u{};
+    float v{};
+
+    GioUV() = default;
+    
+    GioUV(float x)
+        : u(x), v(x)
+    {}
+
+    GioUV(float inU, float inV)
+        : u(inU), v(inV)
+    {}
+
+    std::string ToString() const;
+};

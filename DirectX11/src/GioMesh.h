@@ -1,12 +1,12 @@
 ﻿#pragma once
 #include <vector>
 
-#include "GioVector.h"
+#include "GioVertex.h"
 
 class GioMesh
 {
 public:
-    std::vector<GioVector> vertices{};
+    std::vector<GioVertex> vertices{};
 
     std::vector<UINT> indices{};
 

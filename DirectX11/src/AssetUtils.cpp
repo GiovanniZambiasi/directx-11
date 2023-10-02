@@ -16,13 +16,25 @@ GioMesh AssetUtils::ImportMesh(const std::string& path)
     const aiScene* model = imp.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     assert(model->mNumMeshes);
     aiMesh* mesh = model->mMeshes[0];
+    bool hasNormals = mesh->HasNormals();
+    bool hasTexCoords = mesh->HasTextureCoords(0);
+    aiVector3D* textureCoordinatesArray = mesh->mTextureCoords[0];
 
-    std::vector<GioVector> vertices{};
+    std::vector<GioVertex> vertices{};
     vertices.reserve(mesh->mNumVertices);
     for (int i = 0; i < mesh->mNumVertices; ++i)
     {
         aiVector3D vertex = mesh->mVertices[i];
-        vertices.emplace_back(vertex.x, vertex.y, vertex.z);
+        aiVector3D normal = hasNormals ? mesh->mNormals[i] : aiVector3D{0.f};
+        aiVector3D texCoords = hasTexCoords ? textureCoordinatesArray[i] : aiVector3D{0.f};
+        
+        vertices.push_back(
+            GioVertex
+            {
+                {vertex.x, vertex.y, vertex.z},
+                {normal.x, normal.y, normal.z},
+                {texCoords.x, texCoords.y}
+            });
     }
 
     std::vector<UINT> indices{};

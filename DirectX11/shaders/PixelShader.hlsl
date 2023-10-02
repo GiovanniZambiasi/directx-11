@@ -1,9 +1,12 @@
-cbuffer CBuf
+struct SurfaceData
 {
-    float4 face_colors[6];
-}
+    float3 position : Position;
+    float3 normal : Normal;
+    float2 texCoord : TexCoord;
+    uint faceId : SV_PrimitiveID;
+};
 
-float4 main( uint tId : SV_PrimitiveID ) : SV_Target
+float4 main( SurfaceData surf ) : SV_Target
 {
-    return face_colors[tId%6];
+    return float4(surf.normal, 1.0f);
 }
