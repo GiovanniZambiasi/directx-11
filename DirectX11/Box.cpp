@@ -17,7 +17,7 @@ Box::Box(IRenderingContext& graphics, const GioVector& extents)
 { }
 
 Box::Box(IRenderingContext& graphics, const GioVector& extents, const GioTransform& spawnTransform)
-    : Entity(spawnTransform)
+    : Entity("Box", spawnTransform)
 {
     auto& drawable = GetDrawable();
     

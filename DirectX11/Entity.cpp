@@ -3,8 +3,13 @@
 
 #include "graphics/IRenderingContext.h"
 
-Entity::Entity(const GioTransform& spawnTransform)
-    : transform(spawnTransform)
+Entity::Entity(std::string&& inName)
+    : name(std::move(inName))
+{
+}
+
+Entity::Entity(std::string&& inName, const GioTransform& spawnTransform)
+    : name(std::move(inName)), transform(spawnTransform)
 {
 }
 

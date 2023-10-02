@@ -38,10 +38,10 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
 void Game::Update()
 {
     auto timeNow = std::chrono::steady_clock::now();
-    std::chrono::duration<float> timeSinceStart = timeNow - startTime;
-    std::chrono::duration<float> deltaTime = timeNow - previousFrameTime;
+    timeSinceStart = std::chrono::duration<float>{timeNow - startTime}.count();
+    deltaTime = std::chrono::duration<float>{timeNow - previousFrameTime}.count();
 
-    if(deltaTime.count() < minDeltaTime)
+    if(deltaTime < minDeltaTime)
     {
         return;
     }
@@ -49,18 +49,35 @@ void Game::Update()
     POINT cursorPos{};
     GetCursorPos(&cursorPos);
 
-    graphics->ClearBuffer({.7f, .9f, 1.f});
+    UpdateEntities();
     
+    DrawEntities();
+    
+    previousFrameTime = std::chrono::steady_clock::now();
+}
+
+void Game::UpdateEntities()
+{
+    for (std::shared_ptr<Entity>& entity : entities)
+    {
+        entity->Update(deltaTime);
+    }
+}
+
+void Game::DrawEntities()
+{
+    graphics->ClearBuffer({.7f, .9f, 1.f});
+
     float positionOffset{0.f};
     float rotationOffset{0.f};
     
     float change{1.f};
     for (std::shared_ptr<Entity>& entity : entities)
     {
-        positionOffset = std::sin(timeSinceStart.count() + change);
+        positionOffset = std::sin(timeSinceStart + change);
         change += 2.f;
 
-        rotationOffset = 180.f + std::sin(timeSinceStart.count() * .8f) * 45.f;
+        rotationOffset = 180.f + std::sin(timeSinceStart * .8f) * 45.f;
 
         auto& transform = entity->GetTransform();
         transform.position = GioVector{transform.position.x, positionOffset, transform.position.z};
@@ -69,14 +86,11 @@ void Game::Update()
     }
 
     graphics->GetCameraTransform().position = GioVector{positionOffset, 0.f, 0.f};
-
-    rotationOffset = std::sin(timeSinceStart.count()) * 25.f;
-    std::cout << rotationOffset << std::endl;
+    
+    rotationOffset = std::sin(timeSinceStart) * 25.f;
     graphics->GetCameraTransform().rotationEuler = GioVector{rotationOffset, 0.f, 0.f};
     
     graphics->UpdateCameraMatrix();
     
     graphics->SwapBuffers();
-    
-    previousFrameTime = std::chrono::steady_clock::now();
 }

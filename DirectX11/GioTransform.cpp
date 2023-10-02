@@ -20,6 +20,16 @@ GioVector GioTransform::RotationRadians() const
     };
 }
 
+GioVector GioTransform::GetLookDirection() const
+{
+    return
+    {
+        std::cos(rotationEuler.y) * std::cos(rotationEuler.x),
+        std::sin(rotationEuler.y) * std::cos(rotationEuler.x),
+        sin(rotationEuler.x)
+    };
+}
+
 void GioTransform::Translate(const GioVector& factor)
 {
     position += factor;

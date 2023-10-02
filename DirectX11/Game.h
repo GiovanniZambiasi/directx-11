@@ -18,7 +18,9 @@ class Game
 
     std::vector<std::shared_ptr<Entity>> entities{};
     
-    FLOAT minDeltaTime{};
+    float timeSinceStart{0.f};
+    float deltaTime{0.f};
+    float minDeltaTime{0.f};
     
 public:
     Game() noexcept;
@@ -34,5 +36,10 @@ public:
     void Update();
     
     std::tuple<int, int> GetDefaultSize() const noexcept { return {1240, 720}; }
+
+private:
+    void UpdateEntities();
+
+    void DrawEntities();
 
 };

@@ -22,5 +22,7 @@ struct GioVector
 
     GioVector& operator+=(const GioVector& other);
 
+    operator DirectX::XMVECTOR() const;
+
     std::string ToString() const;
 };

@@ -10,7 +10,7 @@
 #include "graphics/ConstantBuffer.h"
 
 Monkey::Monkey(IRenderingContext& graphics, const GioTransform& spawnTransform)
-    : Entity(spawnTransform)
+    : Entity("Monkey", spawnTransform)
 {
     Drawable& drawable = GetDrawable();
     

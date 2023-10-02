@@ -11,6 +11,8 @@ struct GioTransform
 
     GioVector RotationRadians() const;
 
+    GioVector GetLookDirection() const;
+
     void Translate(const GioVector& factor);
 
     void Rotate(const GioVector& factor);

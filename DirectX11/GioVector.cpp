@@ -33,6 +33,11 @@ GioVector& GioVector::operator+=(const GioVector& other)
     return thisRef;
 }
 
+GioVector::operator DirectX::XMVECTOR() const
+{
+    return {x, y, z};
+}
+
 std::string GioVector::ToString() const
 {
     std::stringstream stream{};
