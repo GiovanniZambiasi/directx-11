@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+struct GioTransform;
 struct RenderingSharedResources;
 
 class IRenderingContext
@@ -11,8 +12,10 @@ public:
     
     virtual ID3D11DeviceContext* GetDeviceContext() const = 0;
 
-    virtual DirectX::XMMATRIX GetProjectionMatrix() const = 0;
+    virtual DirectX::XMMATRIX GetCameraMatrix() const = 0;
 
     virtual RenderingSharedResources& GetSharedResources() = 0;
+ 
+    virtual GioTransform& GetCameraTransform() = 0;
 
 };

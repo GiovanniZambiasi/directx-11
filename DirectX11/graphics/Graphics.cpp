@@ -112,9 +112,9 @@ void Graphics::Initialize()
     SetupSharedResources();
 }
 
-DirectX::XMMATRIX Graphics::GetProjectionMatrix() const
+DirectX::XMMATRIX Graphics::GetCameraMatrix() const
 {
-    return DirectX::XMMatrixPerspectiveLH(1.f, GetAspectRatio(), .5f, 10.f);
+    return cameraMatrix;
 }
 
 void Graphics::ClearBuffer(const GioColor& color)
@@ -132,6 +132,17 @@ void Graphics::ClearBuffer(const GioColor& color)
         1.f
     };
     deviceContext->RSSetViewports(1, &viewport);
+}
+
+void Graphics::UpdateCameraMatrix()
+{
+    GioVector& rot = cameraTransform.rotationEuler;
+    GioVector& pos = cameraTransform.position;
+    cameraMatrix =
+        DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(rot.x)) * DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(rot.y))
+    * DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(rot.z)) *
+            DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z) *
+                DirectX::XMMatrixPerspectiveLH(1.f, GetAspectRatio(), .5f, 10.f);
 }
 
 void Graphics::SwapBuffers()

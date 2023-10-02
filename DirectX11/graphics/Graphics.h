@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "GioTransform.h"
 #include "IRenderingContext.h"
 #include "RenderingSharedResources.h"
 
@@ -21,6 +22,8 @@ class Graphics : public IRenderingContext
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView{};
 
     RenderingSharedResources sharedResources{};
+    GioTransform cameraTransform{};
+    DirectX::XMMATRIX cameraMatrix{};
 
 public:
     Graphics(HWND window, UINT width, UINT height);
@@ -31,7 +34,7 @@ public:
     
     ID3D11DeviceContext* GetDeviceContext() const override  { return deviceContext.Get(); }
 
-    DirectX::XMMATRIX GetProjectionMatrix() const override;
+    DirectX::XMMATRIX GetCameraMatrix() const override;
 
     RenderingSharedResources& GetSharedResources() override { return sharedResources; }
 
@@ -39,10 +42,15 @@ public:
 
     FLOAT GetAspectRatio() const { return static_cast<FLOAT>(outputHeight)/static_cast<FLOAT>(outputWidth); }
 
+    GioTransform& GetCameraTransform() override { return cameraTransform; }
+    
     void ClearBuffer(const GioColor& color);
+
+    void UpdateCameraMatrix();
     
     void SwapBuffers();
 
 private:
     void SetupSharedResources();
+
 };

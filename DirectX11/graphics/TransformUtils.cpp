@@ -18,6 +18,6 @@ DirectX::XMMATRIX TransformUtils::CalculateFinalMatrix(IRenderingContext& graphi
 {
     return XMMatrixTranspose(
         TransformToMatrix(transform) *
-            graphics.GetProjectionMatrix()
+            graphics.GetCameraMatrix()
         );
 }

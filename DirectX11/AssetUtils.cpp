@@ -16,7 +16,6 @@ GioMesh AssetUtils::ImportMesh(const std::string& path)
     const aiScene* model = imp.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
     assert(model->mNumMeshes);
     aiMesh* mesh = model->mMeshes[0];
-    std::cout << "Model '" << path << "' has " << mesh->mNumVertices << " vertices!" << std::endl;
 
     std::vector<GioVector> vertices{};
     vertices.reserve(mesh->mNumVertices);

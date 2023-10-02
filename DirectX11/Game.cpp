@@ -51,24 +51,30 @@ void Game::Update()
 
     graphics->ClearBuffer({.7f, .9f, 1.f});
     
-    std::tuple<UINT, UINT> outputDimensions = graphics->GetOutputDimensions();
-    std::tuple<float,float> halfDimensions{std::get<0>(outputDimensions)/2.f, std::get<1>(outputDimensions)/2.f};
-    float cursorX = cursorPos.x/ std::get<0>(halfDimensions) -1.f;
-    float cursorY = 1-(cursorPos.y/std::get<1>(halfDimensions) - 1.f);
-
+    float positionOffset{0.f};
+    float rotationOffset{0.f};
+    
     float change{1.f};
     for (std::shared_ptr<Entity>& entity : entities)
     {
-        float verticalOffset = std::sin(timeSinceStart.count() + change);
+        positionOffset = std::sin(timeSinceStart.count() + change);
         change += 2.f;
 
-        float rotationOffset = 180.f + std::sin(timeSinceStart.count() * .8f) * 45.f;
+        rotationOffset = 180.f + std::sin(timeSinceStart.count() * .8f) * 45.f;
 
         auto& transform = entity->GetTransform();
-        transform.position = GioVector{transform.position.x, verticalOffset, transform.position.z};
+        transform.position = GioVector{transform.position.x, positionOffset, transform.position.z};
         transform.rotationEuler = GioVector{transform.rotationEuler.x, rotationOffset, transform.rotationEuler.z};
         entity->Draw(*graphics);
-    } 
+    }
+
+    graphics->GetCameraTransform().position = GioVector{positionOffset, 0.f, 0.f};
+
+    rotationOffset = std::sin(timeSinceStart.count()) * 25.f;
+    std::cout << rotationOffset << std::endl;
+    graphics->GetCameraTransform().rotationEuler = GioVector{rotationOffset, 0.f, 0.f};
+    
+    graphics->UpdateCameraMatrix();
     
     graphics->SwapBuffers();
     
