@@ -9,8 +9,8 @@ struct GioVector;
 class Box : public Entity
 {
 public:
-    Box(IRenderingContext& graphics, const GioVector& extents);
+    Box(IRenderingContext& graphics);
     
-    Box(IRenderingContext& graphics, const GioVector& extents, const GioTransform& spawnTransform);
+    Box(IRenderingContext& graphics, const GioTransform& spawnTransform);
     
 };

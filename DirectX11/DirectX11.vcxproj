@@ -219,8 +219,9 @@
     <ClInclude Include="src\graphics\InputLayout.h" />
     <ClInclude Include="src\graphics\IRenderingContext.h" />
     <ClInclude Include="src\graphics\RenderingSharedResources.h" />
+    <ClInclude Include="src\graphics\Sampler.h" />
     <ClInclude Include="src\graphics\Shader.h" />
-    <ClInclude Include="src\graphics\Texture.h" />
+    <ClInclude Include="src\graphics\BindableTexture.h" />
     <ClInclude Include="src\graphics\TransformationBuffer.h" />
     <ClInclude Include="src\graphics\TransformUtils.h" />
     <ClInclude Include="src\graphics\VertexBuffer.h" />
@@ -914,8 +915,9 @@
     <ClCompile Include="src\graphics\InputLayout.cpp" />
     <ClCompile Include="src\graphics\IRenderingContext.cpp" />
     <ClCompile Include="src\graphics\RenderingSharedResources.cpp" />
+    <ClCompile Include="src\graphics\Sampler.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
-    <ClCompile Include="src\graphics\Texture.cpp" />
+    <ClCompile Include="src\graphics\BindableTexture.cpp" />
     <ClCompile Include="src\graphics\TransformationBuffer.cpp" />
     <ClCompile Include="src\graphics\TransformUtils.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />
@@ -1177,6 +1179,26 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\TexturedPixelShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shaders\TexturedVertexShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>

@@ -3,7 +3,7 @@
 
 #include "IBindable.h"
 
-class GioMesh;
+struct GioMesh;
 
 class IndexBuffer : public IBindable
 {

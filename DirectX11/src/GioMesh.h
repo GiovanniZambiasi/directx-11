@@ -3,9 +3,8 @@
 
 #include "GioVertex.h"
 
-class GioMesh
+struct GioMesh
 {
-public:
     std::vector<GioVertex> vertices{};
 
     std::vector<UINT> indices{};

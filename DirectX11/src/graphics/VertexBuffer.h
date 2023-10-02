@@ -5,7 +5,7 @@
 #include "ErrorHandling.h"
 #include "IRenderingContext.h"
 
-class GioMesh;
+struct GioMesh;
 
 class VertexBuffer : public IBindable
 {

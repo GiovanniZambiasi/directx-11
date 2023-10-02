@@ -8,9 +8,8 @@ DirectX::XMMATRIX TransformUtils::TransformToMatrix(const GioTransform& transfor
 {
     GioVector rotationRadians = transform.RotationRadians();
     return
-        DirectX::XMMatrixRotationX(rotationRadians.x) *
-        DirectX::XMMatrixRotationY(rotationRadians.y) *
-        DirectX::XMMatrixRotationZ(rotationRadians.z) *
+        DirectX::XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z) *
+        DirectX::XMMatrixRotationRollPitchYaw(rotationRadians.x, rotationRadians.y, rotationRadians.z) *
         DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
 }
 

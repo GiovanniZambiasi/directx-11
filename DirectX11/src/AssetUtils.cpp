@@ -9,11 +9,19 @@
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#include <wincodec.h>
 
-GioMesh AssetUtils::ImportMesh(const std::string& path)
+#include "ErrorHandling.h"
+#include "GioTexture.h"
+
+using namespace Microsoft::WRL;
+
+GioMesh AssetUtils::ImportMesh(const std::wstring& path)
 {
+    std::string narrowPath{path.begin(), path.end()};
     Assimp::Importer imp{};
-    const aiScene* model = imp.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+    const aiScene* model = imp.ReadFile(narrowPath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+    assert(model);
     assert(model->mNumMeshes);
     aiMesh* mesh = model->mMeshes[0];
     bool hasNormals = mesh->HasNormals();
@@ -50,4 +58,62 @@ GioMesh AssetUtils::ImportMesh(const std::string& path)
     }
 
     return GioMesh{std::move(vertices), std::move(indices)};
+}
+
+GioTexture AssetUtils::ImportTexture(const std::wstring& path)
+{
+    uint32_t width{0};
+    uint32_t height{0};
+    std::vector<uint8_t> data = LoadBGRAImage(path.c_str(), width, height);
+    return GioTexture
+    {
+        width, height, std::move(data)
+    };
+}
+
+std::vector<uint8_t> AssetUtils::LoadBGRAImage(const wchar_t* path, uint32_t& outWidth, uint32_t& outHeight)
+{
+    ComPtr<IWICImagingFactory> wicFactory;
+    GIO_THROW_IF_FAILED(CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicFactory)));
+
+    ComPtr<IWICBitmapDecoder> decoder;
+    GIO_THROW_IF_FAILED(wicFactory->CreateDecoderFromFilename(path, nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, decoder.GetAddressOf()));
+
+    ComPtr<IWICBitmapFrameDecode> frame;
+    GIO_THROW_IF_FAILED(decoder->GetFrame(0, frame.GetAddressOf()));
+
+    GIO_THROW_IF_FAILED(frame->GetSize(&outWidth, &outHeight));
+
+    WICPixelFormatGUID pixelFormat;
+    GIO_THROW_IF_FAILED(frame->GetPixelFormat(&pixelFormat));
+
+    uint32_t rowPitch = outWidth * sizeof(uint32_t);
+    uint32_t imageSize = rowPitch * outHeight;
+
+    std::vector<uint8_t> image;
+    image.resize(size_t(imageSize));
+
+    if (memcmp(&pixelFormat, &GUID_WICPixelFormat32bppBGRA, sizeof(GUID)) == 0)
+    {
+        GIO_THROW_IF_FAILED(frame->CopyPixels(nullptr, rowPitch, imageSize, reinterpret_cast<BYTE*>(image.data())));
+    }
+    else
+    {
+        ComPtr<IWICFormatConverter> formatConverter;
+        GIO_THROW_IF_FAILED(wicFactory->CreateFormatConverter(formatConverter.GetAddressOf()));
+
+        BOOL canConvert = FALSE;
+        GIO_THROW_IF_FAILED(formatConverter->CanConvert(pixelFormat, GUID_WICPixelFormat32bppBGRA, &canConvert));
+        if (!canConvert)
+        {
+            throw std::exception("CanConvert");
+        }
+
+        GIO_THROW_IF_FAILED(formatConverter->Initialize(frame.Get(), GUID_WICPixelFormat32bppBGRA,
+            WICBitmapDitherTypeErrorDiffusion, nullptr, 0, WICBitmapPaletteTypeMedianCut));
+
+        GIO_THROW_IF_FAILED(formatConverter->CopyPixels(nullptr, rowPitch, imageSize, reinterpret_cast<BYTE*>(image.data())));
+    }
+
+    return image;
 }

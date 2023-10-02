@@ -161,6 +161,8 @@ void Graphics::SetupSharedResources()
         {"TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
     sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
+    sharedResources.standardPixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
+    sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"TexturedVertexShader.cso");
     sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
     std::vector<GioColor> faceColors
     {

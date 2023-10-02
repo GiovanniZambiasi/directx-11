@@ -14,7 +14,7 @@ Monkey::Monkey(IRenderingContext& graphics, const GioTransform& spawnTransform)
 {
     Drawable& drawable = GetDrawable();
     
-    GioMesh mesh = AssetUtils::ImportMesh("res/monkey.obj");
+    GioMesh mesh = AssetUtils::ImportMesh(L"res/monkey.obj");
     assert(mesh.IsValid());
     
     auto vertexBuffer = std::make_shared<VertexBuffer>(graphics, mesh);

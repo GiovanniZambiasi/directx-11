@@ -27,8 +27,8 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
 
     entities =
         {
-        std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{0.f, 0.f, 5.f}, {0.f}}),
-        std::make_shared<Box>(*graphics, GioVector{1.f}, GioTransform{{-2.f, 0.f, 5.f}, {0.f}}),
+        std::make_shared<Box>(*graphics, GioTransform{{0.f, 0.f, 5.f}, {0.f}, {.5f}}),
+        std::make_shared<Box>(*graphics, GioTransform{{-2.f, 0.f, 5.f}, {0.f}, {.25f}}),
         std::make_shared<Monkey>(*graphics, GioTransform{ {2.f, 0.f, 5.f}, {0.f} })
     };
     
@@ -58,20 +58,11 @@ void Game::Update()
 
 void Game::UpdateEntities()
 {
-    for (std::shared_ptr<Entity>& entity : entities)
-    {
-        entity->Update(deltaTime);
-    }
-}
-
-void Game::DrawEntities()
-{
-    graphics->ClearBuffer({.7f, .9f, 1.f});
-
     float positionOffset{0.f};
     float rotationOffset{0.f};
     
     float change{1.f};
+    
     for (std::shared_ptr<Entity>& entity : entities)
     {
         positionOffset = std::sin(timeSinceStart + change);
@@ -82,14 +73,26 @@ void Game::DrawEntities()
         auto& transform = entity->GetTransform();
         transform.position = GioVector{transform.position.x, positionOffset, transform.position.z};
         transform.rotationEuler = GioVector{transform.rotationEuler.x, rotationOffset, transform.rotationEuler.z};
-        entity->Draw(*graphics);
+        
+        entity->Update(deltaTime);
     }
 
-    graphics->GetCameraTransform().position = GioVector{positionOffset, 0.f, 0.f};
-    
-    rotationOffset = std::sin(timeSinceStart) * 25.f;
-    graphics->GetCameraTransform().rotationEuler = GioVector{rotationOffset, 0.f, 0.f};
-    
+    // positionOffset = std::sin(timeSinceStart);
+    // graphics->GetCameraTransform().position = GioVector{positionOffset, 0.f, 0.f};
+    //
+    // rotationOffset = std::sin(timeSinceStart) * 25.f;
+    // graphics->GetCameraTransform().rotationEuler = GioVector{rotationOffset, 0.f, 0.f};
+}
+
+void Game::DrawEntities()
+{
+    graphics->ClearBuffer({.7f, .9f, 1.f});
+
+    for (std::shared_ptr<Entity>& entity : entities)
+    {
+        entity->Draw(*graphics);
+    }
+ 
     graphics->UpdateCameraMatrix();
     
     graphics->SwapBuffers();

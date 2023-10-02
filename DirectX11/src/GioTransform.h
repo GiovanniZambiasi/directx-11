@@ -7,6 +7,8 @@ struct GioTransform
 
     GioVector rotationEuler{};
 
+    GioVector scale{1.f};
+
     GioTransform operator+ (const GioTransform& other) const;
 
     GioVector RotationRadians() const;
