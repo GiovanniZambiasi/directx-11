@@ -25,5 +25,5 @@ Monkey::Monkey(IRenderingContext& graphics, const GioTransform& spawnTransform)
 
     drawable.AddBinding(graphics.GetSharedResources().faceColorBuffer);
     
-    ShaderUtils::BindStandardShaders(graphics, drawable);
+    ShaderUtils::BindTexturedShaders(graphics, drawable);
 }
