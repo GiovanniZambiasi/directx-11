@@ -19,6 +19,7 @@ struct RenderingSharedResources
 
     std::shared_ptr<Sampler> standardSampler{};
     std::shared_ptr<BindableTexture> chandelleTexture{};
+    std::shared_ptr<BindableTexture> checkeredTexture{};
     
     std::shared_ptr<TransformationBuffer> transformationBuffer{};
     std::shared_ptr<PixelConstantBuffer> faceColorBuffer{};

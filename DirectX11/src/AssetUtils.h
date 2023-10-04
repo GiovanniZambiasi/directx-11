@@ -2,7 +2,7 @@
 #include <vector>
 
 struct GioVector;
-class GioTexture;
+struct GioTexture;
 class GioMesh;
 
 class AssetUtils

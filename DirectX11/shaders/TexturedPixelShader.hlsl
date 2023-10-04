@@ -23,6 +23,7 @@ SamplerState samplerLinear : register(s0);
 
 float4 main( VSOut surf ) : SV_Target
 {
-    //float4 textureColor = diffuseTexture.Sample(samplerLinear, surf.surfaceData.texCoord);
-    return float4(surf.surfaceData.texCoord, 0.0f,1.0f);
+    float4 textureColor = diffuseTexture.Sample(samplerLinear, surf.surfaceData.texCoord);
+    return textureColor;
+    //return float4(surf.surfaceData.texCoord, 0.0f,1.0f);
 }

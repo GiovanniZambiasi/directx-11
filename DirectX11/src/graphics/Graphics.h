@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "GioColor.h"
 #include "GioTransform.h"
 #include "IRenderingContext.h"
 #include "RenderingSharedResources.h"
@@ -7,7 +8,6 @@ class Box;
 class InputLayout;
 class VertexShader;
 class PixelShader;
-struct GioColor;
 
 class Graphics : public IRenderingContext
 {
@@ -44,7 +44,7 @@ public:
 
     GioTransform& GetCameraTransform() override { return cameraTransform; }
     
-    void ClearBuffer(const GioColor& color);
+    void ClearBuffer(const GioColorF& color);
 
     void UpdateCameraMatrix();
     

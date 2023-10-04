@@ -1,33 +1,34 @@
 ﻿#pragma once
 
+struct GioVector;
+
+template<typename TNumericType, typename = std::enable_if_t<std::is_arithmetic_v<TNumericType>>>
 struct GioColor
 {
-    float r{};
+    TNumericType r{};
     
-    float g{};
+    TNumericType g{};
     
-    float b{};
+    TNumericType b{};
     
-    float a{};
+    TNumericType a{};
 
     GioColor() = default;
 
-    GioColor(float v)
+    GioColor(TNumericType v)
         : r{v}, g{v}, b{v}, a{v}
     {  }
 
-    GioColor(float inR, float inG, float inB, float inA)
+    GioColor(TNumericType inR, TNumericType inG, TNumericType inB, TNumericType inA)
         : r{inR}, g{inG}, b{inB}, a{inA}
     {  }
 
-    GioColor(float inR, float inG, float inB)
+    GioColor(TNumericType inR, TNumericType inG, TNumericType inB)
         : GioColor(inR, inG, inB, 1.f)
     {  }
-
-    static const GioColor White;
-    static const GioColor Clear;
-    static const GioColor Black;
-    static const GioColor Red;
-    static const GioColor Green;
-    static const GioColor Blue;
 };
+
+using GioColorF = GioColor<float>;
+
+using GioColor32 = GioColor<uint8_t>;
+

@@ -12,6 +12,7 @@
 #include <wincodec.h>
 
 #include "ErrorHandling.h"
+#include "GioColor.h"
 #include "GioTexture.h"
 
 using namespace Microsoft::WRL;
@@ -64,11 +65,26 @@ GioTexture AssetUtils::ImportTexture(const std::wstring& path)
 {
     uint32_t width{0};
     uint32_t height{0};
+    
     std::vector<uint8_t> data = LoadBGRAImage(path.c_str(), width, height);
-    return GioTexture
+    std::vector<GioColor32> colors{};
+    colors.reserve(data.size()/4);
+    for (size_t i = 0; i < data.size(); i += 4)
     {
-        width, height, std::move(data)
+        assert(i + 3 < data.size());
+        uint8_t r = data[i];
+        uint8_t g = data[i + 1];
+        uint8_t b = data[i + 2];
+        uint8_t a = data[i + 3];
+        colors.emplace_back(r,g,b,a);
+    }
+
+    auto texture = GioTexture
+    {
+        width, height, std::move(colors)
     };
+    texture.Flip(false);
+    return texture;
 }
 
 std::vector<uint8_t> AssetUtils::LoadBGRAImage(const wchar_t* path, uint32_t& outWidth, uint32_t& outHeight)

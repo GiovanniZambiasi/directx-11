@@ -120,7 +120,7 @@ DirectX::XMMATRIX Graphics::GetCameraMatrix() const
     return cameraMatrix;
 }
 
-void Graphics::ClearBuffer(const GioColor& color)
+void Graphics::ClearBuffer(const GioColorF& color)
 {
     deviceContext->ClearRenderTargetView(backBufferView.Get(), reinterpret_cast<const FLOAT*>(&color));
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -167,8 +167,9 @@ void Graphics::SetupSharedResources()
     sharedResources.texturedPixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
     sharedResources.standardSampler = std::make_shared<Sampler>(*this);
     sharedResources.chandelleTexture = std::make_shared<BindableTexture>(*this, L"res/chandelle.png");
+    sharedResources.checkeredTexture = std::make_shared<BindableTexture>(*this, L"res/checkered.jpg");
     sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
-    std::vector<GioColor> faceColors
+    std::vector<GioColorF> faceColors
     {
         {1.f, 0.f, 1.f},
         {1.f, 0.f, 0.f},
@@ -177,6 +178,6 @@ void Graphics::SetupSharedResources()
         {1.f, 1.f, 0.f},
         {0.f, 1.f, 1.f},
     };
-    sharedResources.faceColorBuffer = std::make_shared<PixelConstantBuffer>(*this, faceColors.data(), static_cast<UINT>(faceColors.size() * sizeof(GioColor)));
+    sharedResources.faceColorBuffer = std::make_shared<PixelConstantBuffer>(*this, faceColors.data(), static_cast<UINT>(faceColors.size() * sizeof(GioColorF)));
 }
 
