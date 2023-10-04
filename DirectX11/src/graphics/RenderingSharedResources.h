@@ -16,7 +16,6 @@ struct RenderingSharedResources
     std::shared_ptr<VertexShader> standardVertexShader{};
     
     std::shared_ptr<PixelShader> texturedPixelShader{};
-    std::shared_ptr<VertexShader> texturedVertexShader{};
 
     std::shared_ptr<Sampler> standardSampler{};
     std::shared_ptr<BindableTexture> chandelleTexture{};

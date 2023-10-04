@@ -15,8 +15,6 @@ DirectX::XMMATRIX TransformUtils::TransformToMatrix(const GioTransform& transfor
 
 DirectX::XMMATRIX TransformUtils::CalculateFinalMatrix(IRenderingContext& graphics, const GioTransform& transform)
 {
-    return XMMatrixTranspose(
-        TransformToMatrix(transform) *
-            graphics.GetCameraMatrix()
-        );
+    return TransformToMatrix(transform) *
+        graphics.GetCameraMatrix();
 }

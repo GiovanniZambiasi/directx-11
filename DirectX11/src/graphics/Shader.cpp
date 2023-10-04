@@ -43,7 +43,7 @@ void ShaderUtils::BindStandardShaders(IRenderingContext& graphics, Drawable& dra
 void ShaderUtils::BindTexturedShaders(IRenderingContext& graphics, Drawable& drawable)
 {
     RenderingSharedResources& sharedResources = graphics.GetSharedResources();
-    drawable.AddBinding(sharedResources.texturedVertexShader);
+    drawable.AddBinding(sharedResources.standardVertexShader);
     drawable.AddBinding(sharedResources.texturedPixelShader);
     drawable.AddBinding(sharedResources.standardInputLayout);
     drawable.AddBinding(sharedResources.standardSampler);

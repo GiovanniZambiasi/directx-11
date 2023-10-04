@@ -75,16 +75,15 @@ void Game::UpdateEntities()
         // transform.position = GioVector{transform.position.x, positionOffset, transform.position.z};
         //transform.rotationEuler = GioVector{transform.rotationEuler.x, deltaTime * 25.f, transform.rotationEuler.z};
         float dt = deltaTime * 25.f;
-        std::cout << dt << std::endl;
         transform.Rotate({0.f, dt, 0.f});
         entity->Update(deltaTime);
     }
 
-    positionOffset = std::sin(timeSinceStart);
-    graphics->GetCameraTransform().position = GioVector{positionOffset, 0.f, 0.f};
-    
-    rotationOffset = std::sin(timeSinceStart) * 25.f;
-    graphics->GetCameraTransform().rotationEuler = GioVector{rotationOffset, 0.f, 0.f};
+    // positionOffset = std::sin(timeSinceStart);
+    // graphics->GetCameraTransform().position = GioVector{positionOffset, 0.f, 0.f};
+    //
+    // rotationOffset = std::sin(timeSinceStart) * 25.f;
+    // graphics->GetCameraTransform().rotationEuler = GioVector{rotationOffset, 0.f, 0.f};
 }
 
 void Game::DrawEntities()

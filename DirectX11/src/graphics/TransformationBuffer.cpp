@@ -3,10 +3,15 @@
 
 #include "TransformUtils.h"
 
+TransformationBuffer::Data::Data(DirectX::XMMATRIX inWorldTransform)
+    : worldTransform(XMMatrixTranspose(inWorldTransform)),
+    worldTransformInverse(XMMatrixTranspose(XMMatrixInverse(nullptr, inWorldTransform)))
+{ }
+
  std::shared_ptr<TransformationBuffer> TransformationBuffer::MakeFromTransform(IRenderingContext& graphics, const GioTransform& transform)
 {
-    DirectX::XMMATRIX matrix = TransformUtils::CalculateFinalMatrix(graphics, transform);
-    return std::make_shared<TransformationBuffer>(graphics, &matrix,static_cast<UINT>(sizeof(matrix)));
+    Data data{TransformUtils::CalculateFinalMatrix(graphics, transform)};
+    return std::make_shared<TransformationBuffer>(graphics, &data,static_cast<UINT>(sizeof(data)));
 }
 
 TransformationBuffer::TransformationBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth)
@@ -15,6 +20,6 @@ TransformationBuffer::TransformationBuffer(IRenderingContext& graphics, const vo
 
 void TransformationBuffer::Update(IRenderingContext& graphics, const GioTransform& transform)
 {
-    DirectX::XMMATRIX matrix = TransformUtils::CalculateFinalMatrix(graphics, transform);
-    ConstantBuffer::Update(graphics, &matrix, sizeof(matrix));
+    Data data{TransformUtils::CalculateFinalMatrix(graphics, transform)};
+    ConstantBuffer::Update(graphics, &data, sizeof(data));
 }

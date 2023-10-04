@@ -165,7 +165,6 @@ void Graphics::SetupSharedResources()
     };
     sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
     sharedResources.texturedPixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
-    sharedResources.texturedVertexShader = std::make_shared<VertexShader>(*this, L"TexturedVertexShader.cso");
     sharedResources.standardSampler = std::make_shared<Sampler>(*this);
     sharedResources.chandelleTexture = std::make_shared<BindableTexture>(*this, L"res/chandelle.png");
     sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
