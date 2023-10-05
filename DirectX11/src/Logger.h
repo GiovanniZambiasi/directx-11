@@ -5,6 +5,7 @@
  * \param Type Log, Warning or Error. See the LogType enum for reference 
  */
 #define GIO_LOG(Type, Message) Logger::Log(LogType::Type, Message, __FILE__, __LINE__)
+#include <fstream>
 
 enum class LogType
 {
@@ -18,6 +19,8 @@ class Logger
     static std::unique_ptr<Logger> instance;
 
     std::string logFilePath{};
+
+    std::ofstream fileStream{};
     
 public:
     static void Init(const std::string& logFilePath);

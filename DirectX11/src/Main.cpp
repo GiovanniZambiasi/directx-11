@@ -44,8 +44,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     if (!XMVerifyCPUSupport())
         return 1;
 
-    Logger::Init("log.txt");
-    
+    Logger::Init("log.log");
+
     try
     {
         HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);

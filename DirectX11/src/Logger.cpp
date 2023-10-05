@@ -32,7 +32,7 @@ Logger::Logger(const std::string& inFilePath)
 
 void Logger::SetupFile()
 {
-    std::ofstream fileStream{logFilePath};
+    fileStream.open(logFilePath);
     time_t sysTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::tm localTime{};
     assert(localtime_s(&localTime, &sysTime) == 0);
@@ -72,7 +72,6 @@ std::string Logger::FormatString(LogType type, const std::string& log, const std
 
 void Logger::WriteToFile(const std::string& log)
 {
-    std::ofstream fileStream{logFilePath, std::ios_base::app};
     if(fileStream.is_open())
     {
         fileStream << log << std::endl;
