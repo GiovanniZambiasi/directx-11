@@ -2,6 +2,7 @@
 #include <chrono>
 #include <vector>
 
+#include "Controls.h"
 #include "graphics/Graphics.h"
 
 class Entity;
@@ -17,6 +18,8 @@ class Game
     std::unique_ptr<Graphics> graphics{};
 
     std::vector<std::shared_ptr<Entity>> entities{};
+
+    Controls controls{};
     
     float timeSinceStart{0.f};
     float deltaTime{0.f};
@@ -34,8 +37,10 @@ public:
     void Initialize(HWND window, int width, int height, int tickRate = 60);
 
     void Update();
-    
+
     std::tuple<int, int> GetDefaultSize() const noexcept { return {1240, 720}; }
+
+    Controls& GetControls() { return controls; }
 
 private:
     void UpdateEntities();

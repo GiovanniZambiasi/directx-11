@@ -139,13 +139,13 @@ void Graphics::ClearBuffer(const GioColorF& color)
 
 void Graphics::UpdateCameraMatrix()
 {
-    GioVector rot = cameraTransform.RotationRadians();
+    GioVector rot = (-cameraTransform.rotationEuler).EulerToRadians();
     GioVector invPos = -cameraTransform.position;
-    
+
     cameraMatrix =
-        DirectX::XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z) *
         DirectX::XMMatrixTranslation(invPos.x, invPos.y, invPos.z) *
-        DirectX::XMMatrixPerspectiveLH(1.f, GetAspectRatio(), .5f, 10.f);
+        DirectX::XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z) *
+        DirectX::XMMatrixPerspectiveLH(1.f, GetAspectRatio(), .5f, 100.f);
 }
 
 void Graphics::SwapBuffers()

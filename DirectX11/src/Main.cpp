@@ -46,6 +46,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     Logger::Init("log.log");
 
+    GioTransform f{
+        {1.f, 0.f, 0.f},
+    };
+
+    f.LookAt(.0f);
+    
+
     try
     {
         HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
@@ -282,9 +289,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             s_fullscreen = !s_fullscreen;
         }
-        break;
 
-    case WM_MENUCHAR:
+        
+        
+        break;
+    case WM_KEYDOWN:
+        {
+            game->GetControls().KeyPressed(wParam);
+
+            break;
+        }
+    case WM_KEYUP:
+        
+        game->GetControls().KeyReleased(wParam);
         // A menu is active and the user presses a key that does not correspond
         // to any mnemonic or accelerator key. Ignore so we don't produce an error beep.
         return MAKELRESULT(0, MNC_CLOSE);

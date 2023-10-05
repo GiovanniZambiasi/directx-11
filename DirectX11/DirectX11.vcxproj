@@ -217,6 +217,7 @@
   <ItemGroup>
     <ClInclude Include="src\AssetUtils.h" />
     <ClInclude Include="src\Box.h" />
+    <ClInclude Include="src\Controls.h" />
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\ErrorHandling.h" />
@@ -397,6 +398,7 @@
       <AdditionalOptions>/Zc:__cplusplus </AdditionalOptions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\Controls.cpp" />
     <ClCompile Include="src\Entity.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

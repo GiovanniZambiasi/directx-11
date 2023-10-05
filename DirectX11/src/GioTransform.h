@@ -18,4 +18,8 @@ struct GioTransform
     void Translate(const GioVector& factor);
 
     void Rotate(const GioVector& factor);
+
+    void LookAt(const GioVector& target);
+
+    std::string ToString() const;
 };

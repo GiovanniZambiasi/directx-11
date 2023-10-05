@@ -30,6 +30,16 @@ struct GioVector
 
     operator DirectX::XMVECTOR() const;
 
+    float Magnitude() const;
+
+    GioVector Normalized() const;
+
+    void Normalize();
+
+    GioVector EulerToRadians() const;
+
+    GioVector RadiansToEuler() const;
+
     std::string ToString() const;
 };
 

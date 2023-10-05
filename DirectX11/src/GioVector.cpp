@@ -53,6 +53,48 @@ GioVector::operator DirectX::XMVECTOR() const
     return {x, y, z};
 }
 
+float GioVector::Magnitude() const
+{
+    return std::sqrt(x*x + y*y + z*z);
+}
+
+GioVector GioVector::Normalized() const
+{
+    float magnitude = Magnitude();
+    
+    if(magnitude == 0.f)
+    {
+        return {0.f};
+    }
+
+    return *this/magnitude;
+}
+
+void GioVector::Normalize()
+{
+    *this = Normalized();
+}
+
+GioVector GioVector::EulerToRadians() const
+{
+    return
+    {
+        DirectX::XMConvertToRadians(x),
+        DirectX::XMConvertToRadians(y),
+        DirectX::XMConvertToRadians(z),
+    };
+}
+
+GioVector GioVector::RadiansToEuler() const
+{
+    return
+    {
+        DirectX::XMConvertToDegrees(x),
+        DirectX::XMConvertToDegrees(y),
+        DirectX::XMConvertToDegrees(z),
+    };
+}
+
 std::string GioVector::ToString() const
 {
     std::stringstream stream{};

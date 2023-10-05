@@ -7,9 +7,9 @@ TransformationBuffer::Data::Data(IRenderingContext& graphics, const GioTransform
 {
     DirectX::XMMATRIX model = TransformUtils::CalculateModelMatrix(inTransform);
     modelMatrix = XMMatrixTranspose(model);
+    modelMatrixInverse = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, model));
     DirectX::XMMATRIX mvp = TransformUtils::CalculateMVPMatrix(graphics, model);
     MVPMatrix = XMMatrixTranspose(mvp);
-    MVPMatrixInverse = XMMatrixTranspose(XMMatrixInverse(nullptr, mvp));
 }
 
  std::shared_ptr<TransformationBuffer> TransformationBuffer::MakeFromTransform(IRenderingContext& graphics, const GioTransform& transform)

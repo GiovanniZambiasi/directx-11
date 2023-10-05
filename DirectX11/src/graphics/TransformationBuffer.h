@@ -13,10 +13,10 @@ class TransformationBuffer : public VertexConstantBuffer
     {
         DirectX::XMMATRIX modelMatrix{};
         
+        DirectX::XMMATRIX modelMatrixInverse{};
+        
         DirectX::XMMATRIX MVPMatrix{};
     
-        DirectX::XMMATRIX MVPMatrixInverse{};
-
         Data(IRenderingContext& graphics, const GioTransform& inTransform);
     };
     
