@@ -116,6 +116,9 @@
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)res\" "$(TargetDir)res\" /e /f /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>rmdir "$(TargetDir)res" /s /q</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -141,6 +144,9 @@
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)res\" "$(TargetDir)res\" /e /f /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>rmdir "$(TargetDir)res" /s /q</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -171,6 +177,9 @@
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)res\" "$(TargetDir)res\" /e /f /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>rmdir "$(TargetDir)res" /s /q</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -201,6 +210,9 @@
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)res\" "$(TargetDir)res\" /e /f /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>rmdir "$(TargetDir)res" /s /q</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\AssetUtils.h" />

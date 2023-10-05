@@ -20,6 +20,12 @@ struct GioVector
 
     GioVector operator+(const GioVector& other) const;
 
+    GioVector operator-(const GioVector& other) const;
+
+    GioVector operator*(float rhs) const;
+
+    GioVector operator-() const;
+    
     GioVector& operator+=(const GioVector& other);
 
     operator DirectX::XMVECTOR() const;

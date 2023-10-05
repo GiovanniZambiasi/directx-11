@@ -23,6 +23,21 @@ GioVector GioVector::operator+(const GioVector& other) const
     };
 }
 
+GioVector GioVector::operator-(const GioVector& other) const
+{
+    return { x - other.x, y - other.y, z - other.z };
+}
+
+GioVector GioVector::operator*(float rhs) const
+{
+    return { x * rhs, y * rhs, z * rhs};
+}
+
+GioVector GioVector::operator-() const
+{
+    return *this * -1.f;
+}
+
 GioVector& GioVector::operator+=(const GioVector& other)
 {
     GioVector& thisRef = *this;

@@ -4,8 +4,6 @@
 
 struct GioTransform;
 
-
-
 /**
  * Constant buffer to be used with vertex shaders to apply object transformation
  */
@@ -13,13 +11,13 @@ class TransformationBuffer : public VertexConstantBuffer
 {
     struct Data
     {
-        DirectX::XMMATRIX worldTransform{};
+        DirectX::XMMATRIX modelMatrix{};
+        
+        DirectX::XMMATRIX MVPMatrix{};
     
-        DirectX::XMMATRIX worldTransformInverse{};
+        DirectX::XMMATRIX MVPMatrixInverse{};
 
-        Data() = default;
-
-        Data(DirectX::XMMATRIX inWorldTransform);
+        Data(IRenderingContext& graphics, const GioTransform& inTransform);
     };
     
 public:

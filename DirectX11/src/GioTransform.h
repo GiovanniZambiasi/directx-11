@@ -13,7 +13,7 @@ struct GioTransform
 
     GioVector RotationRadians() const;
 
-    GioVector GetLookDirection() const;
+    GioVector GetForward() const;
 
     void Translate(const GioVector& factor);
 

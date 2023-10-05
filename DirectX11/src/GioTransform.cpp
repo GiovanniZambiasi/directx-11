@@ -20,7 +20,7 @@ GioVector GioTransform::RotationRadians() const
     };
 }
 
-GioVector GioTransform::GetLookDirection() const
+GioVector GioTransform::GetForward() const
 {
     return
     {

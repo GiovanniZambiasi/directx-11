@@ -1,9 +1,3 @@
-cbuffer TransformBuffer
-{
-    matrix transform;
-    matrix inverseTransform;
-}
-
 struct SurfaceData
 {
     float3 position : Position;
@@ -14,6 +8,7 @@ struct SurfaceData
 struct VSOut
 {
     SurfaceData surfaceData;
+    float3 positionWS : PositionWS;
     float3 normalWS : NormalWS;
     float4 pos : SV_Position;
 };

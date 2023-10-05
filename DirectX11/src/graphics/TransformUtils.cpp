@@ -4,7 +4,7 @@
 #include "GioTransform.h"
 #include "IRenderingContext.h"
 
-DirectX::XMMATRIX TransformUtils::TransformToMatrix(const GioTransform& transform)
+DirectX::XMMATRIX TransformUtils::CalculateModelMatrix(const GioTransform& transform)
 {
     GioVector rotationRadians = transform.RotationRadians();
     return
@@ -13,8 +13,12 @@ DirectX::XMMATRIX TransformUtils::TransformToMatrix(const GioTransform& transfor
         DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
 }
 
-DirectX::XMMATRIX TransformUtils::CalculateFinalMatrix(IRenderingContext& graphics, const GioTransform& transform)
+DirectX::XMMATRIX TransformUtils::CalculateMVPMatrix(IRenderingContext& graphics, const GioTransform& transform)
 {
-    return TransformToMatrix(transform) *
-        graphics.GetCameraMatrix();
+    return CalculateMVPMatrix(graphics, CalculateModelMatrix(transform));
+}
+
+DirectX::XMMATRIX TransformUtils::CalculateMVPMatrix(IRenderingContext& graphics, const DirectX::XMMATRIX& modelMatrix)
+{
+    return modelMatrix * graphics.GetCameraMatrix();
 }

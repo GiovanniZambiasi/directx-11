@@ -1,6 +1,7 @@
 cbuffer TransformBuffer
 {
-    matrix transform;
+    matrix model;
+    matrix mvp;
     matrix inverseTransform;
 }
 
@@ -14,6 +15,7 @@ struct SurfaceData
 struct VSOut
 {
     SurfaceData surfaceData;
+    float3 positionWS : PositionWS;
     float3 normalWS : NormalWS;
     float4 pos : SV_Position;
 };
@@ -22,9 +24,11 @@ VSOut main(SurfaceData surf)
 {
     VSOut output;
     output.surfaceData = surf;
-    output.pos = mul(float4(surf.position, 1.0f), transform);
-    float3x3 rotationComponent = inverseTransform;
+    output.positionWS = mul(float4(surf.position, 1.0f), model);
+    float3x3 rotationComponent = (float3x3)inverseTransform;
     output.normalWS = mul(rotationComponent, surf.normal);
+    output.pos = mul(float4(surf.position, 1.0f), mvp);
+    
     
     return output;
 }
