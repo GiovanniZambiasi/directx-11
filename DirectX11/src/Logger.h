@@ -1,11 +1,19 @@
 ﻿#pragma once
 
+#include <fstream>
+
 /**
  * Logs a message to the console and log file with file and line number information.
  * \param Type Log, Warning or Error. See the LogType enum for reference 
  */
 #define GIO_LOG(Type, Message) Logger::Log(LogType::Type, Message, __FILE__, __LINE__)
-#include <fstream>
+
+/**
+ * Logs a formatted message to the console and log file with file and line number information.
+ * \param Type Log, Warning or Error. See the LogType enum for reference 
+ */
+#define GIO_LOG_F(Type, Format, ...) Logger::Log(LogType::Type, Logger::FormatToString(Format, __VA_ARGS__), __FILE__, __LINE__)
+
 
 enum class LogType
 {
@@ -26,6 +34,15 @@ public:
     static void Init(const std::string& logFilePath);
     
     static void Log(LogType type, const std::string& log, const std::string& file, int line);
+
+    template <typename... Args>
+    static std::string FormatToString(const char* format, Args...args)
+    {
+        constexpr size_t maxSize = 256;
+        char buffer[maxSize];
+        sprintf_s(buffer, sizeof(buffer), format, args...);
+        return {buffer};
+    }
 
 private:
     Logger(const std::string& inFilePath);
