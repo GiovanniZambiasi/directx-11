@@ -78,13 +78,8 @@ GioTexture AssetUtils::ImportTexture(const std::wstring& path)
         uint8_t a = data[i + 3];
         colors.emplace_back(r,g,b,a);
     }
-
-    auto texture = GioTexture
-    {
-        width, height, std::move(colors)
-    };
-    texture.Flip(false);
-    return texture;
+    
+    return { width, height, std::move(colors) };
 }
 
 std::vector<uint8_t> AssetUtils::LoadBGRAImage(const wchar_t* path, uint32_t& outWidth, uint32_t& outHeight)

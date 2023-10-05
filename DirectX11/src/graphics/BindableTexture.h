@@ -13,7 +13,7 @@ class BindableTexture : public IBindable
 public:
     BindableTexture(IRenderingContext& graphics, const std::wstring& path);
 
-    BindableTexture(IRenderingContext& graphics, const GioTexture& inTexture);
+    BindableTexture(IRenderingContext& graphics, GioTexture&& inTexture);
     
     void Bind(IRenderingContext& graphics) override;
 };

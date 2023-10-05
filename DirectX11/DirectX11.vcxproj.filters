@@ -36,6 +36,7 @@
     <ClInclude Include="src\graphics\TransformationBuffer.h" />
     <ClInclude Include="src\graphics\TransformUtils.h" />
     <ClInclude Include="src\graphics\VertexBuffer.h" />
+    <ClInclude Include="src\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetUtils.cpp" />
@@ -66,6 +67,7 @@
     <ClCompile Include="src\graphics\TransformationBuffer.cpp" />
     <ClCompile Include="src\graphics\TransformUtils.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -83,7 +85,6 @@
   <ItemGroup>
     <FxCompile Include="shaders\VertexShader.hlsl" />
     <FxCompile Include="shaders\PixelShader.hlsl" />
-    <FxCompile Include="shaders\TexturedVertexShader.hlsl" />
     <FxCompile Include="shaders\TexturedPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>

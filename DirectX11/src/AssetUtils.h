@@ -3,7 +3,7 @@
 
 struct GioVector;
 struct GioTexture;
-class GioMesh;
+struct GioMesh;
 
 class AssetUtils
 {

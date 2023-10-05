@@ -9,6 +9,7 @@
 #include "Box.h"
 #include "GioColor.h"
 #include "GioVector.h"
+#include "Logger.h"
 #include "Monkey.h"
 
 extern void ExitGame() noexcept;

@@ -32,7 +32,7 @@ Box::Box(IRenderingContext& graphics, const GioTransform& spawnTransform)
     auto indexBuffer = std::make_shared<IndexBuffer>(graphics, mesh);
     drawable.SetIndexBuffer(indexBuffer);
 
-    drawable.AddBinding(graphics.GetSharedResources().chandelleTexture);
+    drawable.AddBinding(graphics.GetSharedResources().testTexture);
     
     ShaderUtils::BindTexturedShaders(graphics, drawable);
 }

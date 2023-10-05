@@ -10,9 +10,10 @@ BindableTexture::BindableTexture(IRenderingContext& graphics, const std::wstring
     : BindableTexture(graphics, AssetUtils::ImportTexture(path))
 { }
 
-BindableTexture::BindableTexture(IRenderingContext& graphics, const GioTexture& inTexture)
+BindableTexture::BindableTexture(IRenderingContext& graphics, GioTexture&& inTexture)
 {
     assert(inTexture.IsValid());
+    inTexture.Flip(false);
     D3D11_TEXTURE2D_DESC desc{};
     desc.Width = inTexture.width;
     desc.Height = inTexture.height;
@@ -23,7 +24,7 @@ BindableTexture::BindableTexture(IRenderingContext& graphics, const GioTexture& 
     desc.SampleDesc.Count = 1;
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     D3D11_SUBRESOURCE_DATA data{ inTexture.pixels.data() };
-    data.SysMemPitch = desc.Width * sizeof(uint32_t);
+    data.SysMemPitch = desc.Width * sizeof(GioColor32);
     GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateTexture2D(&desc, &data, &texture));
     GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateShaderResourceView(texture.Get(), nullptr, &textureView));
 }
