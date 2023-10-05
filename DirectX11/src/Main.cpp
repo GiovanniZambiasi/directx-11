@@ -5,8 +5,10 @@
 #include "pch.h"
 
 #include <iostream>
+#include <sstream>
 
 #include "Game.h"
+#include "Logger.h"
 
 using namespace DirectX;
 
@@ -41,6 +43,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     if (!XMVerifyCPUSupport())
         return 1;
+
+    Logger::Init("log.txt");
     
     try
     {
@@ -114,11 +118,15 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     }
     catch(const std::exception& e)
     {
-        std::cout << "FATAL:" << std::endl << e.what();
+        std::stringstream log;
+        log << "FATAL: \n" << e.what();
+        GIO_LOG(Error, log.str());
     }
     catch(...)
     {
-        std::cout << "FATAL:" << std::endl << "Unknown error";
+        std::stringstream log;
+        log << "Fatal: \n Unknown exception!";
+        GIO_LOG(Error, log.str());
     }
 
     return -1;
