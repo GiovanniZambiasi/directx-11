@@ -51,8 +51,6 @@ void GioTransform::LookAt(const GioVector& target)
     };
 
     rotationEuler = targetRotation;
-    
-    GIO_LOG_F(Log, "Rot is %s", targetRotation.ToString().c_str());
 }
 
 std::string GioTransform::ToString() const

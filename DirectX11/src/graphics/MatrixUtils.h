@@ -3,7 +3,7 @@
 class IRenderingContext;
 struct GioTransform;
 
-class TransformUtils
+class MatrixUtils
 {
 public:
     static DirectX::XMMATRIX CalculateModelMatrix(const GioTransform& transform);
@@ -17,5 +17,5 @@ public:
     static DirectX::XMMATRIX CalculateMVPMatrix(IRenderingContext& graphics, const DirectX::XMMATRIX& modelMatrix);
     
 private:
-    TransformUtils() = delete;
+    MatrixUtils() = delete;
 };

@@ -95,6 +95,11 @@ GioVector GioVector::RadiansToEuler() const
     };
 }
 
+float GioVector::Dot(const GioVector& other) const
+{
+    return x * other.x + y * other.y + z * other.z;
+}
+
 std::string GioVector::ToString() const
 {
     std::stringstream stream{};

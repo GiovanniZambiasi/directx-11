@@ -29,6 +29,5 @@ VSOut main(SurfaceData surf)
     output.normalWS = mul(rotationComponent, surf.normal);
     output.pos = mul(float4(surf.position, 1.0f), mvp);
     
-    
     return output;
 }

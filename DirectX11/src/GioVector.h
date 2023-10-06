@@ -40,6 +40,8 @@ struct GioVector
 
     GioVector RadiansToEuler() const;
 
+    float Dot(const GioVector& other) const;
+
     std::string ToString() const;
 };
 

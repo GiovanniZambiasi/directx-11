@@ -30,9 +30,9 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
 
     entities =
         {
+        std::make_shared<Monkey>(*graphics, GioTransform{ {0.f, 0.f, 1.f}, {0.f, 180.f, 0.f } }),
         std::make_shared<Box>(*graphics, GioTransform{{2.f, -1.f, 0.f}, {0.f, 180.f, 0.f}, {.5f}}),
         std::make_shared<Box>(*graphics, GioTransform{{-2.f, -1.f, 0.f}, {0.f, 180.f, 0.f}, {.25f}}),
-        std::make_shared<Monkey>(*graphics, GioTransform{ {0.f, 0.f, 1.f}, {0.f, 180.f, 0.f } }),
         // std::make_shared<Box>(*graphics, GioTransform{{25.f, 0.f, 0.f}, {0.f, 180.f, 0.f}, {1.f, 25.f, 25.f}}),
         // std::make_shared<Box>(*graphics, GioTransform{{-25.f, 0.f, 0.f}, {0.f, 180.f, 0.f}, {1.f, 25.f, 25.f}}),
     };

@@ -1,14 +1,14 @@
 ﻿#include "pch.h"
 #include "TransformationBuffer.h"
 
-#include "TransformUtils.h"
+#include "MatrixUtils.h"
 
 TransformationBuffer::Data::Data(IRenderingContext& graphics, const GioTransform& inTransform)
 {
-    DirectX::XMMATRIX model = TransformUtils::CalculateModelMatrix(inTransform);
+    DirectX::XMMATRIX model = MatrixUtils::CalculateModelMatrix(inTransform);
     modelMatrix = XMMatrixTranspose(model);
     modelMatrixInverse = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, model));
-    DirectX::XMMATRIX mvp = TransformUtils::CalculateMVPMatrix(graphics, model);
+    DirectX::XMMATRIX mvp = MatrixUtils::CalculateMVPMatrix(graphics, model);
     MVPMatrix = XMMatrixTranspose(mvp);
 }
 

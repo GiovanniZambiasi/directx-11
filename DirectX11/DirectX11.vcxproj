@@ -240,7 +240,7 @@
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\BindableTexture.h" />
     <ClInclude Include="src\graphics\TransformationBuffer.h" />
-    <ClInclude Include="src\graphics\TransformUtils.h" />
+    <ClInclude Include="src\graphics\MatrixUtils.h" />
     <ClInclude Include="src\graphics\VertexBuffer.h" />
     <ClInclude Include="src\Logger.h" />
     <ClInclude Include="src\Monkey.h" />
@@ -938,7 +938,7 @@
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\BindableTexture.cpp" />
     <ClCompile Include="src\graphics\TransformationBuffer.cpp" />
-    <ClCompile Include="src\graphics\TransformUtils.cpp" />
+    <ClCompile Include="src\graphics\MatrixUtils.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Main.cpp">

@@ -46,13 +46,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     Logger::Init("log.log");
 
-    GioTransform f{
-        {1.f, 0.f, 0.f},
-    };
-
-    f.LookAt(.0f);
-    
-
     try
     {
         HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
