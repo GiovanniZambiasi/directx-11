@@ -13,7 +13,6 @@ BindableTexture::BindableTexture(IRenderingContext& graphics, const std::wstring
 BindableTexture::BindableTexture(IRenderingContext& graphics, GioTexture&& inTexture)
 {
     assert(inTexture.IsValid());
-    inTexture.Flip(false);
     D3D11_TEXTURE2D_DESC desc{};
     desc.Width = inTexture.width;
     desc.Height = inTexture.height;

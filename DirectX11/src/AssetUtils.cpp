@@ -21,7 +21,7 @@ GioMesh AssetUtils::ImportMesh(const std::wstring& path)
 {
     std::string narrowPath{path.begin(), path.end()};
     Assimp::Importer imp{};
-    const aiScene* model = imp.ReadFile(narrowPath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+    const aiScene* model = imp.ReadFile(narrowPath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded);
     assert(model);
     assert(model->mNumMeshes);
     aiMesh* mesh = model->mMeshes[0];
