@@ -81,6 +81,8 @@ void Game::UpdateEntities()
     GioTransform& camTransform = graphics->GetCameraTransform();
     camTransform.Translate(controls.GetCamMoveInput() * deltaTime * 10.f);
     camTransform.Rotate(controls.GetCamRotateInput() * deltaTime * 45.f);
+
+    GIO_LOG_F(Log, "Cam transform is %s", camTransform.ToString().c_str());
 }
 
 void Game::DrawEntities()

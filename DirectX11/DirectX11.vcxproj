@@ -1219,6 +1219,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="shaders\Core.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="docs\uml.puml" />

@@ -1,22 +1,4 @@
-cbuffer TransformBuffer
-{
-    matrix transform;
-    matrix inverseTransform;
-}
-
-struct SurfaceData
-{
-    float3 position : Position;
-    float3 normal : Normal;
-    float2 texCoord : TexCoord;
-};
-
-struct VSOut
-{
-    SurfaceData surfaceData;
-    float3 normalWS : NormalWS;
-    float4 pos : SV_Position;
-};
+#include "Core.hlsli"
 
 Texture2D diffuseTexture : register(t0);
 SamplerState samplerLinear : register(s0);

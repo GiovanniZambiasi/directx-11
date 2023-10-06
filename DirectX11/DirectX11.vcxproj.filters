@@ -34,9 +34,10 @@
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\BindableTexture.h" />
     <ClInclude Include="src\graphics\TransformationBuffer.h" />
-    <ClInclude Include="src\graphics\TransformUtils.h" />
     <ClInclude Include="src\graphics\VertexBuffer.h" />
     <ClInclude Include="src\Logger.h" />
+    <ClInclude Include="src\Controls.h" />
+    <ClInclude Include="src\graphics\MatrixUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetUtils.cpp" />
@@ -65,9 +66,10 @@
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\BindableTexture.cpp" />
     <ClCompile Include="src\graphics\TransformationBuffer.cpp" />
-    <ClCompile Include="src\graphics\TransformUtils.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\Logger.cpp" />
+    <ClCompile Include="src\Controls.cpp" />
+    <ClCompile Include="src\graphics\MatrixUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -89,5 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="shaders\Core.hlsli" />
   </ItemGroup>
 </Project>
