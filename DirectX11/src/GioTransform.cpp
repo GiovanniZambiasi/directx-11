@@ -25,6 +25,17 @@ GioVector GioTransform::GetForward() const
     return rotation.ToDirection();
 }
 
+GioVector GioTransform::GetUp() const
+{
+    return TransformDirection(GioVector{0.f, 1.f, 0.f});
+}
+
+GioVector GioTransform::TransformDirection(const GioVector& inDirection) const
+{
+    DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.pitch, rotation.yaw, rotation.roll);
+    return XMVector3Transform(inDirection, matrix);
+}
+
 void GioTransform::Translate(const GioVector& factor)
 {
     position += factor;
@@ -44,7 +55,7 @@ void GioTransform::LookAt(const GioVector& target)
 std::string GioTransform::ToString() const
 {
     std::stringstream stream{};
-    stream << "{ P: " << position.ToString() << " | R: " << rotation.ToString() << " | S: " << scale.ToString() << "}";
+    stream << "{ P: " << position.ToString() << " | R: " << rotation.ToString(false) << " | S: " << scale.ToString() << "}";
     return stream.str();
 }
 

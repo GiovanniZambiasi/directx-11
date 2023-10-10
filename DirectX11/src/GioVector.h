@@ -36,7 +36,7 @@ struct GioVector
 
     void Normalize();
 
-    void ClampMagnitude(float maxMagnitude);
+    GioVector ClampMagnitude(float maxMagnitude) const;
 
     GioVector EulerToRadians() const;
 

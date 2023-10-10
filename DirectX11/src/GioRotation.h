@@ -22,6 +22,8 @@ struct GioRotation
     GioRotation operator+(const GioRotation& other) const;
 
     GioRotation& operator+=(const GioRotation& factor);
+
+    GioRotation operator-() const;
     
     GioRotation ToEuler() const;
 

@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "Game.h"
+#include "GioRotation.h"
 #include "Logger.h"
 
 using namespace DirectX;
@@ -36,6 +37,12 @@ extern "C"
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
+void TestDir(const GioVector& dir, const char* name)
+{
+    GioRotation rot = GioRotation::FromDirection(dir);
+    GIO_LOG_F(Log, "%s-\t\tRot: %s | Dir: %s", name, rot.ToString(false).c_str(), rot.ToDirection().ToString().c_str());
+}
+
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
@@ -46,6 +53,14 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     Logger::Init("log.log");
 
+    TestDir({0.f, 0.f, 0.f,}, "Default");
+    TestDir({0.f, 0.f, 1.f,}, "Front");
+    TestDir({0.f, 0.f, -1.f,}, "Back");
+    TestDir({0.f, 1.f, 0.f,}, "Up");    
+    TestDir({0.f, -1.f, 0.f,}, "Down");    
+    TestDir({1.f, 0.f, 0.f,}, "Right");    
+    TestDir({-1.f, 0.f, 0.f,}, "Left");    
+    
     try
     {
         HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);

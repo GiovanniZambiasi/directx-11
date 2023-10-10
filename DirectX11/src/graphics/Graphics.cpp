@@ -140,10 +140,10 @@ void Graphics::ClearBuffer(const GioColorF& color)
 void Graphics::UpdateCameraMatrix()
 {
     GioVector camPos = cameraTransform.position;
-    GioVector focusPos = cameraTransform.position + cameraTransform.GetForward();
+    GioVector camFocus = camPos + cameraTransform.GetForward();
 
     cameraMatrix =
-        DirectX::XMMatrixLookAtLH(camPos, focusPos, GioVector{0.f, 1.f, 0.f}) *
+            DirectX::XMMatrixLookAtLH(camPos, camFocus, cameraTransform.GetUp()) *
         DirectX::XMMatrixPerspectiveLH(1.f, GetAspectRatio(), .5f, 100.f);
 }
 

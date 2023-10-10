@@ -55,6 +55,11 @@ GioRotation& GioRotation::operator+=(const GioRotation& factor)
     return thisRef;
 }
 
+GioRotation GioRotation::operator-() const
+{
+    return {-pitch, -yaw, -roll};
+}
+
 GioRotation GioRotation::ToEuler() const
 {
     return

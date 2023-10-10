@@ -16,6 +16,10 @@ struct GioTransform
 
     GioVector GetForward() const;
 
+    GioVector GetUp() const;
+
+    GioVector TransformDirection(const GioVector& inDirection) const;
+    
     void Translate(const GioVector& factor);
 
     void Rotate(const GioRotation& factor);

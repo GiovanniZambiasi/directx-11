@@ -103,15 +103,16 @@ void GioVector::Normalize()
     *this = Normalized();
 }
 
-void GioVector::ClampMagnitude(float maxMagnitude)
+GioVector GioVector::ClampMagnitude(float maxMagnitude) const
 {
     float mag = Magnitude();
 
     if(mag > maxMagnitude)
     {
-        auto thisRef = *this;
-        thisRef = thisRef/mag;
+        return *this / mag;
     }
+
+    return *this;
 }
 
 GioVector GioVector::EulerToRadians() const

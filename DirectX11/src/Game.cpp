@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <assimp/camera.h>
 
 #include "graphics/Shader.h"
 #include "graphics/InputLayout.h"
@@ -79,9 +80,14 @@ void Game::UpdateEntities()
     }
 
     GioTransform& camTransform = graphics->GetCameraTransform();
-    camTransform.Translate(controls.GetCamMoveInput() * deltaTime * 10.f);
+    
+    GioVector camMoveInput = controls.GetCamMoveInput();
+    camMoveInput = camTransform.TransformDirection(camMoveInput.ClampMagnitude(1.f));
+    camTransform.Translate(camMoveInput * deltaTime * 10.f);
+    
     GioVector rotationInput = controls.GetCamRotateInput() * deltaTime * 45.f;
-    camTransform.Rotate(GioRotation::FromDegrees(rotationInput.x, rotationInput.y, rotationInput.z));
+    GioRotation rotation = GioRotation::FromDegrees(-rotationInput.x, rotationInput.y, 0.f);
+    camTransform.Rotate(rotation);
 }
 
 void Game::DrawEntities()
