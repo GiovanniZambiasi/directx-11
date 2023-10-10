@@ -30,10 +30,19 @@ void Controls::Update()
     else if(IsDown(0x41))
         camMoveInput += {-1.f, 0.f, 0.f};
 
+    if(IsDown(0x45))
+        camMoveInput += {.0f, 1.f, 0.f};
+    else if(IsDown(0x51))
+        camMoveInput += {.0f, -1.f, 0.f};
+    
     camRotateInput = 0.f;
     if(IsDown(0x4C))
         camRotateInput += {0.f, 1.f, 0.f};
     else if(IsDown(0x4A))
         camRotateInput += {0.f, -1.f, 0.f};
 
+    if(IsDown(0x49))
+        camRotateInput += {1.f, 0.f, 0.f};
+    else if(IsDown(0x4B))
+        camRotateInput += {-1.f, 0.f, 0.f};
 }

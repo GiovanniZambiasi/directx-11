@@ -11,23 +11,18 @@ GioTransform GioTransform::operator+(const GioTransform& other) const
     return GioTransform
     {
         position + other.position,
-        rotationEuler + other.rotationEuler,
+        rotation + other.rotation,
     };
 }
 
-GioVector GioTransform::RotationRadians() const
+GioRotation GioTransform::Rotation() const
 {
-    return rotationEuler.EulerToRadians();
+    return rotation;
 }
 
 GioVector GioTransform::GetForward() const
 {
-    return
-    {
-        std::cos(rotationEuler.y) * std::cos(rotationEuler.x),
-        std::sin(rotationEuler.y) * std::cos(rotationEuler.x),
-        sin(rotationEuler.x)
-    };
+    return rotation.ToDirection();
 }
 
 void GioTransform::Translate(const GioVector& factor)
@@ -35,28 +30,21 @@ void GioTransform::Translate(const GioVector& factor)
     position += factor;
 }
 
-void GioTransform::Rotate(const GioVector& factor)
+void GioTransform::Rotate(const GioRotation& factor)
 {
-    rotationEuler += factor;
+    rotation += factor;
 }
 
 void GioTransform::LookAt(const GioVector& target)
 {
     GioVector direction = (target - position).Normalized();
-    GioVector targetRotation
-    {
-         DirectX::XMConvertToDegrees(std::atan2(direction.y,std::sqrt(direction.x*direction.x + direction.z*direction.z))),
-        DirectX::XMConvertToDegrees(std::atan2(direction.x,direction.z)),
-        0.f,
-    };
-
-    rotationEuler = targetRotation;
+    rotation = GioRotation::FromDirection(direction);
 }
 
 std::string GioTransform::ToString() const
 {
     std::stringstream stream{};
-    stream << "{ P: " << position.ToString() << " | R: " << rotationEuler.ToString() << " | S: " << scale.ToString() << "}";
+    stream << "{ P: " << position.ToString() << " | R: " << rotation.ToString() << " | S: " << scale.ToString() << "}";
     return stream.str();
 }
 

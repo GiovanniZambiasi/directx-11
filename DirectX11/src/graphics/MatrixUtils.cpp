@@ -6,10 +6,10 @@
 
 DirectX::XMMATRIX MatrixUtils::CalculateModelMatrix(const GioTransform& transform)
 {
-    GioVector rotationRadians = transform.RotationRadians();
+    GioRotation rotationRadians = transform.Rotation();
     return
         DirectX::XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z) *
-        DirectX::XMMatrixRotationRollPitchYaw(rotationRadians.x, rotationRadians.y, rotationRadians.z) *
+        DirectX::XMMatrixRotationRollPitchYaw(rotationRadians.pitch, rotationRadians.yaw, rotationRadians.roll) *
         DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
 }
 

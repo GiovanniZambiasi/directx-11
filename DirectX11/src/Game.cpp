@@ -30,9 +30,9 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
 
     entities =
         {
-        std::make_shared<Monkey>(*graphics, GioTransform{ {0.f, 0.f, 1.f}, {0.f, 180.f, 0.f } }),
-        std::make_shared<Box>(*graphics, GioTransform{{2.f, -1.f, 0.f}, {0.f, 180.f, 0.f}, {.5f}}),
-        std::make_shared<Box>(*graphics, GioTransform{{-2.f, -1.f, 0.f}, {0.f, 180.f, 0.f}, {.25f}}),
+        std::make_shared<Monkey>(*graphics, GioTransform{ {0.f, 0.f, 1.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f) }),
+        std::make_shared<Box>(*graphics, GioTransform{{2.f, -1.f, 0.f},  GioRotation::FromDegrees(0.f, 180.f, 0.f), {.5f}}),
+        std::make_shared<Box>(*graphics, GioTransform{{-2.f, -1.f, 0.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f), {.25f}}),
         // std::make_shared<Box>(*graphics, GioTransform{{25.f, 0.f, 0.f}, {0.f, 180.f, 0.f}, {1.f, 25.f, 25.f}}),
         // std::make_shared<Box>(*graphics, GioTransform{{-25.f, 0.f, 0.f}, {0.f, 180.f, 0.f}, {1.f, 25.f, 25.f}}),
     };
@@ -74,15 +74,14 @@ void Game::UpdateEntities()
 
         auto& transform = entity->GetTransform();
         transform.position = GioVector{transform.position.x, positionOffset, transform.position.z};
-        transform.Rotate({0.f, deltaTime * 25.f, 0.f});
+        transform.Rotate(GioRotation::FromDegrees(0.f, deltaTime * 25.f, 0.f));
         entity->Update(deltaTime);
     }
 
     GioTransform& camTransform = graphics->GetCameraTransform();
     camTransform.Translate(controls.GetCamMoveInput() * deltaTime * 10.f);
-    camTransform.Rotate(controls.GetCamRotateInput() * deltaTime * 45.f);
-
-    GIO_LOG_F(Log, "Cam transform is %s", camTransform.ToString().c_str());
+    GioVector rotationInput = controls.GetCamRotateInput() * deltaTime * 45.f;
+    camTransform.Rotate(GioRotation::FromDegrees(rotationInput.x, rotationInput.y, rotationInput.z));
 }
 
 void Game::DrawEntities()

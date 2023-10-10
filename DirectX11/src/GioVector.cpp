@@ -3,6 +3,17 @@
 
 #include <sstream>
 
+GioVector::GioVector(float v): x(v), y(v), z(v)
+{}
+
+GioVector::GioVector(float inX, float inY, float inZ): x(inX), y(inY), z(inZ)
+{}
+
+GioVector::GioVector(const DirectX::XMVECTOR& inVector)
+    : x(DirectX::XMVectorGetX(inVector)), y(DirectX::XMVectorGetY(inVector)), z(DirectX::XMVectorGetZ(inVector))
+{
+}
+
 GioVector GioVector::operator/(float factor) const
 {
     return GioVector
@@ -48,6 +59,23 @@ GioVector& GioVector::operator+=(const GioVector& other)
     return thisRef;
 }
 
+float GioVector::operator[](int index) const
+{
+    assert(index >= 0 && index < 3);
+
+    switch (index)
+    {
+    case 0:
+        return x;
+    case 1:
+        return y;
+    case 2:
+        return z;
+    }
+    
+    return 0;
+}
+
 GioVector::operator DirectX::XMVECTOR() const
 {
     return {x, y, z};
@@ -73,6 +101,17 @@ GioVector GioVector::Normalized() const
 void GioVector::Normalize()
 {
     *this = Normalized();
+}
+
+void GioVector::ClampMagnitude(float maxMagnitude)
+{
+    float mag = Magnitude();
+
+    if(mag > maxMagnitude)
+    {
+        auto thisRef = *this;
+        thisRef = thisRef/mag;
+    }
 }
 
 GioVector GioVector::EulerToRadians() const

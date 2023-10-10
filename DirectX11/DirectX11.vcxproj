@@ -224,6 +224,7 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GioColor.h" />
     <ClInclude Include="src\GioMesh.h" />
+    <ClInclude Include="src\GioRotation.h" />
     <ClInclude Include="src\GioTexture.h" />
     <ClInclude Include="src\GioTransform.h" />
     <ClInclude Include="src\GioVector.h" />
@@ -774,6 +775,7 @@
       <AdditionalOptions>/Zc:__cplusplus </AdditionalOptions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\GioRotation.cpp" />
     <ClCompile Include="src\GioTexture.cpp" />
     <ClCompile Include="src\GioTransform.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>

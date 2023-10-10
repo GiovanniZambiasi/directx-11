@@ -8,13 +8,11 @@ struct GioVector
 
     GioVector() = default;
     
-    GioVector(float v)
-        : x(v), y(v), z(v)
-    {}
+    GioVector(float v);
 
-    GioVector(float inX, float inY, float inZ)
-        : x(inX), y(inY), z(inZ)
-    {}
+    GioVector(float inX, float inY, float inZ);
+
+    GioVector(const DirectX::XMVECTOR& inVector);
 
     GioVector operator/(float factor) const;
 
@@ -28,6 +26,8 @@ struct GioVector
     
     GioVector& operator+=(const GioVector& other);
 
+    float operator[](int index) const;
+
     operator DirectX::XMVECTOR() const;
 
     float Magnitude() const;
@@ -36,6 +36,8 @@ struct GioVector
 
     void Normalize();
 
+    void ClampMagnitude(float maxMagnitude);
+
     GioVector EulerToRadians() const;
 
     GioVector RadiansToEuler() const;
@@ -43,6 +45,7 @@ struct GioVector
     float Dot(const GioVector& other) const;
 
     std::string ToString() const;
+
 };
 
 struct GioUV
