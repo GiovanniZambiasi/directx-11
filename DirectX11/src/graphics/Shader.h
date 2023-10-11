@@ -46,8 +46,6 @@ class ShaderUtils
 public:
     static void BindStandardShaders(IRenderingContext& graphics, Drawable& drawable);
     
-    static void BindTexturedShaders(IRenderingContext& graphics, Drawable& drawable);
-    
 private:
     ShaderUtils() = delete;
 };

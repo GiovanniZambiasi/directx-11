@@ -16,14 +16,7 @@ Monkey::Monkey(IRenderingContext& graphics, const GioTransform& spawnTransform)
     
     GioMesh mesh = AssetUtils::ImportMesh(L"res/monkey.obj");
     assert(mesh.IsValid());
-    
-    auto vertexBuffer = std::make_shared<VertexBuffer>(graphics, mesh);
-    drawable.AddBinding(vertexBuffer);
-
-    auto indexBuffer = std::make_shared<IndexBuffer>(graphics, mesh);
-    drawable.SetIndexBuffer(indexBuffer);
-
-    drawable.AddBinding(graphics.GetSharedResources().faceColorBuffer);
-    
+    drawable.CreateBinding<VertexBuffer>({graphics, mesh});
+    drawable.CreateBinding<IndexBuffer>({graphics, mesh});
     ShaderUtils::BindStandardShaders(graphics, drawable);
 }

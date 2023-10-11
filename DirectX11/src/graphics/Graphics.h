@@ -1,9 +1,12 @@
 ﻿#pragma once
+#include <vector>
+
 #include "GioColor.h"
 #include "GioTransform.h"
 #include "IRenderingContext.h"
 #include "RenderingSharedResources.h"
 
+class Light;
 class Box;
 class InputLayout;
 class VertexShader;
@@ -14,6 +17,7 @@ class Graphics : public IRenderingContext
     HWND outputWindow;
     UINT outputWidth;
     UINT outputHeight;
+    GioColorF clearColor{};
 
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain{};
     Microsoft::WRL::ComPtr<ID3D11Device> device{};
@@ -25,8 +29,10 @@ class Graphics : public IRenderingContext
     GioTransform cameraTransform{};
     DirectX::XMMATRIX cameraMatrix{};
 
+    std::vector<std::weak_ptr<Light>> lights{};
+
 public:
-    Graphics(HWND window, UINT width, UINT height);
+    Graphics(HWND window, UINT width, UINT height, GioColorF inClearColor);
 
     void Initialize();
 
@@ -43,14 +49,20 @@ public:
     FLOAT GetAspectRatio() const { return static_cast<FLOAT>(outputHeight)/static_cast<FLOAT>(outputWidth); }
 
     GioTransform& GetCameraTransform() override { return cameraTransform; }
+
+    void PreRender();
     
-    void ClearBuffer(const GioColorF& color);
+    void SetLights(std::vector<std::weak_ptr<Light>>&& inLights) { lights = std::move(inLights); }
 
     void UpdateCameraMatrix();
     
     void SwapBuffers();
 
 private:
+    void ClearBuffer(const GioColorF& color);
+    
     void SetupSharedResources();
+
+    void UpdateLightBuffer();
 
 };

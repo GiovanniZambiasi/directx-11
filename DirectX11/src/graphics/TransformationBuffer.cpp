@@ -19,7 +19,7 @@ TransformationBuffer::Data::Data(IRenderingContext& graphics, const GioTransform
 }
 
 TransformationBuffer::TransformationBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth)
-    : VertexConstantBuffer(graphics, data, dataWidth)
+    : VertexConstantBuffer(graphics, 0, data, dataWidth)
 { }
 
 void TransformationBuffer::Update(IRenderingContext& graphics, const GioTransform& transform)

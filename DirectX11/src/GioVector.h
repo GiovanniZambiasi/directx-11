@@ -26,6 +26,8 @@ struct GioVector
     
     GioVector& operator+=(const GioVector& other);
 
+    GioVector& operator*=(float x);
+
     float operator[](int index) const;
 
     operator DirectX::XMVECTOR() const;
@@ -45,7 +47,7 @@ struct GioVector
     float Dot(const GioVector& other) const;
 
     std::string ToString() const;
-
+    
 };
 
 struct GioUV

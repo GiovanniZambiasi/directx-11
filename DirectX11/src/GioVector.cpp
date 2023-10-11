@@ -59,6 +59,13 @@ GioVector& GioVector::operator+=(const GioVector& other)
     return thisRef;
 }
 
+GioVector& GioVector::operator*=(float x)
+{
+    GioVector& thisRef = *this;
+    thisRef = thisRef * x;
+    return thisRef;
+}
+
 float GioVector::operator[](int index) const
 {
     assert(index >= 0 && index < 3);

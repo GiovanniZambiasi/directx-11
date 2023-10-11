@@ -5,11 +5,6 @@
 #include "IRenderingContext.h"
 #include "TransformationBuffer.h"
 
-void Drawable::AddBinding(const std::shared_ptr<IBindable>& binding)
-{
-    bindings.push_back(binding);
-}
-
 void Drawable::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indices)
 {
     indexBuffer = indices;

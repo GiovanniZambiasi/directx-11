@@ -42,6 +42,19 @@ public:
 
     Controls& GetControls() { return controls; }
 
+    template<typename TEntity>
+    std::enable_if_t<std::is_base_of_v<Entity, TEntity>>
+    GetEntitiesOfType(std::vector<std::weak_ptr<TEntity>>& outEntities)
+    {
+        for (std::shared_ptr<Entity>& entity : entities)
+        {
+            if(std::shared_ptr<TEntity> casted = std::dynamic_pointer_cast<TEntity>(entity))
+            {
+                outEntities.emplace_back(casted);
+            }
+        }
+    }
+
 private:
     void UpdateEntities();
 

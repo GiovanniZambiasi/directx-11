@@ -12,6 +12,7 @@
 #include "GioVector.h"
 #include "Logger.h"
 #include "Monkey.h"
+#include "Light.h"
 
 extern void ExitGame() noexcept;
 
@@ -25,20 +26,23 @@ Game::Game() noexcept
 
 void Game::Initialize(HWND window, int width, int height, int tickRate)
 {
-    graphics = std::make_unique<Graphics>(window, width, height);
+    graphics = std::make_unique<Graphics>(window, width, height, GioColorF{.7f, .9f, 1.f});
     graphics->Initialize();
     graphics->GetCameraTransform() = { { .0f, .0f, -5.f} };
 
     entities =
         {
         std::make_shared<Monkey>(*graphics, GioTransform{ {0.f, 0.f, 1.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f) }),
-        std::make_shared<Box>(*graphics, GioTransform{{2.f, -1.f, 0.f},  GioRotation::FromDegrees(0.f, 180.f, 0.f), {.5f}}),
+        std::make_shared<Box>(*graphics, GioTransform{{9.f, -1.f, 0.f},  GioRotation::FromDegrees(0.f, 180.f, 0.f), {.5f}}),
         std::make_shared<Box>(*graphics, GioTransform{{-2.f, -1.f, 0.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f), {.25f}}),
-        // std::make_shared<Box>(*graphics, GioTransform{{25.f, 0.f, 0.f}, {0.f, 180.f, 0.f}, {1.f, 25.f, 25.f}}),
-        // std::make_shared<Box>(*graphics, GioTransform{{-25.f, 0.f, 0.f}, {0.f, 180.f, 0.f}, {1.f, 25.f, 25.f}}),
+        std::make_shared<Light>(*graphics, GioTransform{{0.f, 0.f, -5.f}}, LightParams{{}, GioColorF{1.f, 1.f, 1.f}, 10.f, 1.f}),
     };
     
     minDeltaTime = 1.f/static_cast<float>(tickRate);
+
+    std::vector<std::weak_ptr<Light>> lights{};
+    GetEntitiesOfType(lights);
+    graphics->SetLights(std::move(lights));
 }
 
 void Game::Update()
@@ -73,9 +77,9 @@ void Game::UpdateEntities()
         float positionOffset = std::sin(timeSinceStart + change);
         change += 2.f;
 
-        auto& transform = entity->GetTransform();
-        transform.position = GioVector{transform.position.x, positionOffset, transform.position.z};
-        transform.Rotate(GioRotation::FromDegrees(0.f, deltaTime * 25.f, 0.f));
+        // auto& transform = entity->GetTransform();
+        // transform.position = GioVector{transform.position.x, positionOffset, transform.position.z};
+        // transform.Rotate(GioRotation::FromDegrees(0.f, deltaTime * 25.f, 0.f));
         entity->Update(deltaTime);
     }
 
@@ -85,16 +89,14 @@ void Game::UpdateEntities()
     camMoveInput = camTransform.TransformDirection(camMoveInput.ClampMagnitude(1.f));
     camTransform.Translate(camMoveInput * deltaTime * 10.f);
     
-    GioVector rotationInput = controls.GetCamRotateInput() * deltaTime * 45.f;
+    GioVector rotationInput = controls.GetCamRotateInput() * deltaTime * 90.f;
     GioRotation rotation = GioRotation::FromDegrees(-rotationInput.x, rotationInput.y, 0.f);
     camTransform.Rotate(rotation);
 }
 
 void Game::DrawEntities()
 {
-    graphics->ClearBuffer({.7f, .9f, 1.f});
-
-    graphics->UpdateCameraMatrix();
+    graphics->PreRender();
     
     for (std::shared_ptr<Entity>& entity : entities)
     {

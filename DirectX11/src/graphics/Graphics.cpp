@@ -10,6 +10,7 @@
 #include "GioVertex.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
+#include "Light.h"
 #include "Sampler.h"
 #include "Shader.h"
 #include "TransformationBuffer.h"
@@ -18,8 +19,8 @@ using namespace Microsoft;
 
 #pragma comment(lib, "D3DCompiler.lib")
 
-Graphics::Graphics(HWND window, UINT width, UINT height)
-    : outputWindow(window), outputWidth(width), outputHeight(height)
+Graphics::Graphics(HWND window, UINT width, UINT height, GioColorF inClearColor)
+    : outputWindow(window), outputWidth(width), outputHeight(height), clearColor(inClearColor)
 {
     DXGIInfoUtils::Init();
     
@@ -42,7 +43,6 @@ void Graphics::Initialize()
             DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
             DXGI_MODE_SCALING_UNSPECIFIED
         },
-        // AA
         DXGI_SAMPLE_DESC{1, 0},
         // This buffer will be used as the render target of our pipeline
         DXGI_USAGE_RENDER_TARGET_OUTPUT,
@@ -120,6 +120,13 @@ DirectX::XMMATRIX Graphics::GetCameraMatrix() const
     return cameraMatrix;
 }
 
+void Graphics::PreRender()
+{
+    ClearBuffer(clearColor);
+    UpdateCameraMatrix();
+    UpdateLightBuffer();
+}
+
 void Graphics::ClearBuffer(const GioColorF& color)
 {
     deviceContext->ClearRenderTargetView(backBufferView.Get(), reinterpret_cast<const FLOAT*>(&color));
@@ -154,7 +161,6 @@ void Graphics::SwapBuffers()
 
 void Graphics::SetupSharedResources()
 {
-    sharedResources.standardPixelShader = std::make_shared<PixelShader>(*this, L"PixelShader.cso");
     sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
     {
@@ -177,6 +183,21 @@ void Graphics::SetupSharedResources()
         {1.f, 1.f, 0.f},
         {0.f, 1.f, 1.f},
     };
-    sharedResources.faceColorBuffer = std::make_shared<PixelConstantBuffer>(*this, faceColors.data(), static_cast<UINT>(faceColors.size() * sizeof(GioColorF)));
+    sharedResources.lightBuffer = std::make_shared<PixelConstantBuffer>(*this, 0, nullptr, 0);
+}
+
+void Graphics::UpdateLightBuffer()
+{
+    std::vector<LightParams> params{};
+    params.reserve(lights.size());
+
+    for (int i = 0; i < lights.size(); ++i)
+    {
+        std::shared_ptr<Light> light = lights[i].lock();
+        params.emplace_back(light->GetParams());
+    }
+
+    sharedResources.lightBuffer->Update(*this, params.data(), params.size() * sizeof(LightParams));
+    sharedResources.lightBuffer->Bind(*this);
 }
 

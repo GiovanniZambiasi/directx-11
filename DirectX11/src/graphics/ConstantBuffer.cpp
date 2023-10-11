@@ -4,7 +4,8 @@
 #include "ErrorHandling.h"
 #include "IRenderingContext.h"
 
-ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth)
+ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, UINT inIndex, const void* data, UINT dataWidth)
+    : index(inIndex)
 {
     D3D11_BUFFER_DESC desc
     {
@@ -36,10 +37,10 @@ void ConstantBuffer::Update(IRenderingContext& graphics, const void* data, UINT 
 
 void PixelConstantBuffer::Bind(IRenderingContext& graphics)
 {
-    graphics.GetDeviceContext()->PSSetConstantBuffers(0u, 1u, buffer.GetAddressOf());
+    graphics.GetDeviceContext()->PSSetConstantBuffers(GetIndex(), 1u, buffer.GetAddressOf());
 }
 
 void VertexConstantBuffer::Bind(IRenderingContext& graphics)
 {
-    graphics.GetDeviceContext()->VSSetConstantBuffers(0u, 1u, buffer.GetAddressOf());
+    graphics.GetDeviceContext()->VSSetConstantBuffers(GetIndex(), 1u, buffer.GetAddressOf());
 }

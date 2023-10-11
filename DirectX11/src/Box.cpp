@@ -25,15 +25,9 @@ Box::Box(IRenderingContext& graphics, const GioTransform& spawnTransform)
     auto& drawable = GetDrawable();
 
     GioMesh mesh = AssetUtils::ImportMesh(L"res/cube.obj");
-    
-    auto vertexBuffer = std::make_shared<VertexBuffer>(graphics, mesh);
-    drawable.AddBinding(vertexBuffer);
-    
-    auto indexBuffer = std::make_shared<IndexBuffer>(graphics, mesh);
-    drawable.SetIndexBuffer(indexBuffer);
-
+    drawable.CreateBinding<VertexBuffer>({graphics, mesh});
+    drawable.CreateBinding<IndexBuffer>({graphics, mesh});
     drawable.AddBinding(graphics.GetSharedResources().testTexture);
-    
-    ShaderUtils::BindTexturedShaders(graphics, drawable);
+    ShaderUtils::BindStandardShaders(graphics, drawable);
 }
 

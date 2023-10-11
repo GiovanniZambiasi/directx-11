@@ -6,6 +6,7 @@
 #include "Sampler.h"
 #include "InputLayout.h"
 #include "RenderingSharedResources.h"
+#include "TransformationBuffer.h" 
 
 VertexShader::VertexShader(IRenderingContext& graphics, const wchar_t* const fileName)
     : Shader(graphics, fileName)
@@ -35,17 +36,8 @@ void ShaderUtils::BindStandardShaders(IRenderingContext& graphics, Drawable& dra
 {
     RenderingSharedResources& sharedResources = graphics.GetSharedResources();
     drawable.AddBinding(sharedResources.standardVertexShader);
-    drawable.AddBinding(sharedResources.standardPixelShader);
-    drawable.AddBinding(sharedResources.standardInputLayout);
-    drawable.SetTransformationBuffer(sharedResources.transformationBuffer);
-}
-
-void ShaderUtils::BindTexturedShaders(IRenderingContext& graphics, Drawable& drawable)
-{
-    RenderingSharedResources& sharedResources = graphics.GetSharedResources();
-    drawable.AddBinding(sharedResources.standardVertexShader);
     drawable.AddBinding(sharedResources.texturedPixelShader);
     drawable.AddBinding(sharedResources.standardInputLayout);
     drawable.AddBinding(sharedResources.standardSampler);
-    drawable.SetTransformationBuffer(sharedResources.transformationBuffer);
+    drawable.AddBinding(sharedResources.transformationBuffer);
 }
