@@ -2,10 +2,7 @@
 #include "Game.h"
 
 #include <chrono>
-#include <iostream>
-#include <assimp/camera.h>
 
-#include "graphics/Shader.h"
 #include "graphics/InputLayout.h"
 #include "Box.h"
 #include "GioColor.h"

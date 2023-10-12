@@ -21,10 +21,6 @@ IndexBuffer::IndexBuffer(IRenderingContext& graphics, const std::vector<UINT>& i
     GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, &data, buffer.GetAddressOf()));
 }
 
-IndexBuffer::IndexBuffer(IRenderingContext& graphics, const GioMesh& mesh)
-    : IndexBuffer(graphics, mesh.indices)
-{ }
-
 void IndexBuffer::Bind(IRenderingContext& graphics)
 {
     graphics.GetDeviceContext()->IASetIndexBuffer(buffer.Get(), DXGI_FORMAT_R32_UINT, 0);

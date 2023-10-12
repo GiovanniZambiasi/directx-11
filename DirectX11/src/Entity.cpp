@@ -16,5 +16,5 @@ Entity::Entity(std::string&& inName, IGameContext& inGame, const GioTransform& s
 void Entity::Draw(IRenderingContext& graphics)
 {
     graphics.GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    drawable.Draw(graphics, transform);
+    rendering.Draw(graphics, transform);
 }

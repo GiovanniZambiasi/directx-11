@@ -17,69 +17,44 @@
 
 using namespace Microsoft::WRL;
 
-GioMesh AssetUtils::ImportMesh(const std::wstring& path)
+std::unique_ptr<AssetUtils> AssetUtils::instance{};
+
+AssetUtils& AssetUtils::Get()
 {
-    std::string narrowPath{path.begin(), path.end()};
-    Assimp::Importer imp{};
-    const aiScene* model = imp.ReadFile(narrowPath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded);
-    assert(model);
-    assert(model->mNumMeshes);
-    aiMesh* mesh = model->mMeshes[0];
-    bool hasNormals = mesh->HasNormals();
-    bool hasTexCoords = mesh->HasTextureCoords(0);
-    aiVector3D* textureCoordinatesArray = mesh->mTextureCoords[0];
-
-    std::vector<GioVertex> vertices{};
-    vertices.reserve(mesh->mNumVertices);
-    for (int i = 0; i < mesh->mNumVertices; ++i)
+    if(!instance)
     {
-        aiVector3D vertex = mesh->mVertices[i];
-        aiVector3D normal = hasNormals ? mesh->mNormals[i] : aiVector3D{0.f};
-        aiVector3D texCoords = hasTexCoords ? textureCoordinatesArray[i] : aiVector3D{0.f};
-        
-        vertices.push_back(
-            GioVertex
-            {
-                {vertex.x, vertex.y, vertex.z},
-                {normal.x, normal.y, normal.z},
-                {texCoords.x, texCoords.y}
-            });
+        instance = std::unique_ptr<AssetUtils>{new AssetUtils{}};
     }
 
-    std::vector<UINT> indices{};
-    indices.reserve(mesh->mNumFaces);
-    for (int i = 0; i < mesh->mNumFaces; ++i)
-    {
-        aiFace face = mesh->mFaces[i];
-        assert(face.mNumIndices == 3);
-        for (int j = 0; j < face.mNumIndices; ++j)
-        {
-            indices.emplace_back(face.mIndices[j]);
-        }
-    }
-
-    return GioMesh{std::move(vertices), std::move(indices)};
+    return *instance;
 }
 
-GioTexture AssetUtils::ImportTexture(const std::wstring& path)
+std::shared_ptr<GioMesh> AssetUtils::FindOrLoadMesh(IRenderingContext& graphics, const std::wstring& path)
 {
-    uint32_t width{0};
-    uint32_t height{0};
-    
-    std::vector<uint8_t> data = LoadBGRAImage(path.c_str(), width, height);
-    std::vector<GioColor32> colors{};
-    colors.reserve(data.size()/4);
-    for (size_t i = 0; i < data.size(); i += 4)
+    auto resourceEntry = meshes.find(path);
+
+    if(resourceEntry == meshes.end())
     {
-        assert(i + 3 < data.size());
-        uint8_t r = data[i];
-        uint8_t g = data[i + 1];
-        uint8_t b = data[i + 2];
-        uint8_t a = data[i + 3];
-        colors.emplace_back(r,g,b,a);
+        std::shared_ptr<GioMesh> resource = LoadMesh(graphics, path);
+        meshes.emplace(path, resource);
+        return resource;
     }
     
-    return { width, height, std::move(colors) };
+    return resourceEntry->second;
+}
+
+std::shared_ptr<GioTexture> AssetUtils::FindOrLoadTexture(IRenderingContext& graphics, const std::wstring& path)
+{
+    auto textureIt = textures.find(path);
+
+    if(textureIt == textures.end())
+    {
+        std::shared_ptr<GioTexture> texture = LoadTexture(graphics, path);
+        textures.emplace(path, texture);
+        return texture;
+    }
+
+    return textureIt->second;
 }
 
 std::vector<uint8_t> AssetUtils::LoadBGRAImage(const wchar_t* path, uint32_t& outWidth, uint32_t& outHeight)
@@ -127,4 +102,69 @@ std::vector<uint8_t> AssetUtils::LoadBGRAImage(const wchar_t* path, uint32_t& ou
     }
 
     return image;
+}
+
+std::shared_ptr<GioMesh> AssetUtils::LoadMesh(IRenderingContext& graphics, const std::wstring& path)
+{
+    std::string narrowPath{path.begin(), path.end()};
+    Assimp::Importer imp{};
+    const aiScene* model = imp.ReadFile(narrowPath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded);
+    assert(model);
+    assert(model->mNumMeshes);
+    aiMesh* mesh = model->mMeshes[0];
+    bool hasNormals = mesh->HasNormals();
+    bool hasTexCoords = mesh->HasTextureCoords(0);
+    aiVector3D* textureCoordinatesArray = mesh->mTextureCoords[0];
+
+    std::vector<GioVertex> vertices{};
+    vertices.reserve(mesh->mNumVertices);
+    for (int i = 0; i < mesh->mNumVertices; ++i)
+    {
+        aiVector3D vertex = mesh->mVertices[i];
+        aiVector3D normal = hasNormals ? mesh->mNormals[i] : aiVector3D{0.f};
+        aiVector3D texCoords = hasTexCoords ? textureCoordinatesArray[i] : aiVector3D{0.f};
+        
+        vertices.push_back(
+            GioVertex
+            {
+                {vertex.x, vertex.y, vertex.z},
+                {normal.x, normal.y, normal.z},
+                {texCoords.x, texCoords.y}
+            });
+    }
+
+    std::vector<UINT> indices{};
+    indices.reserve(mesh->mNumFaces);
+    for (int i = 0; i < mesh->mNumFaces; ++i)
+    {
+        aiFace face = mesh->mFaces[i];
+        assert(face.mNumIndices == 3);
+        for (int j = 0; j < face.mNumIndices; ++j)
+        {
+            indices.emplace_back(face.mIndices[j]);
+        }
+    }
+
+    return std::make_shared<GioMesh>(graphics, std::move(vertices), std::move(indices));
+}
+
+std::shared_ptr<GioTexture> AssetUtils::LoadTexture(IRenderingContext& graphics, const std::wstring& path)
+{
+    uint32_t width{0};
+    uint32_t height{0};
+    
+    std::vector<uint8_t> data = LoadBGRAImage(path.c_str(), width, height);
+    std::vector<GioColor32> colors{};
+    colors.reserve(data.size()/4);
+    for (size_t i = 0; i < data.size(); i += 4)
+    {
+        assert(i + 3 < data.size());
+        uint8_t r = data[i];
+        uint8_t g = data[i + 1];
+        uint8_t b = data[i + 2];
+        uint8_t a = data[i + 3];
+        colors.emplace_back(r,g,b,a);
+    }
+    
+    return std::make_shared<GioTexture>(graphics, width, height, std::move(colors));
 }

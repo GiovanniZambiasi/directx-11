@@ -1,8 +1,9 @@
 ﻿#pragma once
 
+class RenderingComponent;
 struct LightParams;
 struct GioTransform;
-struct RenderingResources;
+class RenderingResources;
 
 class IRenderingContext
 {

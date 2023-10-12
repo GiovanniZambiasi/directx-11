@@ -2,7 +2,7 @@
 #include "Core.h"
 #include "GioTransform.h"
 #include "IGameContext.h"
-#include "graphics/Drawable.h"
+#include "RenderingComponent.h"
 
 class IGameContext;
 
@@ -14,7 +14,7 @@ class Entity
     
     GioTransform transform{};
 
-    Drawable drawable{};
+    RenderingComponent rendering{};
 
 public:
     Entity(std::string&& inName, IGameContext& inGame);
@@ -29,7 +29,7 @@ public:
 
     IGameContext& GetGameContext() const { return gameContext.get(); }
     
-    Drawable& GetDrawable() { return drawable; }
+    RenderingComponent& GetRenderingComponent() { return rendering; }
 
     GioTransform& GetTransform() { return transform; }
 

@@ -8,8 +8,6 @@
 
 class Entity;
 
-// A basic game implementation that creates a D3D11 device and
-// provides a game loop.
 class Game : public IGameContext
 {
     std::chrono::steady_clock::time_point startTime{};

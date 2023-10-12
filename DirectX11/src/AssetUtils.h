@@ -1,19 +1,37 @@
 ﻿#pragma once
+#include <unordered_map>
 #include <vector>
 
+#include "Core.h"
+
+class IRenderingContext;
 struct GioVector;
-struct GioTexture;
-struct GioMesh;
+class GioTexture;
+class GioMesh;
 
 class AssetUtils
 {
-public:
-    static GioMesh ImportMesh(const std::wstring& path);
+    static std::unique_ptr<AssetUtils> instance;
 
-    static GioTexture ImportTexture(const std::wstring& path);
+    std::unordered_map<std::wstring, std::shared_ptr<GioMesh>> meshes{};
     
-    static std::vector<uint8_t> LoadBGRAImage(const wchar_t* path, uint32_t& outWidth, uint32_t& outHeight);
+    std::unordered_map<std::wstring, std::shared_ptr<GioTexture>> textures{};
+    
+public:
+    static AssetUtils& Get();
+    
+    std::shared_ptr<GioMesh> FindOrLoadMesh(IRenderingContext& graphics, const std::wstring& path);
 
+    std::shared_ptr<GioTexture> FindOrLoadTexture(IRenderingContext& graphics, const std::wstring& path);
+    
 private:
-    AssetUtils() = delete;
+    AssetUtils() = default;
+
+    NO_COPY_MOVE(AssetUtils);
+
+    static std::vector<uint8_t> LoadBGRAImage(const wchar_t* path, uint32_t& outWidth, uint32_t& outHeight);
+    
+    std::shared_ptr<GioMesh> LoadMesh(IRenderingContext& graphics, const std::wstring& path);
+        
+    std::shared_ptr<GioTexture> LoadTexture(IRenderingContext& graphics, const std::wstring& path);
 };

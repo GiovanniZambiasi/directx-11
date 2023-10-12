@@ -15,8 +15,8 @@ Graphics ..|> IRenderingContext
 interface IBindable
 IBindable --> IRenderingContext
 
-class Drawable
-Drawable o--> IBindable
+interface IDrawable
+IDrawable ..|> IBindable
 
 class Shader
 Shader .up.|> IBindable
@@ -28,6 +28,12 @@ VertexBuffer .up.|> IBindable
 class Entity
 Game o--> Entity
 
+class RenderingComponent
+Entity --> RenderingComponent
+
+RenderingComponent o--> IBindable
+RenderingComponent --> IDrawable
+
 struct RenderingSharedResources
 IRenderingContext --> RenderingSharedResources
 
@@ -35,7 +41,6 @@ interface IGameContext
 Game ..|> IGameContext
 IGameContext --> IRenderingContext
 Entity --> IGameContext
-IGameContext --> Entity
 
 
 @enduml

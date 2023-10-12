@@ -5,8 +5,6 @@
 #include "ErrorHandling.h"
 #include "IRenderingContext.h"
 
-struct GioMesh;
-
 class VertexBuffer : public IBindable
 {
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer{};
@@ -31,8 +29,6 @@ public:
         D3D11_SUBRESOURCE_DATA data{vertices.data()};
         GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, &data, &buffer))
     }
-
-    VertexBuffer(IRenderingContext& graphics, const GioMesh& mesh);
     
     void Bind(IRenderingContext& graphics) override;
 

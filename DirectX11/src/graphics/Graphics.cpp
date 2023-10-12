@@ -7,6 +7,7 @@
 #include "BindableTexture.h"
 #include "ErrorHandling.h"
 #include "GioColor.h"
+#include "GioMaterial.h"
 #include "GioVertex.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
@@ -166,28 +167,18 @@ void Graphics::AddLight(const LightParams& lightParams)
 
 void Graphics::SetupSharedResources()
 {
-    sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
+    auto vertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc
     {
         {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(GioVertex, normal), D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(GioVertex, texCoords), D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
-    sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, sharedResources.standardVertexShader->GetBlob());
-    sharedResources.texturedPixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
+    sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, vertexShader->GetBlob());
+    auto pixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
+    sharedResources.standardMaterial = std::make_shared<GioMaterial>(*this, vertexShader, pixelShader, sharedResources.standardInputLayout);
     sharedResources.standardSampler = std::make_shared<Sampler>(*this);
-    sharedResources.testTexture = std::make_shared<BindableTexture>(*this, L"res/texture.jpg");
-    sharedResources.checkeredTexture = std::make_shared<BindableTexture>(*this, L"res/checkered.jpg");
     sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
-    std::vector<GioColorF> faceColors
-    {
-        {1.f, 0.f, 1.f},
-        {1.f, 0.f, 0.f},
-        {0.f, 1.f, 0.f},
-        {0.f, 0.f, 1.f},
-        {1.f, 1.f, 0.f},
-        {0.f, 1.f, 1.f},
-    };
     sharedResources.lightBuffer = std::make_shared<PixelConstantBuffer>(*this, 0, nullptr, 0);
 }
 

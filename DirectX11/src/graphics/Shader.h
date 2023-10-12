@@ -4,7 +4,7 @@
 #include "ErrorHandling.h"
 #include "IBindable.h"
 
-class Drawable;
+class RenderingComponent;
 class IDrawable;
 
 template <typename TShader>
@@ -39,13 +39,4 @@ public:
     PixelShader(IRenderingContext& graphics, const wchar_t* const fileName);
 
     void Bind(IRenderingContext& graphics) override;
-};
-
-class ShaderUtils
-{
-public:
-    static void BindStandardShaders(IRenderingContext& graphics, Drawable& drawable);
-    
-private:
-    ShaderUtils() = delete;
 };

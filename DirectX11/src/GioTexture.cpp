@@ -1,6 +1,21 @@
 ﻿#include "pch.h"
 #include "GioTexture.h"
 
+#include "IRenderingContext.h"
+#include "RenderingResources.h"
+#include "graphics/BindableTexture.h"
+#include "graphics/Sampler.h"
+
+GioTexture::GioTexture(IRenderingContext& graphics, UINT inWidth, UINT inHeight, std::vector<GioColor32>&& inPixels)
+    : width(inWidth), height(inHeight), pixels(std::move(inPixels))
+{
+    if(IsValid())
+    {
+        textureResource = std::make_shared<BindableTexture>(graphics, width, height, pixels);
+        sampler = graphics.GetSharedResources().standardSampler;
+    }
+}
+
 bool GioTexture::IsValid() const
 {
     return width > 0 && height > 0 && pixels.size() > 0;
@@ -28,4 +43,10 @@ void GioTexture::Flip(bool horizontal)
             pixels[bottomElementIndex] = top;
         }
     }
+}
+
+void GioTexture::Bind(IRenderingContext& graphics)
+{
+    textureResource->Bind(graphics);
+    sampler->Bind(graphics);
 }

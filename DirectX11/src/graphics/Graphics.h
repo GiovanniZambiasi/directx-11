@@ -24,6 +24,7 @@ class Graphics : public IRenderingContext
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView{};
 
     RenderingResources sharedResources{};
+
     GioTransform cameraTransform{};
     DirectX::XMMATRIX cameraMatrix{};
 

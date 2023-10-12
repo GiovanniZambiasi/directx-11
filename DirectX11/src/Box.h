@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Entity.h"
 #include "GioTransform.h"
-#include "graphics/Drawable.h"
 
 class IRenderingContext;
 struct GioVector;

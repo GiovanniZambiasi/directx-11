@@ -1,5 +1,12 @@
 ﻿#pragma once
+#include <unordered_map>
 
+#include "GioMesh.h"
+
+class GioMaterial;
+class RenderingComponent;
+class IndexBuffer;
+class VertexBuffer;
 class BindableTexture;
 class Sampler;
 class PixelConstantBuffer;
@@ -8,18 +15,17 @@ class InputLayout;
 class VertexShader;
 class PixelShader;
 
-struct RenderingResources
+class RenderingResources
 {
+public:
     std::shared_ptr<InputLayout> standardInputLayout{};
-    
-    std::shared_ptr<VertexShader> standardVertexShader{};
-    
-    std::shared_ptr<PixelShader> texturedPixelShader{};
+
+    std::shared_ptr<GioMaterial> standardMaterial{};
 
     std::shared_ptr<Sampler> standardSampler{};
-    std::shared_ptr<BindableTexture> testTexture{};
-    std::shared_ptr<BindableTexture> checkeredTexture{};
     
     std::shared_ptr<TransformationBuffer> transformationBuffer{};
+    
     std::shared_ptr<PixelConstantBuffer> lightBuffer{};
+
 };

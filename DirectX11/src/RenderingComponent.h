@@ -3,47 +3,41 @@
 
 #include "Core.h"
 
+class IDrawable;
 struct GioTransform;
 class TransformationBuffer;
 class IndexBuffer;
 class IBindable;
 class IRenderingContext;
 
-class Drawable
+class RenderingComponent
 {
     std::vector<std::shared_ptr<IBindable>> bindings{};
 
-    std::shared_ptr<IndexBuffer> indexBuffer{};
+    std::vector<std::shared_ptr<IDrawable>> drawables{};
     
-    std::shared_ptr<TransformationBuffer> transformationBuffer{};
-
 public:
-    Drawable() = default;
+    RenderingComponent() = default;
     
-    NO_COPY_MOVE(Drawable)
+    NO_COPY_MOVE(RenderingComponent)
 
     template <typename TBinding>
     std::enable_if_t<std::is_base_of_v<IBindable, TBinding>>
     AddBinding(const std::shared_ptr<TBinding>& binding)
     {
-        if(std::is_base_of_v<IndexBuffer, TBinding>)
+        assert(binding);
+
+        bindings.push_back(binding);
+        
+        if(std::is_base_of_v<IDrawable, TBinding>)
         {
-            SetIndexBuffer(std::reinterpret_pointer_cast<IndexBuffer>(binding));
-        }
-        else if(std::is_base_of_v<TransformationBuffer, TBinding>)
-        {
-            SetTransformationBuffer(std::reinterpret_pointer_cast<TransformationBuffer>(binding));
-        }
-        else
-        {
-            bindings.push_back(binding);
+            drawables.push_back(std::reinterpret_pointer_cast<IDrawable>(binding));
         }
     }
     
     /**
      * Creates and adds an IBindable of type TBinding
      * \tparam TBinding The the of the bindable. Must be concrete
-     * \param constructionParams Parameters sent to the constructor of TBinding 
      */
     template <typename TBinding>
     std::enable_if_t<std::is_base_of_v<IBindable, TBinding>, std::shared_ptr<TBinding>>
@@ -56,9 +50,4 @@ public:
     
     void Draw(IRenderingContext& graphics, const GioTransform& inTransform);
     
-private:
-    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indices);
-    
-    void SetTransformationBuffer(const std::shared_ptr<TransformationBuffer>& inBuffer);
-
 };
