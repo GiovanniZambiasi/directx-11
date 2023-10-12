@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ConstantBuffer.h"
+#include "graphics/ConstantBuffer.h"
 #include "GioTransform.h"
 
 struct GioTransform;

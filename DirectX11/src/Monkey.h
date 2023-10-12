@@ -4,6 +4,6 @@
 class Monkey : public Entity
 {
 public:
-    Monkey(IRenderingContext& graphics, const GioTransform& spawnTransform);
+    Monkey(IGameContext& inGame, const GioTransform& spawnTransform);
     
 };

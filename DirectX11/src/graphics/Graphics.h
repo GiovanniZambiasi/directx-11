@@ -4,10 +4,8 @@
 #include "GioColor.h"
 #include "GioTransform.h"
 #include "IRenderingContext.h"
-#include "RenderingSharedResources.h"
+#include "RenderingResources.h"
 
-class Light;
-class Box;
 class InputLayout;
 class VertexShader;
 class PixelShader;
@@ -25,11 +23,11 @@ class Graphics : public IRenderingContext
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBufferView{};
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView{};
 
-    RenderingSharedResources sharedResources{};
+    RenderingResources sharedResources{};
     GioTransform cameraTransform{};
     DirectX::XMMATRIX cameraMatrix{};
 
-    std::vector<std::weak_ptr<Light>> lights{};
+    std::vector<LightParams> frameLights{};
 
 public:
     Graphics(HWND window, UINT width, UINT height, GioColorF inClearColor);
@@ -42,7 +40,7 @@ public:
 
     DirectX::XMMATRIX GetCameraMatrix() const override;
 
-    RenderingSharedResources& GetSharedResources() override { return sharedResources; }
+    RenderingResources& GetSharedResources() override { return sharedResources; }
 
     std::tuple<UINT, UINT> GetOutputDimensions() const { return {outputWidth, outputHeight}; }
 
@@ -52,11 +50,11 @@ public:
 
     void PreRender();
     
-    void SetLights(std::vector<std::weak_ptr<Light>>&& inLights) { lights = std::move(inLights); }
-
     void UpdateCameraMatrix();
     
     void SwapBuffers();
+
+    void AddLight(const LightParams& lightParams) override;
 
 private:
     void ClearBuffer(const GioColorF& color);

@@ -1,17 +1,7 @@
 ﻿#pragma once
+
 #include "Entity.h"
-#include "GioColor.h"
-
-struct LightParams
-{
-    GioVector position{};
-    
-    GioColorF color{1.f};
-
-    float radius{5.f};
-
-    float attenuation{1.f};
-};
+#include "LightParams.h"
 
 class Light : public Entity
 {
@@ -20,7 +10,7 @@ class Light : public Entity
     float timeSinceStart{0.f};
     
 public:
-    Light(IRenderingContext& graphics, const GioTransform& inTransform, const LightParams& inParams);
+    Light(IGameContext& inGame, const GioTransform& inTransform, const LightParams& inParams);
 
     LightParams& GetParams() { return params; } 
     

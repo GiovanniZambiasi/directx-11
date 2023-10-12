@@ -3,38 +3,39 @@
 
 class Game
 
+interface IRenderingContext
+Game --> IRenderingContext
+
 package graphics
 {
 class Graphics
 
-interface IRenderingContext
-
 Graphics ..|> IRenderingContext
 
 interface IBindable
+IBindable --> IRenderingContext
 
 class Drawable
-Drawable ..> IRenderingContext
-Drawable o..> IBindable
+Drawable o--> IBindable
 
-interface IDrawable
-IDrawable --> Drawable
+class Shader
+Shader .up.|> IBindable
 
-struct RenderingSharedResources
-
-IRenderingContext --> RenderingSharedResources
-
-IBindable --> RenderingSharedResources
+class VertexBuffer
+VertexBuffer .up.|> IBindable
 }
 
-Game --> Graphics
-
 class Entity
-
-Entity ..|> IDrawable
-
 Game o--> Entity
 
+struct RenderingSharedResources
+IRenderingContext --> RenderingSharedResources
+
+interface IGameContext
+Game ..|> IGameContext
+IGameContext --> IRenderingContext
+Entity --> IGameContext
+IGameContext --> Entity
 
 
 @enduml

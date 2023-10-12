@@ -3,7 +3,7 @@
 
 #include "IndexBuffer.h"
 #include "IRenderingContext.h"
-#include "TransformationBuffer.h"
+#include "cbuffers/TransformationBuffer.h"
 
 void Drawable::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indices)
 {

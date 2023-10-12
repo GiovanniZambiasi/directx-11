@@ -1,7 +1,8 @@
 ﻿#pragma once
 
+struct LightParams;
 struct GioTransform;
-struct RenderingSharedResources;
+struct RenderingResources;
 
 class IRenderingContext
 {
@@ -14,8 +15,10 @@ public:
 
     virtual DirectX::XMMATRIX GetCameraMatrix() const = 0;
 
-    virtual RenderingSharedResources& GetSharedResources() = 0;
+    virtual RenderingResources& GetSharedResources() = 0;
  
     virtual GioTransform& GetCameraTransform() = 0;
+
+    virtual void AddLight(const LightParams& lightParams) = 0;
 
 };

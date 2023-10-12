@@ -32,17 +32,13 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
 
     entities =
         {
-        std::make_shared<Monkey>(*graphics, GioTransform{ {0.f, 0.f, 1.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f) }),
-        std::make_shared<Box>(*graphics, GioTransform{{9.f, -1.f, 0.f},  GioRotation::FromDegrees(0.f, 180.f, 0.f), {.5f}}),
-        std::make_shared<Box>(*graphics, GioTransform{{-2.f, -1.f, 0.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f), {.25f}}),
-        std::make_shared<Light>(*graphics, GioTransform{{0.f, 0.f, -5.f}}, LightParams{{}, GioColorF{1.f, 1.f, 1.f}, 10.f, 1.f}),
+        std::make_shared<Monkey>(*this, GioTransform{ {0.f, 0.f, 1.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f) }),
+        std::make_shared<Box>(*this, GioTransform{{9.f, -1.f, 0.f},  GioRotation::FromDegrees(0.f, 180.f, 0.f), {.5f}}),
+        std::make_shared<Box>(*this, GioTransform{{-2.f, -1.f, 0.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f), {.25f}}),
+        std::make_shared<Light>(*this, GioTransform{{0.f, 0.f, -5.f}}, LightParams{{}, GioColorF{1.f, 1.f, 1.f}, 10.f, 1.f}),
     };
     
     minDeltaTime = 1.f/static_cast<float>(tickRate);
-
-    std::vector<std::weak_ptr<Light>> lights{};
-    GetEntitiesOfType(lights);
-    graphics->SetLights(std::move(lights));
 }
 
 void Game::Update()

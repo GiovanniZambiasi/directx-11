@@ -13,7 +13,7 @@
 #include "Light.h"
 #include "Sampler.h"
 #include "Shader.h"
-#include "TransformationBuffer.h"
+#include "cbuffers/TransformationBuffer.h"
 
 using namespace Microsoft;
 
@@ -159,6 +159,11 @@ void Graphics::SwapBuffers()
     GIO_THROW_IF_FAILED(swapChain->Present(1, 0));
 }
 
+void Graphics::AddLight(const LightParams& lightParams)
+{
+    frameLights.push_back(lightParams);
+}
+
 void Graphics::SetupSharedResources()
 {
     sharedResources.standardVertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
@@ -188,16 +193,8 @@ void Graphics::SetupSharedResources()
 
 void Graphics::UpdateLightBuffer()
 {
-    std::vector<LightParams> params{};
-    params.reserve(lights.size());
-
-    for (int i = 0; i < lights.size(); ++i)
-    {
-        std::shared_ptr<Light> light = lights[i].lock();
-        params.emplace_back(light->GetParams());
-    }
-
-    sharedResources.lightBuffer->Update(*this, params.data(), params.size() * sizeof(LightParams));
+    sharedResources.lightBuffer->Update(*this, frameLights.data(), frameLights.size() * sizeof(LightParams));
     sharedResources.lightBuffer->Bind(*this);
+    frameLights.clear();
 }
 

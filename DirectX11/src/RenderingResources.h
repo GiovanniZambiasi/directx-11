@@ -8,7 +8,7 @@ class InputLayout;
 class VertexShader;
 class PixelShader;
 
-struct RenderingSharedResources
+struct RenderingResources
 {
     std::shared_ptr<InputLayout> standardInputLayout{};
     

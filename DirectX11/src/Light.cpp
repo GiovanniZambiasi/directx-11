@@ -3,23 +3,21 @@
 
 #include "AssetUtils.h"
 #include "GioMesh.h"
-#include "graphics/RenderingSharedResources.h"
+#include "RenderingResources.h"
 #include "graphics/IndexBuffer.h"
-#include "graphics/BindableTexture.h"
 #include "graphics/Shader.h"
 #include "graphics/VertexBuffer.h"
 
-Light::Light(IRenderingContext& graphics, const GioTransform& inTransform, const LightParams& inParams)
-    : Entity("Light", inTransform), params(inParams)
+Light::Light(IGameContext& inGame, const GioTransform& inTransform, const LightParams& inParams)
+    : Entity("Light", inGame, inTransform), params(inParams)
 {
-    auto& drawable = GetDrawable();
+    Drawable& drawable = GetDrawable();
+    IRenderingContext& graphics = inGame.GetRenderingContext();
 
     GioMesh mesh = AssetUtils::ImportMesh(L"res/cube.obj");
     drawable.CreateBinding<VertexBuffer>({graphics, mesh});
     drawable.CreateBinding<IndexBuffer>({graphics, mesh});
     ShaderUtils::BindStandardShaders(graphics, drawable);
-    
-    params.position = GetTransform().position;
 }
 
 void Light::Update(float deltaTime)
@@ -29,8 +27,12 @@ void Light::Update(float deltaTime)
     auto sin = std::sin(timeSinceStart);
     auto cos = std::cos(timeSinceStart);
 
+    GioTransform& transform = GetTransform();
     GioVector pos{sin, 0.f, cos};
     pos *= 5.f;
-    GetTransform().position = pos;
-    params.position = pos;
+    transform.position = pos;
+
+    params.position = transform.position;
+
+    GetGameContext().GetRenderingContext().AddLight(params);
 }

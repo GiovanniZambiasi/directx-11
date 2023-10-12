@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "TransformationBuffer.h"
 
-#include "MatrixUtils.h"
+#include "graphics/MatrixUtils.h"
 
 TransformationBuffer::Data::Data(IRenderingContext& graphics, const GioTransform& inTransform)
 {

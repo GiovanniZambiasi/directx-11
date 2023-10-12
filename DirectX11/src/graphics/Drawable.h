@@ -45,7 +45,7 @@ public:
      * \tparam TBinding The the of the bindable. Must be concrete
      * \param constructionParams Parameters sent to the constructor of TBinding 
      */
-    template <typename TBinding, typename... TConstructionParams>
+    template <typename TBinding>
     std::enable_if_t<std::is_base_of_v<IBindable, TBinding>, std::shared_ptr<TBinding>>
     CreateBinding(TBinding&& binding)
     {
@@ -61,14 +61,4 @@ private:
     
     void SetTransformationBuffer(const std::shared_ptr<TransformationBuffer>& inBuffer);
 
-};
-
-class IDrawable
-{
-public:
-    virtual ~IDrawable() = default;
-
-    virtual Drawable& GetDrawable() = 0;
-
-    virtual void Draw(IRenderingContext& graphics) = 0;
 };

@@ -8,7 +8,6 @@ InputLayout::InputLayout(IRenderingContext& graphics, const std::vector<D3D11_IN
 {
     GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateInputLayout(elements.data(),static_cast<UINT>(elements.size()), blob->GetBufferPointer(),
                                             blob->GetBufferSize(), &inputLayout));
-    
 }
 
 void InputLayout::Bind(IRenderingContext& graphics)
