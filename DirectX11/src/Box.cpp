@@ -23,7 +23,10 @@ Box::Box(IGameContext& inGame, const GioTransform& spawnTransform)
     std::shared_ptr<GioMesh> mesh = AssetUtils::Get().FindOrLoadMesh(graphics, L"res/cube.obj");
     drawable.AddBinding(mesh);
     std::shared_ptr<GioTexture> texture = AssetUtils::Get().FindOrLoadTexture(graphics, L"res/texture.jpg");
-    drawable.AddBinding(texture);
-    drawable.AddBinding(graphics.GetSharedResources().standardMaterial);
+    assert(graphics.GetSharedResources().standardMaterial);
+    GioMaterial& standardMaterial = *graphics.GetSharedResources().standardMaterial.get();
+    std::shared_ptr<GioMaterial> material = std::make_shared<GioMaterial>(standardMaterial);
+    material->AddTexture(texture);
+    drawable.AddBinding(material);
 }
 
