@@ -7,10 +7,12 @@
 ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, UINT inIndex, const void* data, UINT dataWidth)
     : index(inIndex)
 {
+    float mul = ceilf(static_cast<float>(dataWidth) / 16.f);
+    UINT bytes = static_cast<UINT>(16.f * mul);
     D3D11_BUFFER_DESC desc
     {
         // If the constant buffer is being initialized with null data, byteWidth is set to the arbitrary minimum of 16 bytes  
-        data ? dataWidth : 16,
+        bytes, //data ? dataWidth : 16,
         D3D11_USAGE_DYNAMIC,
         D3D11_BIND_CONSTANT_BUFFER,
         D3D11_CPU_ACCESS_WRITE,

@@ -4,6 +4,7 @@
 #include "GioColor.h"
 #include "GioTransform.h"
 #include "IRenderingContext.h"
+#include "LightParams.h"
 #include "RenderingResources.h"
 
 class InputLayout;
@@ -29,6 +30,8 @@ class Graphics : public IRenderingContext
     DirectX::XMMATRIX cameraMatrix{};
 
     std::vector<LightParams> frameLights{};
+
+    AmbientLightParams ambientLight{};
 
 public:
     Graphics(HWND window, UINT width, UINT height, GioColorF inClearColor);
@@ -57,11 +60,13 @@ public:
 
     void AddLight(const LightParams& lightParams) override;
 
+    void SetAmbientLight(const AmbientLightParams& inLightParams) override;
+    
 private:
     void ClearBuffer(const GioColorF& color);
     
     void SetupSharedResources();
 
     void UpdateLightBuffer();
-
+    
 };

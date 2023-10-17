@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+struct AmbientLightParams;
 class RenderingComponent;
 struct LightParams;
 struct GioTransform;
@@ -22,4 +23,6 @@ public:
 
     virtual void AddLight(const LightParams& lightParams) = 0;
 
+    virtual void SetAmbientLight(const AmbientLightParams& inLightParams) = 0;
+    
 };

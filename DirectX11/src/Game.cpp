@@ -23,7 +23,7 @@ Game::Game() noexcept
 
 void Game::Initialize(HWND window, int width, int height, int tickRate)
 {
-    graphics = std::make_unique<Graphics>(window, width, height, GioColorF{.7f, .9f, 1.f});
+    graphics = std::make_unique<Graphics>(window, width, height, GioColorF{.96f, .99f, 1.f});
     graphics->Initialize();
     graphics->GetCameraTransform() = { { .0f, .0f, -5.f} };
 

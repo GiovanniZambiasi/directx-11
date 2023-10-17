@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 
 #include "BindableTexture.h"
+#include "CoreGraphics.h"
 #include "ErrorHandling.h"
 #include "GioColor.h"
 #include "GioMaterial.h"
@@ -12,6 +13,7 @@
 #include "IndexBuffer.h"
 #include "InputLayout.h"
 #include "Light.h"
+#include "Logger.h"
 #include "Sampler.h"
 #include "Shader.h"
 #include "cbuffers/TransformationBuffer.h"
@@ -20,8 +22,26 @@ using namespace Microsoft;
 
 #pragma comment(lib, "D3DCompiler.lib")
 
+namespace
+{
+    struct LightBuffer
+    {
+        AmbientLightParams ambientLight{};
+
+        PADDING(12, al);
+
+        struct
+        {
+            LightParams params;
+            PADDING(7, l);
+        } light;
+        
+    };
+}
+
 Graphics::Graphics(HWND window, UINT width, UINT height, GioColorF inClearColor)
-    : outputWindow(window), outputWidth(width), outputHeight(height), clearColor(inClearColor)
+    : outputWindow(window), outputWidth(width), outputHeight(height), clearColor(inClearColor),
+      ambientLight(AmbientLightParams{clearColor})
 {
     DXGIInfoUtils::Init();
     
@@ -165,6 +185,11 @@ void Graphics::AddLight(const LightParams& lightParams)
     frameLights.push_back(lightParams);
 }
 
+void Graphics::SetAmbientLight(const AmbientLightParams& inLightParams)
+{
+    ambientLight = inLightParams;
+}
+
 void Graphics::SetupSharedResources()
 {
     auto vertexShader = std::make_shared<VertexShader>(*this, L"VertexShader.cso");
@@ -178,13 +203,21 @@ void Graphics::SetupSharedResources()
     auto pixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
     sharedResources.standardMaterial = std::make_shared<GioMaterial>(*this, vertexShader, pixelShader, sharedResources.standardInputLayout);
     sharedResources.standardSampler = std::make_shared<Sampler>(*this);
-    sharedResources.transformationBuffer = std::make_shared<TransformationBuffer>(*this, nullptr, 0u);
-    sharedResources.lightBuffer = std::make_shared<PixelConstantBuffer>(*this, 0, nullptr, 0);
+    sharedResources.transformationBuffer = TransformationBuffer::MakeFromTransform(*this, {});
+    sharedResources.lightBuffer = std::make_shared<PixelConstantBuffer>(*this, 0, nullptr, sizeof(LightBuffer));
 }
 
 void Graphics::UpdateLightBuffer()
 {
-    sharedResources.lightBuffer->Update(*this, frameLights.data(), frameLights.size() * sizeof(LightParams));
+    LightBuffer lightBuffer{};
+
+    lightBuffer.light.params = frameLights[0];
+    // for (int i = 0; i < lightCount && i < frameLights.size(); ++i)
+    // {
+    //     lightBuffer.lights[i] = frameLights[i];
+    // }
+    lightBuffer.ambientLight = ambientLight;
+    sharedResources.lightBuffer->Update(*this, &lightBuffer, sizeof(LightBuffer));
     sharedResources.lightBuffer->Bind(*this);
     frameLights.clear();
 }

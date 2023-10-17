@@ -22,12 +22,13 @@ struct VSOut
 struct Light
 {
     float3 position : LPosition;
-    float3 color : LColor;
+    float4 color : LColor;
     float radius : LRadius;
     float attenuation : LAttenuation;
 };
 
-cbuffer LightBuffer : register(b0)
+struct AmbientLight
 {
-    Light lights[3];
-}
+    float4 color : ALColor;
+    float intensity : ALIntensity;
+};

@@ -5,6 +5,7 @@
 #include "GioMesh.h"
 #include "GioMaterial.h"
 #include "IRenderingContext.h"
+#include "Logger.h"
 #include "RenderingResources.h"
 
 Light::Light(IGameContext& inGame, const GioTransform& inTransform, const LightParams& inParams)

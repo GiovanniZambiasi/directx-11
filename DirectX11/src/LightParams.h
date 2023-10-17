@@ -9,7 +9,14 @@ struct LightParams
     
     GioColorF color{1.f};
 
-    float radius{5.f};
+    FLOAT radius{5.f};
 
-    float attenuation{1.f};
+    FLOAT attenuation{1.f};
+};
+
+struct AmbientLightParams
+{
+    GioColorF color{1.f};
+
+    FLOAT intensity{.1f};
 };

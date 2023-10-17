@@ -232,6 +232,7 @@
     <ClInclude Include="src\GioVertex.h" />
     <ClInclude Include="src\graphics\cbuffers\TransformationBuffer.h" />
     <ClInclude Include="src\graphics\ConstantBuffer.h" />
+    <ClInclude Include="src\graphics\CoreGraphics.h" />
     <ClInclude Include="src\graphics\IDrawable.h" />
     <ClInclude Include="src\graphics\Graphics.h" />
     <ClInclude Include="src\graphics\IBindable.h" />
