@@ -26,7 +26,7 @@ Box::Box(IGameContext& inGame, const GioTransform& spawnTransform)
     assert(graphics.GetSharedResources().standardMaterial);
     GioMaterial& standardMaterial = *graphics.GetSharedResources().standardMaterial.get();
     std::shared_ptr<GioMaterial> material = std::make_shared<GioMaterial>(standardMaterial);
-    material->AddTexture(texture);
+    material->SetTexture(texture, 0);
     drawable.AddBinding(material);
 }
 

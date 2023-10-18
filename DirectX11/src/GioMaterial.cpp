@@ -1,30 +1,37 @@
-﻿#include "pch.h"
+﻿#include <pch.h>
 #include "GioMaterial.h"
 
 #include "GioTexture.h"
 #include "IRenderingContext.h"
+#include "RenderingResources.h"
 #include "graphics/InputLayout.h"
 #include "graphics/Shader.h"
 
 GioMaterial::GioMaterial(IRenderingContext& graphics, const std::shared_ptr<VertexShader>& inVertexShader,
-    const std::shared_ptr<PixelShader>& inPixelShader, const std::shared_ptr<InputLayout>& inInputLayout)
-    : vertexShader(inVertexShader), pixelShader(inPixelShader), inputLayout(inInputLayout)
+                         const std::shared_ptr<PixelShader>& inPixelShader,
+                         const std::shared_ptr<InputLayout>& inInputLayout,
+                         std::vector<MaterialParameter>&& inParameters)
+    : vertexShader(inVertexShader),
+      pixelShader(inPixelShader),
+      inputLayout(inInputLayout),
+      parameters(std::move(inParameters))
 {
 }
 
 void GioMaterial::Bind(IRenderingContext& graphics)
 {
     assert(pixelShader && vertexShader);
-    
-    for (auto& texture : textures)
-    {
-        texture->Bind(graphics);
-    }
 
-    if(textures.size() == 0)
+    for (const auto& parameter : parameters)
     {
-        ID3D11ShaderResourceView* views[1] = { nullptr};
-        graphics.GetDeviceContext()->PSSetShaderResources(0, 1, views);
+        if(parameter.texture && parameter.texture->IsValid())
+        {
+            parameter.texture->Bind(graphics);
+        }
+        else
+        {
+            graphics.GetSharedResources().whiteTexture->Bind(graphics);
+        }
     }
     
     inputLayout->Bind(graphics);
@@ -32,7 +39,9 @@ void GioMaterial::Bind(IRenderingContext& graphics)
     pixelShader->Bind(graphics);
 }
 
-void GioMaterial::AddTexture(const std::shared_ptr<GioTexture>& texture)
+void GioMaterial::SetTexture(const std::shared_ptr<GioTexture>& texture, int index)
 {
-    textures.push_back(texture);
+    assert(texture->IsValid());
+    assert(index >= 0 && index < parameters.size());
+    parameters[index].texture = texture;
 }

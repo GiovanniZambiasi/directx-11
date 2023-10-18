@@ -3,6 +3,7 @@
 
 #include "GioMesh.h"
 
+class GioTexture;
 class GioMaterial;
 class RenderingComponent;
 class IndexBuffer;
@@ -27,5 +28,7 @@ public:
     std::shared_ptr<TransformationBuffer> transformationBuffer{};
     
     std::shared_ptr<PixelConstantBuffer> lightBuffer{};
+
+    std::shared_ptr<GioTexture> whiteTexture{};
 
 };

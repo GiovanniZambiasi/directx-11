@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "TransformationBuffer.h"
 
+#include "graphics/CoreGraphics.h"
 #include "graphics/MatrixUtils.h"
 
 TransformationBuffer::Data::Data(IRenderingContext& graphics, const GioTransform& inTransform)
@@ -19,7 +20,7 @@ TransformationBuffer::Data::Data(IRenderingContext& graphics, const GioTransform
 }
 
 TransformationBuffer::TransformationBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth)
-    : VertexConstantBuffer(graphics, 0, data, dataWidth)
+    : VertexConstantBuffer(graphics, static_cast<UINT>(CBufferTypesVertex::Transformation), data, dataWidth)
 { }
 
 void TransformationBuffer::Update(IRenderingContext& graphics, const GioTransform& transform)

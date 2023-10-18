@@ -9,6 +9,7 @@
 #include "ErrorHandling.h"
 #include "GioColor.h"
 #include "GioMaterial.h"
+#include "GioTexture.h"
 #include "GioVertex.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
@@ -24,6 +25,8 @@ using namespace Microsoft;
 
 namespace
 {
+    constexpr int light_count = 3;
+    
     struct LightBuffer
     {
         AmbientLightParams ambientLight{};
@@ -34,7 +37,7 @@ namespace
         {
             LightParams params;
             PADDING(7, l);
-        } light;
+        } lights[light_count];
         
     };
 }
@@ -201,21 +204,37 @@ void Graphics::SetupSharedResources()
     };
     sharedResources.standardInputLayout = std::make_shared<InputLayout>(*this, inputElementDesc, vertexShader->GetBlob());
     auto pixelShader = std::make_shared<PixelShader>(*this, L"TexturedPixelShader.cso");
-    sharedResources.standardMaterial = std::make_shared<GioMaterial>(*this, vertexShader, pixelShader, sharedResources.standardInputLayout);
+    sharedResources.standardMaterial = std::make_shared<GioMaterial>(*this, vertexShader, pixelShader,
+                                                                     sharedResources.standardInputLayout,
+                                                                     std::vector<MaterialParameter>
+                                                                     {
+                                                                         {"Albedo"}
+                                                                     });
     sharedResources.standardSampler = std::make_shared<Sampler>(*this);
     sharedResources.transformationBuffer = TransformationBuffer::MakeFromTransform(*this, {});
-    sharedResources.lightBuffer = std::make_shared<PixelConstantBuffer>(*this, 0, nullptr, sizeof(LightBuffer));
+    sharedResources.lightBuffer = std::make_shared<PixelConstantBuffer>(*this, static_cast<UINT>(CBufferTypesPixel::Lights),
+        nullptr, sizeof(LightBuffer));
+    sharedResources.whiteTexture = std::make_shared<GioTexture>(*this, 1, 1, std::vector<GioColor32>{255});
 }
 
 void Graphics::UpdateLightBuffer()
 {
     LightBuffer lightBuffer{};
 
-    lightBuffer.light.params = frameLights[0];
-    // for (int i = 0; i < lightCount && i < frameLights.size(); ++i)
-    // {
-    //     lightBuffer.lights[i] = frameLights[i];
-    // }
+    for (int i = 0; i < light_count; ++i)
+    {
+        bool isValidLight = i < frameLights.size();
+
+        LightParams params{{0.f}, {0.f}, 0.f, 0.f};
+        
+        if(isValidLight)
+        {
+            params = frameLights[i];
+        }
+        
+        lightBuffer.lights[i].params = params;
+    }
+    
     lightBuffer.ambientLight = ambientLight;
     sharedResources.lightBuffer->Update(*this, &lightBuffer, sizeof(LightBuffer));
     sharedResources.lightBuffer->Bind(*this);

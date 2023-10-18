@@ -7,6 +7,13 @@ class InputLayout;
 class VertexShader;
 class PixelShader;
 
+struct MaterialParameter
+{
+    std::string name{};
+
+    std::shared_ptr<GioTexture> texture{};
+};
+
 class GioMaterial : public IBindable
 {
     std::shared_ptr<VertexShader> vertexShader{};
@@ -15,14 +22,17 @@ class GioMaterial : public IBindable
     
     std::shared_ptr<InputLayout> inputLayout{};
 
-    std::vector<std::shared_ptr<GioTexture>> textures{};
+    std::vector<MaterialParameter> parameters{};
 
 public:
     GioMaterial() = default;
 
-    GioMaterial(IRenderingContext& graphics, const std::shared_ptr<VertexShader>& inVertexShader, const std::shared_ptr<PixelShader>& inPixelShader, const std::shared_ptr<InputLayout>& inInputLayout);
+    GioMaterial(IRenderingContext& graphics, const std::shared_ptr<VertexShader>& inVertexShader,
+                const std::shared_ptr<PixelShader>& inPixelShader, const std::shared_ptr<InputLayout>& inInputLayout,
+                std::vector<MaterialParameter>&& inParameters);
 
     void Bind(IRenderingContext& graphics) override;
 
-    void AddTexture(const std::shared_ptr<GioTexture>& texture);
+    void SetTexture(const std::shared_ptr<GioTexture>& texture, int index);
+    
 };
