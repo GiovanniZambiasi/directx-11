@@ -1,5 +1,5 @@
 /**
- * Input to the pixel shader
+ * Input to the vertex shader
  */
 struct SurfaceData
 {

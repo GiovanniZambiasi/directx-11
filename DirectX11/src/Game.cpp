@@ -23,7 +23,7 @@ Game::Game() noexcept
 
 void Game::Initialize(HWND window, int width, int height, int tickRate)
 {
-    graphics = std::make_unique<Graphics>(window, width, height, GioColorF{.96f, .99f, 1.f});
+    graphics = std::make_unique<Graphics>(window, width, height, GioColorF{.8f, .8f, 1.f});
     graphics->Initialize();
     graphics->GetCameraTransform() = { { .0f, .0f, -5.f} };
 
@@ -32,7 +32,8 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
         std::make_shared<Monkey>(*this, GioTransform{ {0.f, 0.f, 1.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f) }),
         std::make_shared<Box>(*this, GioTransform{{9.f, -1.f, 0.f},  GioRotation::FromDegrees(0.f, 180.f, 0.f), {.5f}}),
         std::make_shared<Box>(*this, GioTransform{{-2.f, -1.f, 0.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f), {.25f}}),
-        std::make_shared<Light>(*this, GioTransform{{0.f, 0.f, -5.f}}, LightParams{{}, GioColorF{1.f, 1.f, 1.f}, 10.f, 1.f}),
+        std::make_shared<Light>(*this, GioTransform{{0.f, 0.f, -5.f}}, LightParams{{}, GioColorF{1.f, .0f, .0f}, 10.f, 1.f}),
+        std::make_shared<Light>(*this, GioTransform{{0.f, 0.f, -5.f}}, LightParams{{}, GioColorF{0.f, 0.f, 1.f}, 10.f, 1.f}),
     };
     
     minDeltaTime = 1.f/static_cast<float>(tickRate);
@@ -80,7 +81,7 @@ void Game::UpdateEntities()
     
     GioVector camMoveInput = controls.GetCamMoveInput();
     camMoveInput = camTransform.TransformDirection(camMoveInput.ClampMagnitude(1.f));
-    camTransform.Translate(camMoveInput * deltaTime * 10.f);
+    camTransform.Translate(camMoveInput * deltaTime * 1.f);
     
     GioVector rotationInput = controls.GetCamRotateInput() * deltaTime * 90.f;
     GioRotation rotation = GioRotation::FromDegrees(-rotationInput.x, rotationInput.y, 0.f);

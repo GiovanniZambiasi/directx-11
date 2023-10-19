@@ -29,6 +29,10 @@ namespace
     
     struct LightBuffer
     {
+        GioVector viewPosition{};
+
+        PADDING(4, viewP);
+        
         AmbientLightParams ambientLight{};
 
         PADDING(12, al);
@@ -36,7 +40,7 @@ namespace
         struct
         {
             LightParams params;
-            PADDING(7, l);
+            PADDING(8, l);
         } lights[light_count];
         
     };
@@ -220,6 +224,8 @@ void Graphics::SetupSharedResources()
 void Graphics::UpdateLightBuffer()
 {
     LightBuffer lightBuffer{};
+    lightBuffer.viewPosition = cameraTransform.position;
+    lightBuffer.ambientLight = ambientLight;
 
     for (int i = 0; i < light_count; ++i)
     {
@@ -235,7 +241,6 @@ void Graphics::UpdateLightBuffer()
         lightBuffer.lights[i].params = params;
     }
     
-    lightBuffer.ambientLight = ambientLight;
     sharedResources.lightBuffer->Update(*this, &lightBuffer, sizeof(LightBuffer));
     sharedResources.lightBuffer->Bind(*this);
     frameLights.clear();

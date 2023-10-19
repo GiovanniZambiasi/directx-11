@@ -21,6 +21,8 @@ Light::Light(IGameContext& inGame, const GioTransform& inTransform, const LightP
 
 void Light::Update(float deltaTime)
 {
+    static bool flip = false;
+    
     timeSinceStart += deltaTime;
 
     auto sin = std::sin(timeSinceStart);
@@ -29,7 +31,9 @@ void Light::Update(float deltaTime)
     GioTransform& transform = GetTransform();
     GioVector pos{sin, 0.f, cos};
     pos *= 5.f;
-    transform.position = pos;
+    transform.position = flip ? -pos : pos;
+
+    flip = !flip;
 
     params.position = transform.position;
 

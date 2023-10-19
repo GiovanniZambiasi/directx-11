@@ -1018,6 +1018,7 @@
     <ClCompile Include="src\graphics\MatrixUtils.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\Light.cpp" />
+    <ClCompile Include="src\LightParams.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Main.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
