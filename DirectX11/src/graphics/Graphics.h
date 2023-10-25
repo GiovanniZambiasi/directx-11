@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 
+#include "BufferWriter.h"
 #include "GioColor.h"
 #include "GioTransform.h"
 #include "IRenderingContext.h"
@@ -32,6 +33,8 @@ class Graphics : public IRenderingContext
     std::vector<LightParams> frameLights{};
 
     AmbientLightParams ambientLight{};
+
+    BufferWriter writer{16u};
 
 public:
     Graphics(HWND window, UINT width, UINT height, GioColorF inClearColor);

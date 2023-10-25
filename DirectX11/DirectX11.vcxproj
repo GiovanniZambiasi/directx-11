@@ -230,6 +230,8 @@
     <ClInclude Include="src\GioTransform.h" />
     <ClInclude Include="src\GioVector.h" />
     <ClInclude Include="src\GioVertex.h" />
+    <ClInclude Include="src\graphics\BufferWriter.h" />
+    <ClInclude Include="src\graphics\BufferWriterSpecializations.h" />
     <ClInclude Include="src\graphics\cbuffers\TransformationBuffer.h" />
     <ClInclude Include="src\graphics\ConstantBuffer.h" />
     <ClInclude Include="src\graphics\CoreGraphics.h" />
@@ -859,6 +861,7 @@
       <AdditionalOptions>/Zc:__cplusplus </AdditionalOptions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\graphics\BufferWriter.cpp" />
     <ClCompile Include="src\graphics\cbuffers\TransformationBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

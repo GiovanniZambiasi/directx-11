@@ -25,10 +25,12 @@ struct Light
     float4 color : LColor;
     float radius : LRadius;
     float attenuation : LAttenuation;
+    float sanity;
 };
 
 struct AmbientLight
 {
     float4 color : ALColor;
     float intensity : ALIntensity;
+    float sanity;
 };

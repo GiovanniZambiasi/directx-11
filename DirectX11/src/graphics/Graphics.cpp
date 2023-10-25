@@ -18,33 +18,11 @@
 #include "Sampler.h"
 #include "Shader.h"
 #include "cbuffers/TransformationBuffer.h"
+#include "BufferWriterSpecializations.h"
 
 using namespace Microsoft;
 
 #pragma comment(lib, "D3DCompiler.lib")
-
-namespace
-{
-    constexpr int light_count = 3;
-    
-    struct LightBuffer
-    {
-        GioVector viewPosition{};
-
-        PADDING(4, viewP);
-        
-        AmbientLightParams ambientLight{};
-
-        PADDING(12, al);
-
-        struct
-        {
-            LightParams params;
-            PADDING(8, l);
-        } lights[light_count];
-        
-    };
-}
 
 Graphics::Graphics(HWND window, UINT width, UINT height, GioColorF inClearColor)
     : outputWindow(window), outputWidth(width), outputHeight(height), clearColor(inClearColor),
@@ -216,18 +194,23 @@ void Graphics::SetupSharedResources()
                                                                      });
     sharedResources.standardSampler = std::make_shared<Sampler>(*this);
     sharedResources.transformationBuffer = TransformationBuffer::MakeFromTransform(*this, {});
+
+    LightBuffer buff{};
+    writer << buff;
     sharedResources.lightBuffer = std::make_shared<PixelConstantBuffer>(*this, static_cast<UINT>(CBufferTypesPixel::Lights),
-        nullptr, sizeof(LightBuffer));
+        nullptr, writer.GetSize());
     sharedResources.whiteTexture = std::make_shared<GioTexture>(*this, 1, 1, std::vector<GioColor32>{255});
 }
 
 void Graphics::UpdateLightBuffer()
 {
+    writer.Reset();
+    
     LightBuffer lightBuffer{};
     lightBuffer.viewPosition = cameraTransform.position;
     lightBuffer.ambientLight = ambientLight;
 
-    for (int i = 0; i < light_count; ++i)
+    for (int i = 0; i < LightBuffer::num_lights; ++i)
     {
         bool isValidLight = i < frameLights.size();
 
@@ -238,10 +221,11 @@ void Graphics::UpdateLightBuffer()
             params = frameLights[i];
         }
         
-        lightBuffer.lights[i].params = params;
+        lightBuffer.lights[i] = params;
     }
-    
-    sharedResources.lightBuffer->Update(*this, &lightBuffer, sizeof(LightBuffer));
+
+    writer << lightBuffer;
+    sharedResources.lightBuffer->Update(*this, writer.GetData(), writer.GetSize());
     sharedResources.lightBuffer->Bind(*this);
     frameLights.clear();
 }

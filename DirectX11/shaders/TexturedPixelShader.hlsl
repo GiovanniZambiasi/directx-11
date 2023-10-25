@@ -5,6 +5,7 @@ cbuffer LightBuffer : register(b0)
     float3 viewPos;
     AmbientLight ambient;
     Light lights[3];
+    float sanity;
 }
 
 Texture2D albedoTexture : register(t0);

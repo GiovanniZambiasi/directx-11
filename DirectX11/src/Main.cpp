@@ -10,6 +10,7 @@
 #include "Game.h"
 #include "GioRotation.h"
 #include "Logger.h"
+#include "graphics/BufferWriterSpecializations.h"
 
 using namespace DirectX;
 
@@ -43,8 +44,22 @@ void TestDir(const GioVector& dir, const char* name)
     GIO_LOG_F(Log, "%s-\t\tRot: %s | Dir: %s", name, rot.ToString(false).c_str(), rot.ToDirection().ToString().c_str());
 }
 
+struct Foo
+{
+    char a{'a'};
+    char b{'b'};
+    float c{137.f};
+};
+
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
+    Foo f{};
+    
+    BufferWriter writer{4};
+    writer << f.c;
+
+    Foo* fCopy = reinterpret_cast<Foo*>(writer.GetData());
+    
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
