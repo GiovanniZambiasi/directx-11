@@ -24,5 +24,4 @@ struct AmbientLightParams
 
     FLOAT intensity{.12f};
 
-    FLOAT sanityCheck{10.f};
 };

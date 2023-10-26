@@ -12,8 +12,6 @@ struct LightBuffer
     AmbientLightParams ambientLight{};
 
     LightParams lights[num_lights];
-
-    float sanityCheck{1997.f};
         
 };
 
@@ -38,7 +36,7 @@ inline void BufferWriter::WriteObjectInternal<GioColorF>(const GioColorF& data)
 template<>
 inline void BufferWriter::WriteObjectInternal<AmbientLightParams>(const AmbientLightParams& data)
 {
-    *this << data.color << data.intensity << data.sanityCheck;
+    *this << data.color << data.intensity;
 }
 
 template<>
@@ -56,5 +54,4 @@ inline void BufferWriter::WriteObjectInternal<LightBuffer>(const LightBuffer& da
         const LightParams& light = data.lights[i];
         *this << light;
     }
-    *this << data.sanityCheck;
 }
