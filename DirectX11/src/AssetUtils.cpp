@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "AssetUtils.h"
 
 #include <iostream>
@@ -21,9 +21,9 @@ std::unique_ptr<AssetUtils> AssetUtils::instance{};
 
 AssetUtils& AssetUtils::Get()
 {
-    if(!instance)
+    if (!instance)
     {
-        instance = std::unique_ptr<AssetUtils>{new AssetUtils{}};
+        instance = std::unique_ptr<AssetUtils>{ new AssetUtils{} };
     }
 
     return *instance;
@@ -33,13 +33,13 @@ std::shared_ptr<GioMesh> AssetUtils::FindOrLoadMesh(IRenderingContext& graphics,
 {
     auto resourceEntry = meshes.find(path);
 
-    if(resourceEntry == meshes.end())
+    if (resourceEntry == meshes.end())
     {
         std::shared_ptr<GioMesh> resource = LoadMesh(graphics, path);
         meshes.emplace(path, resource);
         return resource;
     }
-    
+
     return resourceEntry->second;
 }
 
@@ -47,7 +47,7 @@ std::shared_ptr<GioTexture> AssetUtils::FindOrLoadTexture(IRenderingContext& gra
 {
     auto textureIt = textures.find(path);
 
-    if(textureIt == textures.end())
+    if (textureIt == textures.end())
     {
         std::shared_ptr<GioTexture> texture = LoadTexture(graphics, path);
         textures.emplace(path, texture);
@@ -106,7 +106,7 @@ std::vector<uint8_t> AssetUtils::LoadBGRAImage(const wchar_t* path, uint32_t& ou
 
 std::shared_ptr<GioMesh> AssetUtils::LoadMesh(IRenderingContext& graphics, const std::wstring& path)
 {
-    std::string narrowPath{path.begin(), path.end()};
+    std::string narrowPath{ path.begin(), path.end() };
     Assimp::Importer imp{};
     const aiScene* model = imp.ReadFile(narrowPath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded);
     assert(model);
@@ -121,9 +121,9 @@ std::shared_ptr<GioMesh> AssetUtils::LoadMesh(IRenderingContext& graphics, const
     for (int i = 0; i < mesh->mNumVertices; ++i)
     {
         aiVector3D vertex = mesh->mVertices[i];
-        aiVector3D normal = hasNormals ? mesh->mNormals[i] : aiVector3D{0.f};
-        aiVector3D texCoords = hasTexCoords ? textureCoordinatesArray[i] : aiVector3D{0.f};
-        
+        aiVector3D normal = hasNormals ? mesh->mNormals[i] : aiVector3D{ 0.f };
+        aiVector3D texCoords = hasTexCoords ? textureCoordinatesArray[i] : aiVector3D{ 0.f };
+
         vertices.push_back(
             GioVertex
             {
@@ -150,12 +150,12 @@ std::shared_ptr<GioMesh> AssetUtils::LoadMesh(IRenderingContext& graphics, const
 
 std::shared_ptr<GioTexture> AssetUtils::LoadTexture(IRenderingContext& graphics, const std::wstring& path)
 {
-    uint32_t width{0};
-    uint32_t height{0};
-    
+    uint32_t width{ 0 };
+    uint32_t height{ 0 };
+
     std::vector<uint8_t> data = LoadBGRAImage(path.c_str(), width, height);
     std::vector<GioColor32> colors{};
-    colors.reserve(data.size()/4);
+    colors.reserve(data.size() / 4);
     for (size_t i = 0; i < data.size(); i += 4)
     {
         assert(i + 3 < data.size());
@@ -163,8 +163,8 @@ std::shared_ptr<GioTexture> AssetUtils::LoadTexture(IRenderingContext& graphics,
         uint8_t g = data[i + 1];
         uint8_t b = data[i + 2];
         uint8_t a = data[i + 3];
-        colors.emplace_back(r,g,b,a);
+        colors.emplace_back(r, g, b, a);
     }
-    
+
     return std::make_shared<GioTexture>(graphics, width, height, std::move(colors));
 }

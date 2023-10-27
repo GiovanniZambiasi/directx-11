@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "ConstantBuffer.h"
 
 #include "ErrorHandling.h"
@@ -25,7 +25,7 @@ ConstantBuffer::ConstantBuffer(IRenderingContext& graphics, UINT inIndex, const 
     {
             data,
     };
-    
+
     GIO_THROW_IF_FAILED(graphics.GetDevice()->CreateBuffer(&desc, data ? &subresourceData : nullptr, &buffer));
 }
 
@@ -33,7 +33,7 @@ void ConstantBuffer::Update(IRenderingContext& graphics, const void* data, UINT 
 {
     D3D11_MAPPED_SUBRESOURCE subresource{};
     GIO_THROW_IF_FAILED(graphics.GetDeviceContext()->Map(buffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &subresource))
-    memcpy(subresource.pData, data, dataWidth);
+        memcpy(subresource.pData, data, dataWidth);
     graphics.GetDeviceContext()->Unmap(buffer.Get(), 0u);
 }
 

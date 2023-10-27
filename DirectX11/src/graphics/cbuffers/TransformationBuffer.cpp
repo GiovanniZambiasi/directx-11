@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "TransformationBuffer.h"
 
 #include "graphics/CoreGraphics.h"
@@ -13,10 +13,10 @@ TransformationBuffer::Data::Data(IRenderingContext& graphics, const GioTransform
     MVPMatrix = XMMatrixTranspose(mvp);
 }
 
- std::shared_ptr<TransformationBuffer> TransformationBuffer::MakeFromTransform(IRenderingContext& graphics, const GioTransform& transform)
+std::shared_ptr<TransformationBuffer> TransformationBuffer::MakeFromTransform(IRenderingContext& graphics, const GioTransform& transform)
 {
-    Data data{graphics, transform};
-    return std::make_shared<TransformationBuffer>(graphics, &data,static_cast<UINT>(sizeof(data)));
+    Data data{ graphics, transform };
+    return std::make_shared<TransformationBuffer>(graphics, &data, static_cast<UINT>(sizeof(data)));
 }
 
 TransformationBuffer::TransformationBuffer(IRenderingContext& graphics, const void* data, UINT dataWidth)
@@ -25,6 +25,6 @@ TransformationBuffer::TransformationBuffer(IRenderingContext& graphics, const vo
 
 void TransformationBuffer::Update(IRenderingContext& graphics, const GioTransform& transform)
 {
-    Data data{graphics, transform};
+    Data data{ graphics, transform };
     ConstantBuffer::Update(graphics, &data, sizeof(data));
 }
