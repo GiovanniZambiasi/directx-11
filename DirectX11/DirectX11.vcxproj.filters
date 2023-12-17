@@ -48,6 +48,7 @@
     <ClInclude Include="src\python\PythonEmbedding.h" />
     <ClInclude Include="src\RenderingComponent.h" />
     <ClInclude Include="src\RenderingResources.h" />
+    <ClInclude Include="src\Application.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetUtils.cpp" />
@@ -81,6 +82,7 @@
     <ClCompile Include="src\LightParams.cpp" />
     <ClCompile Include="src\python\PythonEmbedding.cpp" />
     <ClCompile Include="src\RenderingComponent.cpp" />
+    <ClCompile Include="src\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
