@@ -4,11 +4,11 @@
 
 #include "pch.h"
 
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 
 #include "Game.h"
-#include "GioRotation.h"
 #include "Logger.h"
 #include "graphics/BufferWriterSpecializations.h"
 
@@ -38,28 +38,18 @@ extern "C"
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
-void TestDir(const GioVector& dir, const char* name)
+void LogStartApp()
 {
-    GioRotation rot = GioRotation::FromDirection(dir);
-    GIO_LOG_F(Log, "%s-\t\tRot: %s | Dir: %s", name, rot.ToString(false).c_str(), rot.ToDirection().ToString().c_str());
+    time_t sysTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm localTime{};
+    assert(localtime_s(&localTime, &sysTime) == 0);
+    std::stringstream initLog{};
+    initLog << "[" << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S") << "] Initializing log file...\n\n";
+    GIO_LOG_F(Log, initLog.str().c_str());
 }
-
-struct Foo
-{
-    char a{'a'};
-    char b{'b'};
-    float c{137.f};
-};
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-    Foo f{};
-    
-    BufferWriter writer{4};
-    writer << f.c;
-
-    Foo* fCopy = reinterpret_cast<Foo*>(writer.GetData());
-    
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -68,13 +58,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     Logger::Init("log.log");
 
-    TestDir({0.f, 0.f, 0.f,}, "Default");
-    TestDir({0.f, 0.f, 1.f,}, "Front");
-    TestDir({0.f, 0.f, -1.f,}, "Back");
-    TestDir({0.f, 1.f, 0.f,}, "Up");    
-    TestDir({0.f, -1.f, 0.f,}, "Down");    
-    TestDir({1.f, 0.f, 0.f,}, "Right");    
-    TestDir({-1.f, 0.f, 0.f,}, "Left");    
+    LogStartApp();
+    
     
     try
     {

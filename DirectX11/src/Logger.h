@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <fstream>
+#include <thread>
 
 /**
  * Logs a message to the console and log file with file and line number information.
@@ -29,6 +30,8 @@ class Logger
     std::string logFilePath{};
 
     std::ofstream fileStream{};
+
+    std::thread outputThread{};
     
 public:
     static void Init(const std::string& logFilePath);
@@ -44,10 +47,16 @@ public:
         return {buffer};
     }
 
+    ~Logger();
+    
 private:
     Logger(const std::string& inFilePath);
 
     void SetupFile();
+
+    void RedirectStdoutToFile();
+
+    void OpenConsoleWindow();
     
     void LogInternal(LogType type, const std::string& log, const std::string& file, int line);
 

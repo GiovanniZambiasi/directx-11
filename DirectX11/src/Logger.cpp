@@ -1,11 +1,11 @@
 ﻿#include "pch.h"
 #include "Logger.h"
 
-#include <chrono>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <thread>
 
 #include "ErrorHandling.h"
 
@@ -28,15 +28,29 @@ Logger::Logger(const std::string& inFilePath)
     : logFilePath(inFilePath)
 {
     SetupFile();
+    RedirectStdoutToFile();
+    outputThread = std::thread{&Logger::OpenConsoleWindow, this};
+}
+
+Logger::~Logger()
+{
+    outputThread.detach();
 }
 
 void Logger::SetupFile()
 {
     fileStream.open(logFilePath);
-    time_t sysTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::tm localTime{};
-    assert(localtime_s(&localTime, &sysTime) == 0);
-    fileStream << "[" << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S") << "] Initializing log file..." << std::endl << std::endl; 
+}
+
+void Logger::RedirectStdoutToFile()
+{
+    freopen("stdout.log", "w", stdout);
+}
+
+void Logger::OpenConsoleWindow()
+{
+    std::string command = FormatToString("powershell.exe Get-Content 'stdout.log' -Wait -Tail 1");
+    std::system(command.c_str());
 }
 
 void Logger::LogInternal(LogType type, const std::string& log, const std::string& file, int line)
