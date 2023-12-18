@@ -23,20 +23,27 @@ enum class LogType
     Error,
 };
 
-class Logger
+struct LoggerConfig
 {
-    static std::unique_ptr<Logger> instance;
-
     std::string logFilePath{};
 
     std::string stdoutFilePath{};
 
+    std::string stderrFilePath{};
+};
+
+class Logger
+{
+    static std::unique_ptr<Logger> instance;
+
+    LoggerConfig config{};
+    
     std::ofstream fileStream{};
 
     std::thread outputThread{};
     
 public:
-    static void Init(const std::string& logFilePath, const std::string& stdoutFilePath);
+    static void Init(LoggerConfig&& config);
     
     static void Log(LogType type, const std::string& log, const std::string& file, int line);
 
@@ -52,7 +59,7 @@ public:
     ~Logger();
     
 private:
-    Logger(const std::string& inFilePath, const std::string& stdoutFilePath);
+    Logger(LoggerConfig&& config);
 
     void SetupFile();
 
