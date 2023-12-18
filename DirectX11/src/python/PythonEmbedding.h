@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "PythonEmbedding.h"
 
 class PythonEmbedding
 {
@@ -11,4 +12,7 @@ public:
 
 private:
     void AddWorkingDirToSysPath();
+
+    void InitializeSystemLibraries();
 };
+

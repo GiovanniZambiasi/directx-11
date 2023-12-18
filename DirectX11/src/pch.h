@@ -47,6 +47,18 @@
 #include <stdexcept>
 #include <tuple>
 
+// https://docs.python.org/3/c-api/intro.html#introduction
+#define PY_SSIZE_T_CLEAN
+// If _DEBUG flag is defined, python adds a dependency to the debug version of the python lib (which is not included by
+// default in a python installation)
+#ifdef _DEBUG
+  #undef _DEBUG
+  #include <python.h>
+  #define _DEBUG
+#else
+  #include <python.h>
+#endif
+
 namespace DX
 {
     inline void ThrowIfFailed(HRESULT hr)

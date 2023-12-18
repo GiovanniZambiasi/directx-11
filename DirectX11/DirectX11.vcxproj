@@ -257,6 +257,7 @@
     <ClInclude Include="src\Monkey.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\python\PythonEmbedding.h" />
+    <ClInclude Include="src\python\PythonSystemLibrary.h" />
     <ClInclude Include="src\RenderingComponent.h" />
     <ClInclude Include="src\RenderingResources.h" />
     <ClInclude Include="src\StepTimer.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="src\Monkey.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\python\PythonEmbedding.cpp" />
+    <ClCompile Include="src\python\PythonSystemLibrary.cpp" />
     <ClCompile Include="src\RenderingComponent.cpp" />
   </ItemGroup>
   <ItemGroup>

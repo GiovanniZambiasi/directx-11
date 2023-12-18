@@ -7,7 +7,7 @@ class FileReader:
     def __init__(self, filePath:str):
         self.io = open(filePath, "r")
         self.base_name = os.path.basename(filePath)
-        print(f"Registering {self.base_name} in logger")
+        print(f"\tRegistering \'{self.base_name}\' in logger")
 
     def update(self):
         content = self.io.read()

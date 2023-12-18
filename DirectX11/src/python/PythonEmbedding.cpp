@@ -6,18 +6,7 @@
 #include <thread>
 
 #include "Logger.h"
-
-// https://docs.python.org/3/c-api/intro.html#introduction
-#define PY_SSIZE_T_CLEAN
-// If _DEBUG flag is defined, python adds a dependency to the debug version of the python lib (which is not included by
-// default in a python installation)
-#ifdef _DEBUG
-  #undef _DEBUG
-  #include <python.h>
-  #define _DEBUG
-#else
-  #include <python.h>
-#endif
+#include "PythonSystemLibrary.h"
 
 PythonEmbedding::PythonEmbedding()
  
@@ -30,12 +19,13 @@ PythonEmbedding::~PythonEmbedding()
 
 void PythonEmbedding::Init()
 {
+    InitializeSystemLibraries();
     Py_Initialize();
     AddWorkingDirToSysPath();
     
-    auto fileName = PyUnicode_DecodeFSDefault("HelloWorld");
+    auto fileName = PyUnicode_DecodeFSDefault("Handshake");
     auto module = PyImport_Import(fileName);
-    auto function = PyObject_GetAttrString(module, "HelloWorld");
+    auto function = PyObject_GetAttrString(module, "handshake_python");
     
     if(function && PyCallable_Check(function))
     {
@@ -67,4 +57,9 @@ void PythonEmbedding::AddWorkingDirToSysPath()
     stream << "sys.path.append('" <<  scriptsPathNarrow << "')";
     PyRun_SimpleString(stream.str().c_str());
     GIO_LOG_F(Log, "Appending scripts path '%s' to python sys.path", scriptsPathNarrow.c_str());
+}
+
+void PythonEmbedding::InitializeSystemLibraries()
+{
+    PyImport_AppendInittab(PythonSystemLibrary::moduleName.c_str(), &PythonSystemLibrary::CreateModule);
 }
