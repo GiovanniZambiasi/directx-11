@@ -1,0 +1,2 @@
+﻿def HelloWorld():
+    print("Wassup!")

@@ -10,7 +10,7 @@
 
 #include "Game.h"
 #include "Logger.h"
-#include "graphics/BufferWriterSpecializations.h"
+#include "python/PythonEmbedding.h"
 
 using namespace DirectX;
 
@@ -59,6 +59,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     Logger::Init("log.log", "stdout.log");
     LogStartApp();
     
+    PythonEmbedding python{};
+    python.Init();
     
     try
     {
