@@ -29,12 +29,14 @@ class Logger
 
     std::string logFilePath{};
 
+    std::string stdoutFilePath{};
+
     std::ofstream fileStream{};
 
     std::thread outputThread{};
     
 public:
-    static void Init(const std::string& logFilePath);
+    static void Init(const std::string& logFilePath, const std::string& stdoutFilePath);
     
     static void Log(LogType type, const std::string& log, const std::string& file, int line);
 
@@ -50,7 +52,7 @@ public:
     ~Logger();
     
 private:
-    Logger(const std::string& inFilePath);
+    Logger(const std::string& inFilePath, const std::string& stdoutFilePath);
 
     void SetupFile();
 

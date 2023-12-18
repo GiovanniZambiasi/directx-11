@@ -44,7 +44,7 @@ void LogStartApp()
     std::tm localTime{};
     assert(localtime_s(&localTime, &sysTime) == 0);
     std::stringstream initLog{};
-    initLog << "[" << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S") << "] Initializing log file...\n\n";
+    initLog << "[" << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S") << "] Initializing log file...";
     GIO_LOG_F(Log, initLog.str().c_str());
 }
 
@@ -56,8 +56,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     if (!XMVerifyCPUSupport())
         return 1;
 
-    Logger::Init("log.log");
-
+    Logger::Init("log.log", "stdout.log");
     LogStartApp();
     
     

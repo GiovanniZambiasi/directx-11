@@ -12,10 +12,10 @@
 
 std::unique_ptr<Logger> Logger::instance{};
 
-void Logger::Init(const std::string& logFilePath)
+void Logger::Init(const std::string& logFilePath, const std::string& stdoutFilePath)
 {
     assert(!instance);
-    instance = std::unique_ptr<Logger>{new Logger{logFilePath}};
+    instance = std::unique_ptr<Logger>{new Logger{logFilePath, stdoutFilePath}};
 }
 
 void Logger::Log(LogType type, const std::string& log, const std::string& file, int line)
@@ -24,17 +24,17 @@ void Logger::Log(LogType type, const std::string& log, const std::string& file, 
     instance->LogInternal(type, log, file, line);
 }
 
-Logger::Logger(const std::string& inFilePath)
-    : logFilePath(inFilePath)
+Logger::~Logger()
+{
+    outputThread.detach();
+}
+
+Logger::Logger(const std::string& inFilePath, const std::string& stdoutFilePath)
+    : logFilePath(inFilePath), stdoutFilePath(stdoutFilePath)
 {
     SetupFile();
     RedirectStdoutToFile();
     outputThread = std::thread{&Logger::OpenConsoleWindow, this};
-}
-
-Logger::~Logger()
-{
-    outputThread.detach();
 }
 
 void Logger::SetupFile()
@@ -44,12 +44,14 @@ void Logger::SetupFile()
 
 void Logger::RedirectStdoutToFile()
 {
-    freopen("stdout.log", "w", stdout);
+    std::remove(stdoutFilePath.c_str());
+    freopen(stdoutFilePath.c_str(), "w", stdout);
 }
 
 void Logger::OpenConsoleWindow()
 {
-    std::string command = FormatToString("powershell.exe Get-Content 'stdout.log' -Wait -Tail 1");
+    // TODO - Use python instead of powershell
+    std::string command = FormatToString("powershell.exe Get-Content '%s' -Wait -Tail -1", stdoutFilePath.c_str());
     std::system(command.c_str());
 }
 
