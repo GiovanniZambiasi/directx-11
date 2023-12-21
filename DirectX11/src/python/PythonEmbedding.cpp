@@ -22,16 +22,22 @@ void PythonEmbedding::Init()
     InitializeSystemLibraries();
     Py_Initialize();
     AddWorkingDirToSysPath();
-    
-    auto fileName = PyUnicode_DecodeFSDefault("Handshake");
-    auto module = PyImport_Import(fileName);
-    auto function = PyObject_GetAttrString(module, "handshake_python");
+
+    PyObject* fileName = PyUnicode_DecodeFSDefault("Handshake");
+    PyObject* module = PyImport_Import(fileName);
+    PyObject* function = PyObject_GetAttrString(module, "handshake_python");
     
     if(function && PyCallable_Check(function))
     {
         PyObject_CallObject(function, nullptr);
     }
-    
+
+    auto dict = PyModule_GetDict(module);
+    auto fooType = PyDict_GetItemString(dict, "Foo");
+    auto args = Py_BuildValue("ii", 10, 20);
+    auto fooInstance = PyObject_CallObject(fooType, args);
+    PyObject_CallMethod(fooInstance, "print_foo", nullptr);
+
     Py_Finalize();
 }
 
