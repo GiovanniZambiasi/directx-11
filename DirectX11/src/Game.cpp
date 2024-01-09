@@ -10,6 +10,7 @@
 #include "Logger.h"
 #include "Monkey.h"
 #include "Light.h"
+#include "ui/UI.h"
 
 extern void ExitGame() noexcept;
 
@@ -27,6 +28,8 @@ void Game::Initialize(HWND window, int width, int height, int tickRate)
     graphics->Initialize();
     graphics->GetCameraTransform() = { { .0f, .0f, -5.f} };
 
+    ui = std::make_unique<UI>(window, graphics->GetDevice(), graphics->GetDeviceContext());
+    
     entities =
         {
         std::make_shared<Monkey>(*this, GioTransform{ {0.f, 0.f, 1.f}, GioRotation::FromDegrees(0.f, 180.f, 0.f) }),
@@ -53,15 +56,24 @@ void Game::Update()
     POINT cursorPos{};
     GetCursorPos(&cursorPos);
 
+    PreRender();
+    
     UpdateEntities();
     
-    DrawEntities();
+    Render();
     
     previousFrameTime = std::chrono::steady_clock::now();
 }
 
+void Game::PreRender()
+{
+    graphics->PreRender();
+    ui->PreRender();
+}
+
 void Game::UpdateEntities()
 {
+    ui->Update();
     controls.Update();
     
     float change{1.f};
@@ -88,14 +100,13 @@ void Game::UpdateEntities()
     camTransform.Rotate(rotation);
 }
 
-void Game::DrawEntities()
+void Game::Render()
 {
-    graphics->PreRender();
-    
     for (std::shared_ptr<Entity>& entity : entities)
     {
         entity->Draw(*graphics);
     }
  
+    ui->Render();
     graphics->SwapBuffers();
 }

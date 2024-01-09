@@ -48,7 +48,17 @@
     <ClInclude Include="src\python\PythonEmbedding.h" />
     <ClInclude Include="src\RenderingComponent.h" />
     <ClInclude Include="src\RenderingResources.h" />
-    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\python\PythonSystemLibrary.h" />
+    <ClInclude Include="src\python\PythonUtils.h" />
+    <ClInclude Include="vendor\imgui\imconfig.h" />
+    <ClInclude Include="vendor\imgui\imgui.h" />
+    <ClInclude Include="vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="vendor\imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="vendor\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="src\ui\UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetUtils.cpp" />
@@ -82,7 +92,16 @@
     <ClCompile Include="src\LightParams.cpp" />
     <ClCompile Include="src\python\PythonEmbedding.cpp" />
     <ClCompile Include="src\RenderingComponent.cpp" />
-    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\python\PythonSystemLibrary.cpp" />
+    <ClCompile Include="src\python\PythonUtils.cpp" />
+    <ClCompile Include="vendor\imgui\imgui.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="vendor\imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="vendor\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\ui\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

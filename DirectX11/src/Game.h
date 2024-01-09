@@ -7,6 +7,7 @@
 #include "graphics/Graphics.h"
 
 class Entity;
+class UI;
 
 class Game : public IGameContext
 {
@@ -15,6 +16,8 @@ class Game : public IGameContext
     std::chrono::steady_clock::time_point previousFrameTime{};
 
     std::unique_ptr<Graphics> graphics{};
+
+    std::unique_ptr<UI> ui{};
 
     std::vector<std::shared_ptr<Entity>> entities{};
 
@@ -47,8 +50,10 @@ protected:
     std::vector<std::shared_ptr<Entity>>& GetEntities() override { return entities; }
     
 private:
+    void PreRender();
+    
     void UpdateEntities();
 
-    void DrawEntities();
+    void Render();
 
 };
